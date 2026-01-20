@@ -3,86 +3,151 @@ import datetime
 import re
 
 # --- 1. KONFIGURATION & DESIGN ---
-st.set_page_config(page_title="ReturnGuard", layout="wide")
+st.set_page_config(page_title="ReturnGuard", layout="wide", initial_sidebar_state="expanded")
 
+# Erweitertes CSS für Sidebar-Navigation und Layout-Harmonie
 st.markdown("""
     <style>
-    .stTabs [data-baseweb="tab-list"] { gap: 8px; }
-    .stTabs [data-baseweb="tab"] { height: 50px; background-color: #f0f2f6; border-radius: 5px; }
-    .stTabs [aria-selected="true"] { background-color: #002b5c !important; color: white !important; }
+    /* Navigation Buttons in der Sidebar */
+    [data-testid="stSidebarNav"] {display: none;} /* Versteckt Standard-Nav */
+    
+    .nav-button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        text-align: left;
+        background-color: transparent;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        color: #333;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .nav-button:hover {
+        background-color: #f0f2f6;
+        border-color: #002b5c;
+    }
+    .nav-active {
+        background-color: #002b5c !important;
+        color: white !important;
+        border: none;
+    }
 
-    /* Farblogik für Experten-Check Buttons */
-    div[data-testid="stSegmentedControl"] button { height: 55px !important; font-weight: bold !important; flex: 1 !important; }
+    /* Landingpage Optimierung */
+    .main-title {
+        font-size: 3.5rem !important;
+        font-weight: 800;
+        color: #002b5c;
+        margin-bottom: 0;
+        line-height: 1.2;
+    }
+    .sub-title {
+        font-size: 1.5rem;
+        color: #666;
+        margin-bottom: 40px;
+    }
+    .feature-card {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #eee;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        height: 100%;
+    }
+    .section-header {
+        color: #002b5c;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #002b5c;
+        display: inline-block;
+        padding-bottom: 5px;
+    }
+    
+    /* Experten-Check Buttons */
+    div[data-testid="stSegmentedControl"] button { height: 50px !important; flex: 1 !important; }
     div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(1)[aria-checked="true"] { background-color: #ff4b4b !important; color: white !important; }
     div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(2)[aria-checked="true"] { background-color: #ffa500 !important; color: white !important; }
     div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(3)[aria-checked="true"] { background-color: #28a745 !important; color: white !important; }
-    
-    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-    /* Landingpage Styling */
-    .hero-section { background-color: #002b5c; padding: 40px; border-radius: 15px; color: white; text-align: center; margin-bottom: 30px; }
-    .feature-box { background-color: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e0e0e0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .instruction-text { font-size: 1.05rem; line-height: 1.6; color: #333; }
+    /* Hide Spinners */
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. NAVIGATION ---
+# --- 2. MANUELLE SIDEBAR NAVIGATION ---
 with st.sidebar:
-    st.title("🛡️ ReturnGuard")
-    page = st.selectbox("Menü", ["🏠 Kunden-Portal", "🛠️ Experten-Check (Intern)"])
+    st.markdown('<h1 style="color: #002b5c;">🛡️ ReturnGuard</h1>', unsafe_allow_html=True)
+    st.write("Professional Leasing Protection")
     st.write("---")
-    st.caption("Version 1.2.0 - 2026")
+    
+    # Session State für Navigation initialisieren
+    if 'current_page' not in st.session_state:
+        st.session_state.current_page = "Kunden-Portal"
 
-# --- 3. SEITE: KUNDEN-PORTAL ---
-if page == "🏠 Kunden-Portal":
-    st.markdown('<div class="hero-section"><h1>🛡️ ReturnGuard</h1><p style="font-size: 1.3rem;">Professionelle Zustandsberichte für Ihre Leasingrückgabe</p></div>', unsafe_allow_html=True)
+    # Buttons als Navigations-Ersatz
+    if st.button("🏠 Kunden-Portal", use_container_width=True, type="primary" if st.session_state.current_page == "Kunden-Portal" else "secondary"):
+        st.session_state.current_page = "Kunden-Portal"
+        st.rerun()
+        
+    if st.button("🛠️ Experten-Check (Intern)", use_container_width=True, type="primary" if st.session_state.current_page == "Experten-Check" else "secondary"):
+        st.session_state.current_page = "Experten-Check"
+        st.rerun()
 
-    col_img, col_info = st.columns([0.55, 0.45])
+    st.write("---")
+    st.caption("© 2026 ReturnGuard System")
+
+# --- 3. SEITE: KUNDEN-PORTAL (LANDINGPAGE) ---
+if st.session_state.current_page == "Kunden-Portal":
+    # Hero Bereich
+    st.markdown('<h1 class="main-title">ReturnGuard</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-title">Schutz vor unerwarteten Kosten bei der Leasingrückgabe.</p>', unsafe_allow_html=True)
+
+    # Layout: Bild links, Text rechts (gleichmäßig verteilt)
+    col_img, col_info = st.columns([1, 1], gap="large")
 
     with col_img:
-        st.subheader("Analysebereiche am Fahrzeug")
-        # Professionelle 2D Draufsicht (Platzhalter durch ein neutrales Auto-Diagramm ersetzt)
         st.image("https://raw.githubusercontent.com/Frankyboy1984/ReturnGuard/main/car_top_view_blueprint.png", 
-                 caption="Präzise Erfassung aller Schadensbereiche.")
+                 use_container_width=True)
         
+        st.markdown('<p class="section-header">Der Ablauf</p>', unsafe_allow_html=True)
         st.markdown("""
-        <div class="instruction-text">
-        <h3>So funktioniert ReturnGuard für Sie:</h3>
-        <ol>
-            <li><b>Termin vor Rückgabe:</b> Wir prüfen Ihr Fahrzeug ca. 2-4 Wochen vor dem Abgabetermin.</li>
-            <li><b>Detaillierte Erfassung:</b> Unsere Experten scannen die markierten Bereiche auf Dellen, Kratzer und Verschleiß.</li>
-            <li><b>Kosten-Analyse:</b> Sie erhalten sofort eine Übersicht der potenziellen Minderwerte.</li>
-            <li><b>Handlungsempfehlung:</b> Wir zeigen Ihnen, welche Schäden per Smart-Repair günstiger behoben werden können.</li>
-        </ol>
+        <div style="font-size: 1.1rem; line-height: 1.8;">
+        1️⃣ <b>Termin vereinbaren:</b> Wir kommen zu Ihnen oder Sie zu uns.<br>
+        2️⃣ <b>Digitaler Scan:</b> Präzise Aufnahme aller Fahrzeugbereiche.<br>
+        3️⃣ <b>Bericht erhalten:</b> Sofortige Übersicht über Mängel & Kosten.<br>
+        4️⃣ <b>Reparatur-Option:</b> Smart-Repair Empfehlungen nutzen & sparen.
         </div>
         """, unsafe_allow_html=True)
 
     with col_info:
         st.markdown("""
-        <div class="feature-box">
-            <h3>Ihre Vorteile</h3>
-            <p>✅ <b>Hohe Ersparnis:</b> Vermeiden Sie überteuerte pauschale Abrechnungen der Leasinggeber.</p>
-            <p>✅ <b>Volle Transparenz:</b> Sie wissen genau, in welchem Zustand Ihr Fahrzeug zurückgeht.</p>
-            <p>✅ <b>Keine Überraschungen:</b> Ein unabhängiges Gutachten als Argumentationsgrundlage.</p>
-            <p>✅ <b>Zeitgewinn:</b> Schnelle Abwicklung durch digitale Protokollierung.</p>
+        <div class="feature-card">
+            <h3 style="color: #002b5c; margin-top:0;">Warum ReturnGuard?</h3>
+            <p style="font-size: 1.1rem;">Leasinggeber berechnen bei der Rückgabe oft überhöhte Pauschalpreise für kleinste Schäden. Wir geben Ihnen die <b>Kontrolle zurück</b>.</p>
+            <hr>
+            <p>✅ <b>Ersparnis:</b> Bis zu 60% weniger Nachzahlungskosten.</p>
+            <p>✅ <b>Sicherheit:</b> Unabhängiges Gutachten als Beweismittel.</p>
+            <p>✅ <b>Expertise:</b> Bewertung nach modernsten Standards.</p>
+            <p>✅ <b>Schnelligkeit:</b> Digitales Protokoll in Echtzeit.</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.write("---")
-        st.subheader("Interesse geweckt?")
-        st.write("Geben Sie Ihre E-Mail an. Wir senden Ihnen eine Checkliste für die Rückgabe und melden uns für eine Beratung.")
-        email_lp = st.text_input("E-Mail-Adresse:", placeholder="beispiel@mail.de")
-        if st.button("Jetzt Informationen anfordern"):
+        st.markdown('<h3 style="color: #002b5c;">Jetzt Beratung anfordern</h3>', unsafe_allow_html=True)
+        email_lp = st.text_input("E-Mail-Adresse für Ihr Angebot:", placeholder="name@firma.de")
+        
+        c1, c2 = st.columns([1,1])
+        if c1.button("📩 Informationen senden", use_container_width=True):
             if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email_lp):
-                st.success("Erfolgreich! Wir haben Ihre Anfrage erhalten.")
+                st.success("Anfrage erfolgreich versendet!")
             else:
-                st.error("Bitte eine gültige E-Mail eingeben.")
+                st.error("Ungültige E-Mail.")
 
-# --- 4. SEITE: EXPERTEN-CHECK ---
+# --- 4. SEITE: EXPERTEN-CHECK (INTERN) ---
 else:
-    # (Hier bleibt dein bewährter Experten-Code mit Halter, Technik, Check und Export stehen)
-    st.title("🛠️ Interner Experten-Bereich")
-    st.info("Bitte nutzen Sie die Tabs für die Fahrzeugaufnahme.")
+    st.markdown('<h1 class="main-title">Experten-System</h1>', unsafe_allow_html=True)
     
     tab_halter, tab_tech, tab_check, tab_export = st.tabs(["👤 Halter", "🚗 Technik", "📋 Check", "📊 Export"])
     
@@ -91,7 +156,7 @@ else:
         c1, c2 = st.columns(2)
         c1.selectbox("Anrede", ["Firma", "Herr", "Frau"])
         c2.text_input("Name / Firma")
-        st.text_area("Interne Bemerkung")
+        st.text_area("Interne Bemerkung (Alpha Controller)")
 
     with tab_tech:
         st.subheader("Fahrzeugdetails")
@@ -111,9 +176,9 @@ else:
     with tab_check:
         st.subheader("Zustandsbewertung")
         sections = {
-            "Außenhaut": ["Lack", "Dellen", "Kratzer"],
-            "Räder": ["Reifen", "Felgen"],
-            "Innenraum": ["Polster", "Geruch"]
+            "Außenhaut & Karosserie": ["Lackzustand", "Dellen/Beulen", "Kratzer", "Steinschläge"],
+            "Fahrwerk & Räder": ["Reifenprofil", "Felgenzustand", "Bremsanlage"],
+            "Innenraum & Technik": ["Polster/Leder", "Geruch/Raucher", "Armaturen", "Fehlerspeicher"]
         }
         costs = {}
         for sec, items in sections.items():
@@ -128,6 +193,8 @@ else:
     with tab_export:
         total = sum(costs.values())
         st.metric("Gesamt-Minderwert", f"{total} €")
-        if st.button("🏁 Gutachten abschließen"):
-            st.success("Bericht wurde generiert.")
-            
+        if st.button("🏁 Gutachten finalisieren"):
+            if len(st.session_state.get('vin_clean', '')) != 17:
+                st.error("FIN ungültig!")
+            else:
+                st.success("Zustandsbericht erfolgreich generiert.")
