@@ -5,7 +5,6 @@ import re
 # --- 1. KONFIGURATION & DESIGN ---
 st.set_page_config(page_title="ReturnGuard Pro", layout="wide")
 
-# CSS für professionelles Branding und farbige Buttons
 st.markdown("""
     <style>
     .stTabs [data-baseweb="tab-list"] { gap: 8px; }
@@ -27,6 +26,12 @@ st.markdown("""
     div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(3)[aria-checked="true"] {
         background-color: #28a745 !important; color: white !important;
     }
+    
+    /* KM-Stand: Entfernt die Pfeile im Nummernfeld */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; margin: 0; 
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -45,90 +50,61 @@ with tab_halter:
     name = c2.text_input("Name / Firma")
     strasse = c1.text_input("Straße & Nr.")
     ort = c2.text_input("PLZ & Ort")
-    st.text_area("Interne Bemerkung", height=100)
+    st.text_area("Interne Bemerkung (Alpha Controller)", height=100)
 
-# --- 4. TAB: TECHNIK & FIN-FIX ---
+# --- 4. TAB: TECHNIK (DAT-Vorbereitung) ---
 with tab_tech:
     st.subheader("Fahrzeugdetails")
     t1, t2 = st.columns(2)
     
-    # Initialisierung des Session States für die FIN, falls noch nicht vorhanden
-    if 'vin_clean' not in st.session_state:
-        st.session_state['vin_clean'] = ""
-
-    # Die Eingabe erfolgt in das Feld. 
-    # Durch 'on_change' stellen wir sicher, dass die Umwandlung sofort beim Verlassen greift.
+    # FIN-Logik mit automatischer Großschreibung
+    if 'vin_clean' not in st.session_state: st.session_state['vin_clean'] = ""
     def format_vin():
-        raw = st.session_state.vin_input_field
-        # Entferne Sonderzeichen und mache alles GROSS
-        st.session_state.vin_clean = re.sub(r'[^a-zA-Z0-9]', '', raw).upper()
-        # Schreibe den sauberen Wert zurück in das Eingabefeld
+        st.session_state.vin_clean = re.sub(r'[^a-zA-Z0-9]', '', st.session_state.vin_input_field).upper()
         st.session_state.vin_input_field = st.session_state.vin_clean
 
-    vin = t1.text_input(
-        "FIN (17 Zeichen)", 
-        max_chars=17, 
-        key="vin_input_field", 
-        on_change=format_vin,
-        help="Wird beim Verlassen des Feldes automatisch großgeschrieben."
-    )
-    
-    # Aktueller Stand der bereinigten FIN für die Logik
-    final_vin = st.session_state.get('vin_clean', '')
-
-    # Visuelles Feedback
-    if final_vin:
-        if len(final_vin) < 17:
-            t1.warning(f"⚠️ FIN unvollständig: {len(final_vin)}/17 Zeichen")
-        elif len(final_vin) == 17:
-            t1.success(f"✅ FIN korrekt: {final_vin}")
-    
+    final_vin = t1.text_input("FIN (17 Zeichen)", max_chars=17, key="vin_input_field", on_change=format_vin)
     kz = t2.text_input("Amtliches Kennzeichen")
-    km = t1.number_input("Kilometerstand", value=0, step=1)
-    ez = t2.text_input("Erstzulassung (MM/JJJJ)")
+    
+    # KM-Stand als sauberes Eingabefeld
+    km = t1.number_input("Kilometerstand", min_value=0, step=1, format="%d")
+    
+    # EZ als echtes Datum (Tag Monat Jahr)
+    ez = t2.date_input("Erstzulassung", value=datetime.date(2020, 1, 1), format="DD.MM.YYYY")
     
     st.divider()
     t3, t4 = st.columns(2)
-    t3.selectbox("Getriebeart", ["Schaltgetriebe", "Automatik", "Doppelkupplung"])
-    t4.selectbox("Kraftstoff", ["Benzin", "Diesel", "Elektro", "Hybrid"])
-    t3.number_input("CO2 g/km", value=0)
-    t4.selectbox("Umweltplakette", ["Grün (4)", "Gelb (3)", "Rot (2)", "Keine"])
+    getriebe = t3.selectbox("Getriebeart", ["Schaltung", "Automatik"])
+    euro_norm = t4.selectbox("EURO Norm", ["Euro 6d", "Euro 6", "Euro 5", "Euro 4", "Elektro/Null Emission"])
 
-# --- 5. TAB: EXPERT-CHECK (MODULAR) ---
+# --- 5. TAB: EXPERT-CHECK ---
 with tab_check:
-    st.subheader("Zustandsbewertung")
-    
+    st.subheader("Zustandsbewertung (Vest Standard)")
     sections = {
         "Außenhaut & Karosserie": ["Lackzustand", "Dellen/Beulen", "Kratzer", "Steinschläge"],
         "Fahrwerk & Räder": ["Reifenprofil", "Felgenzustand", "Bremsanlage"],
         "Verglasung & Optik": ["Windschutzscheibe", "Beleuchtung", "Spiegel"],
         "Innenraum & Technik": ["Polster/Leder", "Geruch/Raucher", "Armaturen", "Fehlerspeicher"]
     }
-
     repair_costs = {}
     for section_name, items in sections.items():
         with st.expander(f"📦 {section_name}", expanded=True):
             for item in items:
-                choice = st.segmented_control(
-                    label=f"**{item}**",
-                    options=["Mangel", "Gebrauch", "i.O."],
-                    key=f"check_{item}",
-                    default="i.O."
-                )
+                choice = st.segmented_control(label=f"**{item}**", options=["Mangel", "Gebrauch", "i.O."], key=f"check_{item}", default="i.O.")
                 if choice == "Mangel":
-                    repair_costs[item] = st.number_input(f"Minderwert {item} (€)", min_value=0, step=50, key=f"cost_{item}")
+                    repair_costs[item] = st.number_input(f"Minderwert {item} (€)", min_value=0, step=50, key=f"cost_{item}", format="%d")
                 else:
                     repair_costs[item] = 0
 
 # --- 6. TAB: EXPORT ---
 with tab_export:
     st.subheader("Zusammenfassung")
-    total_minderwert = sum(repair_costs.values())
-    st.metric("Gesamt-Minderwert", f"{total_minderwert} €")
+    total = sum(repair_costs.values())
+    st.metric("Voraussichtlicher Minderwert", f"{total} €")
     
     if st.button("🏁 GUTACHTEN FINALISIEREN"):
-        if len(final_vin) != 17:
-            st.error(f"❌ Abbruch: FIN hat nur {len(final_vin)} von 17 Stellen.")
+        if len(st.session_state.get('vin_clean', '')) != 17:
+            st.error("❌ Die FIN ist unvollständig.")
         else:
             st.balloons()
-            st.success(f"Bericht für {final_vin} erstellt.")
+            st.success(f"Bericht für {kz} (FIN: {st.session_state.vin_clean}) erstellt.")
