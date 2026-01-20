@@ -113,9 +113,9 @@ if st.session_state.current_page == "Kunde":
 
     with c2:
         # Einbindung des hochgeladenen Bildes ohne weißen Überhang
-        st.image("Gemini_Generated_Image_zdbbxqzdbbxqzdbb.jpg", 
-                 caption="Unsere digitale Experten-Analyse", 
-                 use_container_width=True)
+        st.image("analyse.jpg", 
+             caption="Unsere digitale Experten-Analyse", 
+             use_container_width=True)
 
     st.write("---")
     
