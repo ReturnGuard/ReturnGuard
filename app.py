@@ -5,70 +5,87 @@ import re
 # --- 1. KONFIGURATION & DESIGN ---
 st.set_page_config(page_title="ReturnGuard", layout="wide")
 
-# CSS für das Design (Landingpage & Buttons)
 st.markdown("""
     <style>
-    /* Design für die Landingpage-Cards */
-    .feature-card {
-        padding: 20px;
-        border-radius: 10px;
-        background-color: #f0f2f6;
-        border-left: 5px solid #002b5c;
-        margin-bottom: 10px;
+    .stTabs [data-baseweb="tab-list"] { gap: 8px; }
+    .stTabs [data-baseweb="tab"] { height: 50px; background-color: #f0f2f6; border-radius: 5px; }
+    .stTabs [aria-selected="true"] { background-color: #002b5c !important; color: white !important; }
+
+    /* Farblogik für Experten-Check Buttons nebeneinander */
+    div[data-testid="stSegmentedControl"] button {
+        height: 55px !important;
+        font-weight: bold !important;
+        flex: 1 !important;
     }
-    /* Bekannte Farblogik für Experten-Buttons */
-    div[data-testid="stSegmentedControl"] button { height: 55px !important; font-weight: bold !important; flex: 1 !important; }
-    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(1)[aria-checked="true"] { background-color: #ff4b4b !important; color: white !important; }
-    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(2)[aria-checked="true"] { background-color: #ffa500 !important; color: white !important; }
-    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(3)[aria-checked="true"] { background-color: #28a745 !important; color: white !important; }
+    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(1)[aria-checked="true"] {
+        background-color: #ff4b4b !important; color: white !important;
+    }
+    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(2)[aria-checked="true"] {
+        background-color: #ffa500 !important; color: white !important;
+    }
+    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(3)[aria-checked="true"] {
+        background-color: #28a745 !important; color: white !important;
+    }
+    
+    /* KM-Stand & Kosten: Entfernt die Pfeile (+/-) im Nummernfeld */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; margin: 0; 
+    }
+
+    /* Landingpage Styling */
+    .hero-section { background-color: #002b5c; padding: 40px; border-radius: 15px; color: white; text-align: center; margin-bottom: 30px; }
+    .feature-box { background-color: #ffffff; padding: 20px; border-radius: 10px; border: 1px solid #ddd; height: 100%; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. NAVIGATION LOGIK ---
-# Wir nutzen die Seitenleiste, um zwischen Kunde und Experte zu wählen
-page = st.sidebar.selectbox("Bereich wählen", ["🏠 Kunden-Portal", "🛠️ Experten-Check (Intern)"])
-
-# --- 3. SEITE: LANDINGPAGE (KUNDE) ---
-if page == "🏠 Kunden-Portal":
+# --- 2. NAVIGATION ---
+with st.sidebar:
     st.title("🛡️ ReturnGuard")
-    st.subheader("Sorgenfreie Leasingrückgabe durch professionelle Vorab-Prüfung.")
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
+    page = st.selectbox("Menü", ["🏠 Kunden-Portal", "🛠️ Experten-Check (Intern)"])
+    st.write("---")
+    st.caption("Version 1.2.0 - 2026")
+
+# --- 3. SEITE: KUNDEN-PORTAL (LANDINGPAGE) ---
+if page == "🏠 Kunden-Portal":
+    st.markdown('<div class="hero-section"><h1>🛡️ ReturnGuard</h1><p style="font-size: 1.5rem;">Sicherheit bei Ihrer Leasingrückgabe</p></div>', unsafe_allow_html=True)
+
+    col_img, col_info = st.columns([0.6, 0.4])
+
+    with col_img:
+        st.subheader("Ihre Analyse im Überblick")
+        # Platzhalter für die 2D Fahrzeugansicht
+        st.image("https://img.freepik.com/vektoren-kostenlos/auto-draufsicht-mit-realistischem-design_23-2147879483.jpg", 
+                 caption="Unsere Experten prüfen alle kritischen Zonen Ihres Fahrzeugs.")
+        
         st.markdown("""
-        <div class="feature-card">
-            <h4>Sicherheit vor Nachzahlungen</h4>
-            <p>Wir prüfen Ihr Fahrzeug nach offiziellen Standards, bevor es der Leasinggeber tut.</p>
-        </div>
-        <div class="feature-card">
-            <h4>Smart-Repair Empfehlungen</h4>
-            <p>Sparen Sie bis zu 60% der Kosten durch gezielte Instandsetzung vor der Rückgabe.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        **Was wir prüfen:**
+        * **Karosserie:** Dellen, Kratzer und Lackmängel.
+        * **Räder:** Felgenzustand und Reifenprofiltiefe.
+        * **Innenraum:** Polsterzustand und technische Funktionen.
+        """)
+
+    with col_info:
+        st.markdown('<div class="feature-box"><h3>Ihre Vorteile</h3>'
+                    '<ul><li><b>Kostenersparnis:</b> Teure Nachzahlungen vermeiden.</li>'
+                    '<li><b>Transparenz:</b> Unabhängiger Zustandsbericht.</li>'
+                    '<li><b>Smart-Repair:</b> Gezielte Reparaturempfehlungen.</li></ul></div>', unsafe_allow_html=True)
         
-        st.divider()
-        st.write("### Jetzt Informationen anfordern")
-        email = st.text_input("Ihre E-Mail-Adresse für ein unverbindliches Angebot:")
-        
-        if st.button("Anfrage senden"):
-            if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
-                st.success(f"Vielen Dank! Ein Experte wird sich unter {email} bei Ihnen melden.")
+        st.write("---")
+        st.write("### Jetzt Kontakt aufnehmen")
+        email_lp = st.text_input("E-Mail-Adresse für weitere Informationen:")
+        if st.button("Unverbindlich anfragen"):
+            if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email_lp):
+                st.success(f"Vielen Dank! Wir haben Ihre E-Mail ({email_lp}) erhalten.")
             else:
                 st.error("Bitte geben Sie eine gültige E-Mail-Adresse ein.")
 
-    with col2:
-        st.info("**Kontakt**\n\n📞 +49 (0) 123 456 78\n\n📧 info@returnguard.de\n\n📍 Berlin / Hamburg / München")
-
-# --- 4. SEITE: EXPERTEN-CHECK (UNSER GRUNDGERÜST) ---
-elif page == "🛠️ Experten-Check (Intern)":
-    st.title("🛡️ ReturnGuard - Experten-System")
+# --- 4. SEITE: EXPERTEN-CHECK (INTERN) ---
+else:
+    st.title("🛠️ Experten-System")
     
-    tab_halter, tab_tech, tab_check, tab_export = st.tabs([
-        "👤 Halter", "🚗 Technik", "📋 Expert-Check", "📊 Export"
-    ])
+    tab_halter, tab_tech, tab_check, tab_export = st.tabs(["👤 Halter", "🚗 Technik", "📋 Check", "📊 Export"])
 
-    # --- TAB: HALTER ---
     with tab_halter:
         st.subheader("Halterinformationen")
         c1, c2 = st.columns(2)
@@ -76,7 +93,6 @@ elif page == "🛠️ Experten-Check (Intern)":
         name = c2.text_input("Name / Firma")
         st.text_area("Interne Bemerkung", height=100)
 
-    # --- TAB: TECHNIK (Ihre optimierten Felder) ---
     with tab_tech:
         st.subheader("Fahrzeugdetails")
         t1, t2 = st.columns(2)
@@ -95,12 +111,13 @@ elif page == "🛠️ Experten-Check (Intern)":
         getriebe = t1.selectbox("Getriebeart", ["Schaltung", "Automatik"])
         euro_norm = t2.selectbox("EURO Norm", ["Euro 6d", "Euro 6", "Euro 5", "Euro 4", "Elektro"])
 
-    # --- TAB: CHECK ---
     with tab_check:
         st.subheader("Zustandsbewertung")
         sections = {
-            "Außenhaut & Karosserie": ["Lackzustand", "Dellen/Beulen", "Kratzer"],
-            "Innenraum & Technik": ["Polster/Leder", "Geruch/Raucher", "Fehlerspeicher"]
+            "Außenhaut & Karosserie": ["Lackzustand", "Dellen/Beulen", "Kratzer", "Steinschläge"],
+            "Fahrwerk & Räder": ["Reifenprofil", "Felgenzustand", "Bremsanlage"],
+            "Verglasung & Optik": ["Windschutzscheibe", "Beleuchtung", "Spiegel"],
+            "Innenraum & Technik": ["Polster/Leder", "Geruch/Raucher", "Armaturen", "Fehlerspeicher"]
         }
         repair_costs = {}
         for sec, items in sections.items():
@@ -108,16 +125,15 @@ elif page == "🛠️ Experten-Check (Intern)":
                 for item in items:
                     choice = st.segmented_control(label=f"**{item}**", options=["Mangel", "Gebrauch", "i.O."], key=f"check_{item}", default="i.O.")
                     if choice == "Mangel":
-                        repair_costs[item] = st.number_input(f"Kosten {item} (€)", min_value=0, key=f"cost_{item}", format="%d")
+                        repair_costs[item] = st.number_input(f"Minderwert {item} (€)", min_value=0, key=f"cost_{item}", format="%d")
                     else:
                         repair_costs[item] = 0
 
-    # --- TAB: EXPORT ---
     with tab_export:
         total = sum(repair_costs.values())
-        st.metric("Gesamt-Minderwert", f"{total} €")
-        if st.button("🏁 Protokoll abschließen"):
+        st.metric("Berechneter Minderwert", f"{total} €")
+        if st.button("🏁 Protokoll finalisieren"):
             if len(st.session_state.get('vin_clean', '')) != 17:
-                st.error("FIN unvollständig!")
+                st.error("FIN ungültig!")
             else:
-                st.success("Daten finalisiert.")
+                st.success(f"Zustandsbericht für {st.session_state.vin_clean} erstellt.")
