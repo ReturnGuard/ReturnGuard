@@ -96,7 +96,7 @@ if st.session_state.current_page == "Kunde":
     with c2:
         # HIER DEIN BILD EINTRAGEN
         # Falls du das Bild auf GitHub hast, ersetze die URL unten:
-        st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvmcJdv7JcFTkfuRcRhPjpLUrvU_55yrOxEw&s", 
+        st.image("document.querySelector("#primary > div.main > section.postcontent > div > div > div.postcontent-img > img")", 
                  use_container_width=True)
 
     st.write("---")
