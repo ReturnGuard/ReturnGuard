@@ -96,7 +96,7 @@ if st.session_state.current_page == "Kunde":
     with c2:
         # HIER DEIN BILD EINTRAGEN
         # Falls du das Bild auf GitHub hast, ersetze die URL unten:
-        st.image("https://raw.githubusercontent.com/Frankyboy1984/ReturnGuard/main/hyper_realistic_car_analysis.png", 
+        st.image("https://www.shutterstock.com/de/image-photo/lets-assess-your-vehicle-cropped-portrait-2293217689?trackingId=5492e738-d485-4334-b697-94b8741e124d&listId=searchResults", 
                  caption="Präzise Zustandsanalyse", 
                  use_container_width=True)
 
