@@ -93,7 +93,7 @@ st.write("---")
 if st.session_state.current_page == "Kunde":
     st.markdown('<div class="main-card">', unsafe_allow_html=True)
     
-    # Hero Sektion: Fokus auf das Analyse-Bild
+  # --- Hero Sektion: Fokus auf das Analyse-Bild ---
     c1, c2 = st.columns([1.1, 1], gap="large")
     
     with c1:
@@ -111,8 +111,8 @@ if st.session_state.current_page == "Kunde":
         if st.button("Jetzt Check anfragen", use_container_width=True):
             st.toast("E-Mail Feld wird fokussiert...")
 
-   with c2:
-        # Hier müssen genau 4 Leerzeichen am Anfang der nächsten Zeile stehen
+    with c2:
+        # Achte darauf, dass dieses Bild 'analyse.png' nun korrekt hochgeladen ist!
         st.image("analyse.png", 
                  caption="Unsere digitale Experten-Analyse", 
                  use_container_width=True)
