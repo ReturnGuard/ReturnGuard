@@ -96,7 +96,7 @@ if st.session_state.current_page == "Kunde":
     with c2:
         # HIER DEIN BILD EINTRAGEN
         # Falls du das Bild auf GitHub hast, ersetze die URL unten:
-        st.image("document.querySelector("#primary > div.main > section.postcontent > div > div > div.postcontent-img > img")", 
+        st.image("https://kfz-gutachtenzentrale.de/tipps-ratgeber/tipps-fuer-autofahrer-details/fahrzeugbewertung-leicht-gemacht-tipps-fuer-kaeufer-und-verkaeufer/")", 
                  use_container_width=True)
 
     st.write("---")
