@@ -2,7 +2,7 @@ import streamlit as st
 import datetime
 import re
 
-# --- 1. KONFIGURATION (Das mobile.de Card-Layout) ---
+# --- 1. KONFIGURATION & DESIGN (Mobile.de Look) ---
 st.set_page_config(page_title="ReturnGuard", layout="centered", initial_sidebar_state="collapsed")
 
 st.markdown("""
@@ -12,7 +12,8 @@ st.markdown("""
     /* Verhindert das Abschneiden der Headline oben */
     .block-container {
         max-width: 1100px !important;
-        padding-top: 4rem !important;
+        padding-top: 5rem !important; 
+        padding-bottom: 2rem !important;
     }
 
     /* Die weiße Haupt-Karte */
@@ -33,14 +34,19 @@ st.markdown("""
         margin-bottom: 25px;
     }
 
-    /* Button-Design wie bei Profi-Portalen */
+    /* Button-Design: Professionell & Dunkelblau */
     div.stButton > button {
         border-radius: 8px;
         font-weight: 600;
         background-color: #002b5c;
         color: white;
         border: none;
-        height: 3.2rem;
+        height: 3.5rem;
+        transition: 0.3s;
+    }
+    div.stButton > button:hover {
+        background-color: #004080;
+        border: none;
     }
     
     /* Experten-Check Ampel-Logik */
@@ -51,7 +57,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. HEADER NAVIGATION ---
+# --- 2. TOP NAVIGATION (Header) ---
 if 'current_page' not in st.session_state:
     st.session_state.current_page = "Kunde"
 
@@ -75,63 +81,74 @@ st.write("---")
 if st.session_state.current_page == "Kunde":
     st.markdown('<div class="main-card">', unsafe_allow_html=True)
     
-    # Layout wie auf dem Bild: Text links, Fahrzeug rechts
-    c1, c2 = st.columns([1.2, 1], gap="large")
+    # Layout: Text links, Fahrzeug-Analyse rechts
+    c1, c2 = st.columns([1.1, 1], gap="large")
     
     with c1:
-        st.markdown('<h1 class="hero-title">Leasingrückgabe ohne Risiko</h1>', unsafe_allow_html=True)
-        st.write("### Schützen Sie sich vor hohen Nachzahlungen durch unseren unabhängigen Zustands-Check.")
+        st.markdown('<h1 class="hero-title">Keine Angst vor der Leasing-Rückgabe</h1>', unsafe_allow_html=True)
+        st.write("### Schützen Sie sich vor hohen Nachzahlungen durch unseren unabhängigen Vorab-Check.")
         
         st.markdown("""
         <div style="margin: 30px 0;">
-        <p style="font-size: 1.2rem;">🛡️ <b>Unabhängig:</b> Bewertung nach offiziellen Standards.</p>
+        <p style="font-size: 1.2rem;">🛡️ <b>Unabhängig:</b> Wir bewerten objektiv nach offiziellen Standards.</p>
         <p style="font-size: 1.2rem;">📊 <b>Transparent:</b> Sofort-Bericht mit allen Minderwerten.</p>
-        <p style="font-size: 1.2rem;">💰 <b>Ersparnis:</b> Reparaturtipps statt teurer Pauschalen.</p>
+        <p style="font-size: 1.2rem;">💰 <b>Ersparnis:</b> Gezielte Reparaturtipps statt teurer Pauschalen.</p>
         </div>
         """, unsafe_allow_html=True)
         
         if st.button("Jetzt Check anfragen", use_container_width=True):
-            st.toast("E-Mail unten eingeben!")
+            st.toast("Geben Sie unten Ihre E-Mail an!")
 
     with c2:
-        # Hier fügen Sie den kopierten Link zwischen die Anführungszeichen ein
-    st.image("https://kfz-gutachtenzentrale.de/wp-content/uploads/2024/10/tuev-sued-connected-services-8071-2.jpg", 
-             caption="Digitale Schadensanalyse", 
-             use_container_width=True)
-    st.write("---")
-    
-    # Der ReturnGuard Prozess
-    st.subheader("So funktioniert ReturnGuard")
-    p1, p2, p3 = st.columns(3)
-    p1.info("**1. Aufnahme**\nExperte kommt zu Ihnen.")
-    p2.info("**2. Analyse**\nDigitale Zustandsaufnahme.")
-    p3.info("**3. Sicherheit**\nKostentransparenz erhalten.")
+        # Einbindung des hochgeladenen Bildes (Fahrzeug mit Markierungen)
+        st.image("https://raw.githubusercontent.com/Frankyboy1984/ReturnGuard/main/Gemini_Generated_Image_zdbbxqzdbbxqzdbb.jpg", 
+                 caption="Digitale Schadensidentifikation an allen Bauteilen", 
+                 use_container_width=True)
 
     st.write("---")
     
-    # Lead-Sektion
-    st.subheader("Interesse? Jetzt Kontakt aufnehmen.")
-    e_col1, e_col2 = st.columns([2, 1])
-    email_lp = e_col1.text_input("Ihre E-Mail-Adresse", placeholder="name@beispiel.de", label_visibility="collapsed")
-    if e_col2.button("Informationen anfordern", use_container_width=True):
+    # Prozess-Schritte
+    st.subheader("Ihr Weg zur sicheren Rückgabe")
+    a1, a2, a3 = st.columns(3)
+    a1.info("**1. Termin**\nExperten-Besuch vereinbaren.")
+    a2.info("**2. Analyse**\nZustandsaufnahme per App.")
+    a3.info("**3. Sicherheit**\nMit Fakten zur Rückgabe.")
+
+    st.write("---")
+    
+    # Lead-Formular
+    st.subheader("Interesse? Wir beraten Sie gerne.")
+    e1, e2 = st.columns([2, 1])
+    email_lp = e1.text_input("Ihre E-Mail-Adresse", placeholder="beispiel@firma.de", label_visibility="collapsed")
+    if e2.button("Absenden", use_container_width=True):
         if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email_lp):
-            st.success("Anfrage erhalten! Wir melden uns.")
+            st.success("Erfolgreich! Wir melden uns in Kürze.")
         else:
             st.error("E-Mail ungültig.")
             
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 4. SEITE: EXPERTEN-CHECK ---
+# --- 4. SEITE: EXPERTEN-CHECK (Intern) ---
 else:
     st.markdown('<div class="main-card">', unsafe_allow_html=True)
     st.title("🛡️ Experten-Zustandsbericht")
     
     tabs = st.tabs(["👤 Halter", "🚗 Technik", "📋 Check", "📊 Export"])
     
-    # Hier folgen die bereits erstellten Formularfelder für den Experten...
+    with tabs[0]:
+        st.subheader("Stammdaten")
+        st.selectbox("Anrede", ["Firma", "Herr", "Frau"])
+        st.text_input("Vollständiger Name")
+
+    with tabs[1]:
+        st.subheader("Fahrzeugdaten")
+        st.text_input("FIN (17 Zeichen)", max_chars=17)
+        st.number_input("Aktueller KM-Stand", min_value=0, format="%d")
+
     with tabs[2]:
-        st.subheader("Modularer Zustands-Check")
-        items = ["Karosserie", "Felgen/Reifen", "Innenraum"]
+        # Modulare Struktur für den Check [cite: 2026-01-20]
+        st.subheader("Punktuelle Bewertung")
+        items = ["Außenhaut & Karosserie", "Fahrwerk & Räder", "Verglasung & Optik", "Innenraum & Technik"]
         costs = {}
         for item in items:
             st.write(f"### {item}")
@@ -139,3 +156,13 @@ else:
             if choice == "Mangel":
                 costs[item] = st.number_input(f"Reparaturkosten {item} (€)", key=f"v_{item}", format="%d")
             else: costs[item] = 0
+
+    with tabs[3]:
+        total = sum(costs.values())
+        st.metric("Gesamter Minderwert", f"{total} €")
+        if st.button("Protokoll abschließen"):
+            st.balloons()
+            st.success("Zustandsbericht wurde im System gespeichert.")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+    
