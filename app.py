@@ -112,10 +112,7 @@ if st.session_state.current_page == "Kunde":
             st.toast("E-Mail Feld wird fokussiert...")
 
     with c2:
-    # WICHTIG: Die Endung muss .png sein, da deine Datei so heißt
-    st.image("analyse.png", 
-             caption="Unsere digitale Experten-Analyse", 
-             use_container_width=True)
+    st.image("analyse.png", caption="Unsere digitale Experten-Analyse", use_container_width=True)
 
     st.write("---")
     
