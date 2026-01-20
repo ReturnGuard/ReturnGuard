@@ -94,11 +94,10 @@ if st.session_state.current_page == "Kunde":
             st.toast("E-Mail unten eingeben!")
 
     with c2:
-        # HIER DEIN BILD EINTRAGEN
-        # Falls du das Bild auf GitHub hast, ersetze die URL unten:
-        st.image("https://kfz-gutachtenzentrale.de/wp-content/uploads/2024/10/tuev-sued-connected-services-8071-2.jpg")", 
-                 use_container_width=True)
-
+        # Hier fügen Sie den kopierten Link zwischen die Anführungszeichen ein
+    st.image("https://kfz-gutachtenzentrale.de/wp-content/uploads/2024/10/tuev-sued-connected-services-8071-2.jpg", 
+             caption="Digitale Schadensanalyse", 
+             use_container_width=True)
     st.write("---")
     
     # Der ReturnGuard Prozess
