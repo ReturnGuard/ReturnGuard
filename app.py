@@ -1,93 +1,77 @@
 import streamlit as st
 from fpdf import FPDF
 
-# Konfiguration
 st.set_page_config(page_title="ReturnGuard Pro", layout="wide")
 
-# CSS für echte, farbige Buttons
+# DAS ERZWUNGENE FARB-DESIGN FÜR SEGMENTED CONTROL
 st.markdown("""
     <style>
-    /* Styling für die Radio-Buttons als große Block-Elemente */
-    div[data-testid="stWidgetLabel"] {
-        font-size: 1.2rem !important;
+    /* 1. Grund-Styling der Buttons nebeneinander */
+    div[data-testid="stSegmentedControl"] button {
+        height: 55px !important;
         font-weight: bold !important;
-        margin-bottom: 10px !important;
+        flex: 1 !important; /* Macht alle Buttons gleich breit */
+    }
+
+    /* 2. MANGEL (Rot) - Wenn der erste Button aktiv ist */
+    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(1)[aria-checked="true"] {
+        background-color: #ff4b4b !important;
+        color: white !important;
+    }
+
+    /* 3. GEBRAUCH (Gelb) - Wenn der zweite Button aktiv ist */
+    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(2)[aria-checked="true"] {
+        background-color: #ffa500 !important;
+        color: white !important;
+    }
+
+    /* 4. I.O. (Grün) - Wenn der dritte Button aktiv ist */
+    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(3)[aria-checked="true"] {
+        background-color: #28a745 !important;
+        color: white !important;
     }
     
-    /* Wir stylen die Radio-Optionen um */
-    div[data-testid="stRadio"] div[role="radiogroup"] {
-        flex-direction: row !important;
-        gap: 10px;
-    }
-
-    div[data-testid="stRadio"] label {
-        background-color: #e0e0e0; /* Standard Grau */
-        padding: 15px 25px !important;
-        border-radius: 10px !important;
-        border: 2px solid #ccc !important;
-        width: 100%;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    /* Farbe wenn ausgewählt: Erster Button (Mangel) */
-    div[data-testid="stRadio"] div[role="radiogroup"] > div:nth-child(1) input[checked] + div > div > p::before {
-        content: "🚨 ";
-    }
-    div[data-testid="stRadio"] div[role="radiogroup"] > div:nth-child(1) label[data-baseweb="radio"] div:first-child { display: none; }
-    div[data-testid="stRadio"] div[role="radiogroup"] > div:nth-child(1) input[checked] + div {
-        background-color: #ff4b4b !important; /* ROT */
-        color: white !important;
-    }
-
-    /* Farbe wenn ausgewählt: Zweiter Button (Gebrauch) */
-    div[data-testid="stRadio"] div[role="radiogroup"] > div:nth-child(2) label[data-baseweb="radio"] div:first-child { display: none; }
-    div[data-testid="stRadio"] div[role="radiogroup"] > div:nth-child(2) input[checked] + div {
-        background-color: #ffa500 !important; /* GELB */
-        color: white !important;
-    }
-
-    /* Farbe wenn ausgewählt: Dritter Button (i.O.) */
-    div[data-testid="stRadio"] div[role="radiogroup"] > div:nth-child(3) label[data-baseweb="radio"] div:first-child { display: none; }
-    div[data-testid="stRadio"] div[role="radiogroup"] > div:nth-child(3) input[checked] + div {
-        background-color: #28a745 !important; /* GRÜN */
-        color: white !important;
+    /* Hover-Effekte stabilisieren */
+    div[data-testid="stSegmentedControl"] button:hover {
+        border-color: #002b5c !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🛡️ ReturnGuard Mobile")
+st.title("🛡️ ReturnGuard - Experten-Check")
 
-# Sektionen definieren
+# Workflow in Sektionen (Modular wie gewünscht)
 sections = {
     "Außenhaut": ["Lackzustand", "Dellen/Beulen", "Kratzer"],
-    "Räder": ["Reifenprofil", "Felgenzustand"]
+    "Räder/Fahrwerk": ["Reifenprofil", "Felgenzustand"]
 }
 
-costs = {}
+check_results = {}
+repair_costs = {}
 
 for section, items in sections.items():
-    st.header(section)
+    st.subheader(section)
     for item in items:
-        # Wir nutzen st.radio, das wir per CSS oben "umgebaut" haben
-        choice = st.radio(
-            f"{item}:",
+        # Hier ist das schöne Element nebeneinander
+        choice = st.segmented_control(
+            label=f"**{item}**",
             options=["Mangel", "Gebrauch", "i.O."],
             key=f"check_{item}",
-            index=2, # Standardmäßig auf i.O.
-            horizontal=True
+            default="i.O."
         )
+        check_results[item] = choice
         
+        # Smart-Repair Feld nur bei Mangel
         if choice == "Mangel":
-            costs[item] = st.number_input(f"Kosten für {item} (€)", min_value=0, step=50, key=f"cost_{item}")
+            repair_costs[item] = st.number_input(f"Kosten {item} (€)", min_value=0, step=50, key=f"cost_{item}")
         else:
-            costs[item] = 0
+            repair_costs[item] = 0
     st.divider()
 
-# Zusammenfassung
-total = sum(costs.values())
-st.metric("Gesamter Minderwert", f"{total} €")
+# Auswertung
+total = sum(repair_costs.values())
+st.metric("Voraussichtlicher Minderwert", f"{total} €")
 
 if st.button("🏁 Protokoll abschließen"):
     st.balloons()
-    st.success(f"Bericht mit {total}€ Minderwert erstellt.")
+    st.success("Daten gespeichert. PDF kann generiert werden.")
