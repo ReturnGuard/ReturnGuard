@@ -96,7 +96,7 @@ if st.session_state.current_page == "Kunde":
     with c2:
         # HIER DEIN BILD EINTRAGEN
         # Falls du das Bild auf GitHub hast, ersetze die URL unten:
-        st.image("https://kfz-gutachtenzentrale.de/tipps-ratgeber/tipps-fuer-autofahrer-details/fahrzeugbewertung-leicht-gemacht-tipps-fuer-kaeufer-und-verkaeufer/")", 
+        st.image("https://kfz-gutachtenzentrale.de/wp-content/uploads/2024/10/tuev-sued-connected-services-8071-2.jpg")", 
                  use_container_width=True)
 
     st.write("---")
