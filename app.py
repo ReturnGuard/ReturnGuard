@@ -2,38 +2,53 @@ import streamlit as st
 import datetime
 import re
 
-# --- 1. KONFIGURATION & DESIGN ---
-st.set_page_config(page_title="ReturnGuard", layout="wide", initial_sidebar_state="expanded")
+# --- 1. KONFIGURATION & MOBILE-STYLE DESIGN ---
+# Wir nutzen layout="centered", um den Look von mobile.de (zentrierter Content, Platz für Banner) zu erzielen
+st.set_page_config(page_title="ReturnGuard", layout="centered", initial_sidebar_state="collapsed")
 
-# CSS für professionelles Branding und Navigation
 st.markdown("""
     <style>
-    /* Sidebar Navigation Fix */
-    [data-testid="stSidebarNav"] {display: none;} /* Standard-Nav ausblenden */
+    /* Hintergrundfarbe wie bei mobile.de (leichtes Grau) */
+    .stApp {
+        background-color: #f3f5f6;
+    }
     
-    /* Hauptüberschrift Design */
-    .main-title {
-        font-size: 4rem !important;
-        font-weight: 800;
-        color: #002b5c;
-        margin-bottom: 0px;
-    }
-    .sub-title {
-        font-size: 1.4rem;
-        color: #555;
+    /* Top Navigation Bar */
+    .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: white;
+        padding: 10px 20px;
+        border-bottom: 1px solid #e1e4e8;
         margin-bottom: 30px;
+        border-radius: 8px;
+    }
+    
+    .nav-links button {
+        border: none;
+        background: none;
+        color: #002b5c;
+        font-weight: bold;
+        padding: 10px 15px;
+        cursor: pointer;
     }
 
-    /* Feature Box Design */
-    .feature-card {
-        background-color: #f8f9fa;
-        padding: 35px;
-        border-radius: 15px;
-        border-left: 8px solid #002b5c;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    /* Card Design für den Content */
+    .main-card {
+        background-color: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
-    /* Experten-Check Ampel-Logik */
+    /* Überschriften Design */
+    h1 {
+        color: #002b5c;
+        font-weight: 800 !important;
+    }
+
+    /* Experten-Check Buttons (Ampel-Logik) */
     div[data-testid="stSegmentedControl"] button { height: 50px !important; flex: 1 !important; }
     div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(1)[aria-checked="true"] { background-color: #ff4b4b !important; color: white !important; }
     div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"]:nth-of-type(2)[aria-checked="true"] { background-color: #ffa500 !important; color: white !important; }
@@ -44,116 +59,105 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. SIDEBAR NAVIGATION ---
-with st.sidebar:
-    st.markdown('<h2 style="color: #002b5c; margin-bottom: 0;">🛡️ ReturnGuard</h2>', unsafe_allow_html=True)
-    st.write("Professional Leasing Protection")
+# --- 2. TOP NAVIGATION LOGIK ---
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = "Kunde"
+
+# Container für die obere Leiste (simuliert mobile.de Header)
+col_logo, col_nav = st.columns([1, 2])
+
+with col_logo:
+    st.markdown('<h2 style="color: #002b5c; margin:0;">🛡️ ReturnGuard</h2>', unsafe_allow_html=True)
+
+with col_nav:
+    # Buttons für die Navigation nebeneinander
+    c1, c2 = st.columns(2)
+    if c1.button("🏠 Privatkunden", use_container_width=True, type="primary" if st.session_state.current_page == "Kunde" else "secondary"):
+        st.session_state.current_page = "Kunde"
+        st.rerun()
+    if c2.button("🛠️ Experten-Check", use_container_width=True, type="primary" if st.session_state.current_page == "Experte" else "secondary"):
+        st.session_state.current_page = "Experte"
+        st.rerun()
+
+st.write("---")
+
+# --- 3. SEITE: KUNDEN-PORTAL (MOBILE.DE STYLE) ---
+if st.session_state.current_page == "Kunde":
+    st.markdown('<div class="main-card">', unsafe_allow_html=True)
+    
+    st.title("Was ist Ihr Fahrzeug bei der Rückgabe wert?")
+    st.write("Vermeiden Sie Nachzahlungen. Erhalten Sie jetzt eine professionelle Zustandsbewertung.")
+    
+    # Fahrzeugbild zentral (Draufsicht für Analyse)
+    st.image("https://img.freepik.com/free-vector/top-view-of-sedan-car-isolated-on-white-background_1308-72439.jpg", 
+             width=400, use_container_width=False)
+    
     st.write("---")
     
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = "Kunden-Portal"
-
-    # Navigation Buttons mit Farblogik
-    if st.button("🏠 Kunden-Portal", use_container_width=True, type="primary" if st.session_state.current_page == "Kunden-Portal" else "secondary"):
-        st.session_state.current_page = "Kunden-Portal"
-        st.rerun()
-        
-    if st.button("🛠️ Experten-Check (Intern)", use_container_width=True, type="primary" if st.session_state.current_page == "Experten-Check" else "secondary"):
-        st.session_state.current_page = "Experten-Check"
-        st.rerun()
+    # Vorteile im 2-Spalten-Layout
+    v1, v2 = st.columns(2)
+    with v1:
+        st.markdown("### ✅ Kosten-Check\nSofortige Kalkulation potenzieller Minderwerte.")
+    with v2:
+        st.markdown("### ✅ Smart-Repair\nTipps zur günstigen Instandsetzung.")
 
     st.write("---")
-    st.caption("© 2026 ReturnGuard System")
+    
+    # Lead-Formular
+    st.subheader("Jetzt Bericht anfordern")
+    email_lp = st.text_input("Ihre E-Mail-Adresse", placeholder="name@beispiel.de")
+    if st.button("Kostenlose Informationen senden", use_container_width=True):
+        if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email_lp):
+            st.success("Erfolg! Sie erhalten in Kürze Post von uns.")
+        else:
+            st.error("Bitte E-Mail prüfen.")
+            
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 3. SEITE: KUNDEN-PORTAL ---
-if st.session_state.current_page == "Kunden-Portal":
-    st.markdown('<h1 class="main-title">ReturnGuard</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-title">Schutz vor unerwarteten Kosten bei der Leasingrückgabe.</p>', unsafe_allow_html=True)
-
-    col_img, col_info = st.columns([1.1, 1], gap="large")
-
-    with col_img:
-        # Bild-Fix: Wir nutzen ein hochauflösendes Blueprint-Beispiel
-        st.image("https://img.freepik.com/free-vector/modern-car-top-view-design_23-2147915571.jpg", 
-                 use_container_width=True, caption="Analyse der kritischen Rückgabebereiche")
-        
-        st.markdown('<h3 style="color: #002b5c; border-bottom: 2px solid #002b5c; display: inline-block;">Der Ablauf</h3>', unsafe_allow_html=True)
-        st.markdown("""
-        <div style="font-size: 1.15rem; line-height: 1.9; margin-top: 15px;">
-        1️⃣ <b>Termin vereinbaren:</b> Flexibel bei Ihnen vor Ort.<br>
-        2️⃣ <b>Zustands-Scan:</b> Aufnahme aller Details per ReturnGuard-App.<br>
-        3️⃣ <b>Kosten-Check:</b> Sofortige Auswertung potenzieller Minderwerte.<br>
-        4️⃣ <b>Reparatur:</b> Gezielte Empfehlungen zur Kostenminimierung.
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col_info:
-        st.markdown("""
-        <div class="feature-card">
-            <h2 style="color: #002b5c; margin-top:0;">Warum ReturnGuard?</h2>
-            <p style="font-size: 1.1rem; color: #444;">Leasinggeber berechnen oft hohe Pauschalen. Wir geben Ihnen die <b>Fakten</b> für eine faire Rückgabe.</p>
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
-            <p style="font-size: 1.1rem;">✅ <b>Ersparnis:</b> Bis zu 60% geringere Nachzahlungen.</p>
-            <p style="font-size: 1.1rem;">✅ <b>Sicherheit:</b> Unabhängiger Bericht als Beweismittel.</p>
-            <p style="font-size: 1.1rem;">✅ <b>Expertise:</b> Bewertung nach modernsten Standards.</p>
-            <p style="font-size: 1.1rem;">✅ <b>Echtzeit:</b> Digitales Protokoll sofort verfügbar.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.write("---")
-        st.markdown('<h3 style="color: #002b5c;">Jetzt Beratung anfordern</h3>', unsafe_allow_html=True)
-        email_lp = st.text_input("Ihre E-Mail-Adresse für ein Angebot:", placeholder="name@firma.de")
-        
-        if st.button("📩 Informationen jetzt senden", use_container_width=True):
-            if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email_lp):
-                st.success("Erfolgreich! Wir melden uns in Kürze bei Ihnen.")
-            else:
-                st.error("Bitte prüfen Sie Ihre E-Mail-Adresse.")
-
-# --- 4. SEITE: EXPERTEN-CHECK ---
+# --- 4. SEITE: EXPERTEN-CHECK (INTERN) ---
 else:
-    st.markdown('<h1 class="main-title">Experten-System</h1>', unsafe_allow_html=True)
+    st.markdown('<div class="main-card">', unsafe_allow_html=True)
+    st.title("Experten-Bewertung")
     
     tab_halter, tab_tech, tab_check, tab_export = st.tabs(["👤 Halter", "🚗 Technik", "📋 Check", "📊 Export"])
     
     with tab_halter:
-        st.subheader("Halterinformationen")
-        c1, c2 = st.columns(2)
-        c1.selectbox("Anrede", ["Firma", "Herr", "Frau"])
-        c2.text_input("Name / Firma")
-        st.text_area("Interne Bemerkung")
+        st.subheader("Halterdaten")
+        st.selectbox("Anrede", ["Firma", "Herr", "Frau"])
+        st.text_input("Name")
+        st.text_area("Bemerkung")
 
     with tab_tech:
         st.subheader("Fahrzeugdetails")
-        t1, t2 = st.columns(2)
         if 'vin_clean' not in st.session_state: st.session_state['vin_clean'] = ""
         def format_vin():
             st.session_state.vin_clean = re.sub(r'[^a-zA-Z0-9]', '', st.session_state.vin_input_field).upper()
             st.session_state.vin_input_field = st.session_state.vin_clean
-        t1.text_input("FIN (17 Zeichen)", max_chars=17, key="vin_input_field", on_change=format_vin)
-        t2.text_input("Amtliches Kennzeichen")
-        t1.number_input("Kilometerstand", min_value=0, format="%d")
-        t2.date_input("Erstzulassung", value=datetime.date(2020,1,1), format="DD.MM.YYYY")
+        st.text_input("FIN (17 Zeichen)", max_chars=17, key="vin_input_field", on_change=format_vin)
+        st.text_input("Kennzeichen")
+        st.number_input("Kilometer", min_value=0, format="%d")
+        st.date_input("Erstzulassung", value=datetime.date(2022,1,1), format="DD.MM.YYYY")
 
     with tab_check:
         st.subheader("Zustandsbewertung")
-        sections = {
-            "Außenhaut & Karosserie": ["Lackzustand", "Dellen/Beulen", "Kratzer", "Steinschläge"],
-            "Fahrwerk & Räder": ["Reifenprofil", "Felgenzustand", "Bremsanlage"],
-            "Innenraum & Technik": ["Polster/Leder", "Geruch/Raucher", "Armaturen", "Fehlerspeicher"]
-        }
+        # Beispiel-Check
+        items = ["Lackzustand", "Reifenprofil", "Felgen", "Innenraum"]
         costs = {}
-        for sec, items in sections.items():
-            with st.expander(f"📦 {sec}", expanded=True):
-                for item in items:
-                    choice = st.segmented_control(f"**{item}**", ["Mangel", "Gebrauch", "i.O."], key=f"c_{item}", default="i.O.")
-                    if choice == "Mangel":
-                        costs[item] = st.number_input(f"Kosten {item} (€)", key=f"v_{item}", format="%d")
-                    else:
-                        costs[item] = 0
+        for item in items:
+            choice = st.segmented_control(f"**{item}**", ["Mangel", "Gebrauch", "i.O."], key=f"c_{item}", default="i.O.")
+            if choice == "Mangel":
+                costs[item] = st.number_input(f"Kosten {item} (€)", key=f"v_{item}", format="%d")
+            else:
+                costs[item] = 0
 
     with tab_export:
         total = sum(costs.values())
-        st.metric("Gesamt-Minderwert", f"{total} €")
-        if st.button("🏁 Bericht abschließen"):
-            st.success("Zustandsbericht wurde generiert.")
+        st.metric("Potenzieller Minderwert", f"{total} €")
+        if st.button("Protokoll abschließen"):
+            st.success("Bericht generiert.")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Platz für Banner (unten oder seitlich durch layout="centered" automatisch frei)
+st.write("")
+st.caption("Platz für Partner-Banner & Werbung")
