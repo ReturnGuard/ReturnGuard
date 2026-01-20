@@ -7,65 +7,21 @@ st.set_page_config(page_title="ReturnGuard", layout="centered", initial_sidebar_
 
 st.markdown("""
     <style>
-    /* Hintergrund & Reduzierung des oberen Abstands */
-    .stApp { background-color: #f3f5f6; }
-    .block-container {
-        max-width: 1100px !important;
-        padding-top: 2rem !important; /* Weniger Platz oben für kompakten Look */
-    }
-
-    /* Weiße Haupt-Karte mit weichem Schatten */
-    .main-card {
-        background-color: white;
-        padding: 45px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        margin-top: 10px;
-    }
-
-    /* Headline: Größer und fokussierter */
-    .hero-title {
-        font-size: 3.4rem !important;
-        font-weight: 800 !important;
-        color: #002b5c;
-        line-height: 1.1;
-        letter-spacing: -0.02em;
-        margin-bottom: 20px;
-    }
-
-    /* Sub-Header Styling */
-    .sub-title {
-        font-size: 1.4rem;
-        color: #4a5568;
-        margin-bottom: 30px;
-    }
-
-    /* Call-to-Action Buttons */
-    div.stButton > button {
-        border-radius: 6px;
-        font-weight: 700;
-        background-color: #002b5c;
+    /* Der ehemals weiße Balken wird nun zum Hero-Banner */
+    .hero-banner {
+        background: linear-gradient(135deg, #002b5c 0%, #004080 100%);
+        padding: 60px;
+        border-radius: 12px 12px 0 0; /* Oben abgerundet */
         color: white;
-        height: 3.8rem;
-        border: none;
-        box-shadow: 0 4px 12px rgba(0, 43, 92, 0.2);
+        text-align: center;
+        margin-bottom: -20px; /* Zieht die weiße Karte optisch heran */
     }
     
-    /* Lead-Box am Ende */
-    .lead-container {
-        background-color: #f8fafc;
-        padding: 30px;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        margin-top: 40px;
-    }
-
-    /* Icon-Liste Styling */
-    .usp-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 12px;
-        font-size: 1.15rem;
+    .main-card {
+        background-color: white;
+        padding: 40px;
+        border-radius: 0 0 12px 12px; /* Unten abgerundet */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     </style>
     """, unsafe_allow_html=True)
