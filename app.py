@@ -114,7 +114,7 @@ if st.session_state.current_page == "Kunde":
 
     with c2:
         # Hier wird nun dein Bild geladen (Achte auf Analyse.png vs analyse.png)
-        st.image("Analyse.png", 
+        st.image("analyse.png", 
                  caption="Unsere digitale Experten-Analyse", 
                  use_container_width=True)
         
