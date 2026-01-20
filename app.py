@@ -111,11 +111,12 @@ if st.session_state.current_page == "Kunde":
         if st.button("Jetzt Check anfragen", use_container_width=True):
             st.toast("E-Mail Feld wird fokussiert...")
 
-    with c2:
-    st.image("analyse.png", caption="Unsere digitale Experten-Analyse", use_container_width=True)
-
-    st.write("---")
-    
+   with c2:
+        # Hier müssen genau 4 Leerzeichen am Anfang der nächsten Zeile stehen
+        st.image("analyse.png", 
+                 caption="Unsere digitale Experten-Analyse", 
+                 use_container_width=True)
+       
     # Der ReturnGuard Prozess (Horizontaler Fokus)
     st.subheader("In 3 Schritten zur Kostensicherheit")
     p1, p2, p3 = st.columns(3)
