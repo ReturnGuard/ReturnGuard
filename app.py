@@ -49,7 +49,7 @@ st.markdown("""
     }
     
     .hero-title {
-        font-size: 3.5rem;
+        font-size: 4.5rem;
         font-weight: 800;
         color: white;
         margin-bottom: 20px;
@@ -302,18 +302,28 @@ st.markdown("""
     
     .trust-badge {
         text-align: center;
+        background: white;
+        padding: 30px 25px;
+        border-radius: 15px;
+        box-shadow: 10px 10px 30px #d1d9e6, -10px -10px 30px #ffffff;
+        transition: transform 0.3s ease;
+        min-width: 200px;
+    }
+    
+    .trust-badge:hover {
+        transform: translateY(-5px);
     }
     
     .trust-icon {
-        font-size: 3rem;
-        color: #667eea;
-        margin-bottom: 10px;
+        font-size: 4.5rem;
+        margin-bottom: 15px;
     }
     
     .trust-text {
-        font-size: 0.9rem;
+        font-size: 1.1rem;
         color: #4a5568;
         font-weight: 600;
+        line-height: 1.4;
     }
     
     /* Streamlit Button Override */
@@ -431,7 +441,7 @@ with pkg_col1:
         <div class="package-card">
             <span class="package-icon">🥉</span>
             <h3 class="package-title">Basis</h3>
-            <div class="package-price">199€</div>
+            <div class="package-price">99€</div>
             <ul class="package-features">
                 <li><span class="feature-icon">✓</span> Grundcheck Fahrzeugzustand</li>
                 <li><span class="feature-icon">✓</span> Fotodokumentation (20 Bilder)</li>
@@ -449,7 +459,7 @@ with pkg_col2:
         <div class="package-card">
             <span class="package-icon">🥈</span>
             <h3 class="package-title">Standard</h3>
-            <div class="package-price">399€</div>
+            <div class="package-price">199€</div>
             <ul class="package-features">
                 <li><span class="feature-icon">✓</span> Umfassende Schadensbewertung</li>
                 <li><span class="feature-icon">✓</span> Fotodokumentation (50 Bilder)</li>
@@ -470,7 +480,7 @@ with pkg_col3:
             <div class="popular-badge">🔥 BELIEBT</div>
             <span class="package-icon">🥇</span>
             <h3 class="package-title">Premium</h3>
-            <div class="package-price">699€</div>
+            <div class="package-price">299€</div>
             <ul class="package-features">
                 <li><span class="feature-icon">✓</span> Vollständige Rechtsprüfung</li>
                 <li><span class="feature-icon">✓</span> Fotodokumentation (100+ Bilder)</li>
@@ -491,7 +501,7 @@ with pkg_col4:
         <div class="package-card">
             <span class="package-icon">💎</span>
             <h3 class="package-title">VIP All-Inclusive</h3>
-            <div class="package-price">1.299€</div>
+            <div class="package-price">999€</div>
             <ul class="package-features">
                 <li><span class="feature-icon">✓</span> Persönlicher Ansprechpartner</li>
                 <li><span class="feature-icon">✓</span> Vollständige Rückgabe-Begleitung</li>
@@ -506,6 +516,70 @@ with pkg_col4:
         </div>
     """, unsafe_allow_html=True)
     st.button("Jetzt buchen", key="btn_vip", use_container_width=True)
+
+st.write("")
+
+# Paket-Vergleichstabelle
+st.markdown("""
+    <div style="background: white; padding: 40px; border-radius: 20px; margin-top: 40px; box-shadow: 10px 10px 30px #d1d9e6, -10px -10px 30px #ffffff;">
+        <h3 style="text-align: center; color: #2d3748; margin-bottom: 30px; font-size: 2rem;">📊 Paket-Vergleich auf einen Blick</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <th style="padding: 15px; text-align: left; border-radius: 10px 0 0 0;">Leistung</th>
+                    <th style="padding: 15px; text-align: center;">Basis</th>
+                    <th style="padding: 15px; text-align: center;">Standard</th>
+                    <th style="padding: 15px; text-align: center;">Premium</th>
+                    <th style="padding: 15px; text-align: center; border-radius: 0 10px 0 0;">VIP</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background: #f8f9fa;">
+                    <td style="padding: 15px; font-weight: 600;">Fahrzeugcheck</td>
+                    <td style="padding: 15px; text-align: center;">Basis</td>
+                    <td style="padding: 15px; text-align: center;">Umfassend</td>
+                    <td style="padding: 15px; text-align: center;">Komplett</td>
+                    <td style="padding: 15px; text-align: center;">Premium</td>
+                </tr>
+                <tr>
+                    <td style="padding: 15px; font-weight: 600;">Fotos</td>
+                    <td style="padding: 15px; text-align: center;">20</td>
+                    <td style="padding: 15px; text-align: center;">50</td>
+                    <td style="padding: 15px; text-align: center;">100+</td>
+                    <td style="padding: 15px; text-align: center;">Unbegrenzt</td>
+                </tr>
+                <tr style="background: #f8f9fa;">
+                    <td style="padding: 15px; font-weight: 600;">Rechtliche Beratung</td>
+                    <td style="padding: 15px; text-align: center;">❌</td>
+                    <td style="padding: 15px; text-align: center;">Telefon 1h</td>
+                    <td style="padding: 15px; text-align: center;">Anwalt 2h</td>
+                    <td style="padding: 15px; text-align: center;">Vollständig</td>
+                </tr>
+                <tr>
+                    <td style="padding: 15px; font-weight: 600;">Verhandlung mit Leasinggeber</td>
+                    <td style="padding: 15px; text-align: center;">❌</td>
+                    <td style="padding: 15px; text-align: center;">❌</td>
+                    <td style="padding: 15px; text-align: center;">✅</td>
+                    <td style="padding: 15px; text-align: center;">✅ Premium</td>
+                </tr>
+                <tr style="background: #f8f9fa;">
+                    <td style="padding: 15px; font-weight: 600;">Support-Zeit</td>
+                    <td style="padding: 15px; text-align: center;">48h</td>
+                    <td style="padding: 15px; text-align: center;">24h</td>
+                    <td style="padding: 15px; text-align: center;">24/7</td>
+                    <td style="padding: 15px; text-align: center;">24/7 Premium</td>
+                </tr>
+                <tr>
+                    <td style="padding: 15px; font-weight: 600;">Rückgabe-Begleitung</td>
+                    <td style="padding: 15px; text-align: center;">❌</td>
+                    <td style="padding: 15px; text-align: center;">❌</td>
+                    <td style="padding: 15px; text-align: center;">❌</td>
+                    <td style="padding: 15px; text-align: center;">✅ Vor Ort</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+""", unsafe_allow_html=True)
 
 st.write("")
 st.write("")
@@ -548,11 +622,38 @@ with col2:
     email_input = st.text_input(
         "E-Mail-Adresse",
         placeholder="ihre.email@beispiel.de",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key="email_main"
     )
     
-    if st.button("Jetzt kostenlose Beratung anfordern", use_container_width=True):
-        if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email_input):
+    # Zentrierung des Textes im Input-Feld
+    st.markdown("""
+        <style>
+        input[type="text"] {
+            text-align: center !important;
+            font-size: 1.2rem !important;
+            padding: 20px !important;
+            height: 60px !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    if st.button("🚀 Jetzt kostenlose Beratung anfordern", use_container_width=True, key="main_cta"):
+        if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+
+
+st.write("")
+st.write("")
+
+# --- FOOTER ---
+st.markdown("""
+    <div style="text-align: center; padding: 40px 20px; color: #718096;">
+        <p style="font-size: 0.9rem;">🛡️ ReturnGuard - Ihr Partner für faire Leasingrückgaben</p>
+        <p style="font-size: 0.8rem; margin-top: 10px;">
+            Datenschutz | AGB | Impressum | Kontakt
+        </p>
+    </div>
+""", unsafe_allow_html=True)
+, email_input):
             st.success("✅ Vielen Dank! Wir kontaktieren Sie innerhalb von 24 Stunden.")
             st.balloons()
         else:
