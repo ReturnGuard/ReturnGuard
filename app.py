@@ -1,4 +1,31 @@
-import streamlit as st
+# NEUE: Sticky Contact Buttons
+.sticky-contact {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.3s;
+    text-decoration: none;
+}
+
+.contact-button:hover { transform: scale(1.1); }
+.whatsapp-btn { background: #25D366; }
+.phone-btn { background: #667eea; }import streamlit as st
 import re
 
 st.set_page_config(page_title="ReturnGuard", layout="wide", initial_sidebar_state="collapsed")
@@ -89,8 +116,21 @@ div.stButton > button {
 </style>
 """, unsafe_allow_html=True)
 
+# STICKY CONTACT BUTTONS (IMMER SICHTBAR!)
+st.markdown("""
+    <div class="sticky-contact">
+        <a href="https://wa.me/4917698765432?text=Hallo%20ReturnGuard" 
+           target="_blank" class="contact-button whatsapp-btn" title="WhatsApp">
+            📱
+        </a>
+        <a href="tel:+498912345678" class="contact-button phone-btn" title="Anrufen">
+            📞
+        </a>
+    </div>
+""", unsafe_allow_html=True)
+
 # NAVIGATION
-st.markdown("### 🛡️ ReturnGuard")
+st.markdown("### 🛡️ ReturnGuard | ☎️ +49 89 123 456 78")
 nav_cols = st.columns(6)
 with nav_cols[0]:
     if st.button("🏠 Home", use_container_width=True): st.session_state.page = 'home'; st.rerun()
@@ -287,6 +327,22 @@ if st.session_state.page == 'calculator':
 # ========== STARTSEITE ==========
 elif st.session_state.page == 'home':
     st.markdown('<div class="hero-section"><h1 class="hero-title">🛡️ Leasingrückgabe für Ihren Audi</h1><p class="hero-subtitle">Schützen Sie sich vor unfairen Nachzahlungen</p></div>', unsafe_allow_html=True)
+    
+    # Schnellkontakt prominent
+    st.markdown("""
+        <div style="background: white; padding: 25px; border-radius: 15px; text-align: center; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+            <h3>📞 Sofortkontakt</h3>
+            <p style="font-size: 1.3rem; font-weight: 700; color: #667eea;">
+                <a href="tel:+498912345678" style="text-decoration: none; color: #667eea;">+49 89 123 456 78</a>
+            </p>
+            <p style="font-size: 1.1rem;">
+                <a href="https://wa.me/4917698765432" target="_blank" style="text-decoration: none; color: #25D366;">
+                    💬 WhatsApp: +49 176 987 654 32
+                </a>
+            </p>
+            <p style="color: #718096;">Mo-Fr: 8:00-18:00 | Sa: 9:00-14:00</p>
+        </div>
+    """, unsafe_allow_html=True)
     
     st.markdown('<div class="urgency-banner">⏰ Nur noch 3 Termine diese Woche verfügbar!</div>', unsafe_allow_html=True)
     
