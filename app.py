@@ -434,36 +434,25 @@ st.write("")
 st.write("")
 
 # FAQ (NEU!)
-st.markdown("""
-    <div class="faq-section">
-        <h2 style="text-align: center; color: #2d3748; margin-bottom: 40px;">❓ Häufig gestellte Fragen</h2>
-        
-        <div class="faq-item">
-            <div class="faq-question">Wann sollte ich einen Check durchführen lassen?</div>
-            <div class="faq-answer">Idealerweise 3-6 Monate vor der Rückgabe. So haben Sie genügend Zeit, eventuelle Schäden noch kostengünstig zu beheben.</div>
-        </div>
-        
-        <div class="faq-item">
-            <div class="faq-question">Wie lange dauert der Check?</div>
-            <div class="faq-answer">Ein Basis-Check dauert ca. 1 Stunde, ein Premium-Check mit vollständiger Dokumentation 2-3 Stunden vor Ort.</div>
-        </div>
-        
-        <div class="faq-item">
-            <div class="faq-question">Was passiert nach dem Check?</div>
-            <div class="faq-answer">Sie erhalten innerhalb von 48 Stunden einen detaillierten digitalen Bericht mit Handlungsempfehlungen und Kosteneinschätzung.</div>
-        </div>
-        
-        <div class="faq-item">
-            <div class="faq-question">Sind die Gutachter wirklich unabhängig?</div>
-            <div class="faq-answer">Ja, alle unsere Gutachter sind TÜV-zertifiziert und arbeiten vollkommen unabhängig von Leasinggebern und Herstellern.</div>
-        </div>
-        
-        <div class="faq-item">
-            <div class="faq-question">Was ist, wenn ich mit dem Ergebnis nicht zufrieden bin?</div>
-            <div class="faq-answer">Bei unserem VIP-Paket bieten wir eine Geld-zurück-Garantie. Wenn wir Ihnen nicht mindestens den doppelten Paketpreis einsparen, erhalten Sie Ihr Geld zurück.</div>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
+st.write("")
+st.write("")
+st.markdown("## ❓ Häufig gestellte Fragen")
+st.write("")
+
+with st.expander("❓ Wann sollte ich einen Check durchführen lassen?"):
+    st.write("Idealerweise 3-6 Monate vor der Rückgabe. So haben Sie genügend Zeit, eventuelle Schäden noch kostengünstig zu beheben.")
+
+with st.expander("❓ Wie lange dauert der Check?"):
+    st.write("Ein Basis-Check dauert ca. 1 Stunde, ein Premium-Check mit vollständiger Dokumentation 2-3 Stunden vor Ort.")
+
+with st.expander("❓ Was passiert nach dem Check?"):
+    st.write("Sie erhalten innerhalb von 48 Stunden einen detaillierten digitalen Bericht mit Handlungsempfehlungen und Kosteneinschätzung.")
+
+with st.expander("❓ Sind die Gutachter wirklich unabhängig?"):
+    st.write("Ja, alle unsere Gutachter sind TÜV-zertifiziert und arbeiten vollkommen unabhängig von Leasinggebern und Herstellern.")
+
+with st.expander("❓ Was ist, wenn ich mit dem Ergebnis nicht zufrieden bin?"):
+    st.write("Bei unserem VIP-Paket bieten wir eine Geld-zurück-Garantie. Wenn wir Ihnen nicht mindestens den doppelten Paketpreis einsparen, erhalten Sie Ihr Geld zurück.")
 
 st.write("")
 st.write("")
