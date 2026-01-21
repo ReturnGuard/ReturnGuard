@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- MODERNES CSS MIT AKTUELLEN TRENDS ---
+# --- MODERNES CSS MIT QUICK WINS ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -21,10 +21,11 @@ st.markdown("""
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
     
-    /* Hero Section mit Glassmorphism */
+    /* Hero Section mit Audi-Bild */
     .hero-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 80px 20px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%),
+                    url('https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1920&h=600&fit=crop') center/cover;
+        padding: 100px 20px;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -53,23 +54,161 @@ st.markdown("""
         font-weight: 800;
         color: white;
         margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
         position: relative;
         z-index: 1;
     }
     
     .hero-subtitle {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         color: rgba(255,255,255,0.95);
         margin-bottom: 30px;
         position: relative;
         z-index: 1;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    /* Sticky CTA Button */
+    .sticky-cta {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .sticky-cta-button {
+        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+        color: white;
+        padding: 18px 35px;
+        border-radius: 50px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .sticky-cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(255, 107, 53, 0.6);
     }
     
     /* Container */
     .block-container {
         max-width: 1400px !important;
         padding-top: 2rem !important;
+    }
+    
+    /* Testimonial Section */
+    .testimonial-section {
+        background: white;
+        padding: 60px 40px;
+        border-radius: 20px;
+        margin: 50px 0;
+        box-shadow: 10px 10px 30px #d1d9e6, -10px -10px 30px #ffffff;
+    }
+    
+    .testimonial-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 30px;
+        border-radius: 15px;
+        margin: 20px 0;
+        border-left: 4px solid #667eea;
+        transition: transform 0.3s ease;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateX(5px);
+    }
+    
+    .testimonial-text {
+        font-size: 1.1rem;
+        color: #2d3748;
+        font-style: italic;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+    
+    .testimonial-author {
+        font-weight: 700;
+        color: #667eea;
+        font-size: 1rem;
+    }
+    
+    .testimonial-stars {
+        color: #FFD700;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    /* FAQ Section */
+    .faq-section {
+        background: white;
+        padding: 60px 40px;
+        border-radius: 20px;
+        margin: 50px 0;
+        box-shadow: 10px 10px 30px #d1d9e6, -10px -10px 30px #ffffff;
+    }
+    
+    .faq-item {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 15px 0;
+        border-left: 4px solid #667eea;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+    
+    .faq-question {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 10px;
+    }
+    
+    .faq-answer {
+        font-size: 1rem;
+        color: #4a5568;
+        line-height: 1.6;
+    }
+    
+    /* Urgency Banner */
+    .urgency-banner {
+        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 30px 0;
+        box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        animation: pulse-subtle 2s infinite;
+    }
+    
+    @keyframes pulse-subtle {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+    
+    .urgency-icon {
+        font-size: 1.5rem;
+        margin-right: 10px;
     }
     
     /* Paket-Vergleich Container */
@@ -81,7 +220,7 @@ st.markdown("""
         padding: 20px;
     }
     
-    /* Moderne Paket-Karten mit Neumorphism & Hover-Effekten */
+    /* Moderne Paket-Karten */
     .package-card {
         background: white;
         border-radius: 20px;
@@ -153,12 +292,6 @@ st.markdown("""
         margin: 20px 0;
     }
     
-    .package-price-period {
-        font-size: 1rem;
-        color: #718096;
-        font-weight: 400;
-    }
-    
     .package-features {
         text-align: left;
         margin: 25px 0;
@@ -183,31 +316,6 @@ st.markdown("""
         margin-right: 10px;
         color: #48bb78;
         font-weight: bold;
-    }
-    
-    /* CTA Button mit Micro-Interaktionen */
-    .cta-button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 15px 35px;
-        border-radius: 50px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-    }
-    
-    .cta-button:active {
-        transform: translateY(0);
     }
     
     /* Features Section */
@@ -357,13 +465,18 @@ st.markdown("""
     /* Responsive Design */
     @media (max-width: 768px) {
         .hero-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
         }
         .hero-subtitle {
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
-        .package-comparison {
-            grid-template-columns: 1fr;
+        .sticky-cta {
+            bottom: 10px;
+            right: 10px;
+        }
+        .sticky-cta-button {
+            padding: 15px 25px;
+            font-size: 1rem;
         }
     }
     </style>
@@ -373,7 +486,16 @@ st.markdown("""
 if 'current_page' not in st.session_state:
     st.session_state.current_page = "Kunde"
 
-# --- HERO SECTION ---
+# --- STICKY CTA BUTTON ---
+st.markdown("""
+    <div class="sticky-cta">
+        <a href="#lead-form" class="sticky-cta-button">
+            🚀 Jetzt Termin sichern
+        </a>
+    </div>
+""", unsafe_allow_html=True)
+
+# --- HERO SECTION MIT AUDI-BILD ---
 st.markdown("""
     <div class="hero-section">
         <h1 class="hero-title">🛡️ Leasingrückgabe für Ihren Audi</h1>
@@ -382,6 +504,15 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.write("")
+
+# --- URGENCY BANNER ---
+st.markdown("""
+    <div class="urgency-banner">
+        <span class="urgency-icon">⏰</span>
+        Nur noch 3 Termine diese Woche verfügbar! Sichern Sie sich jetzt Ihren Platz.
+    </div>
+""", unsafe_allow_html=True)
+
 st.write("")
 
 # --- TRUST BADGES ---
@@ -573,83 +704,4 @@ st.markdown("""
                 <tr style="background: #f8f9fa;">
                     <td style="padding: 15px; font-weight: 600;">Support-Zeit</td>
                     <td style="padding: 15px; text-align: center;">48h</td>
-                    <td style="padding: 15px; text-align: center;">24h</td>
-                    <td style="padding: 15px; text-align: center;">24/7</td>
-                    <td style="padding: 15px; text-align: center;">24/7 Premium</td>
-                </tr>
-                <tr>
-                    <td style="padding: 15px; font-weight: 600;">Rückgabe-Begleitung</td>
-                    <td style="padding: 15px; text-align: center;">❌</td>
-                    <td style="padding: 15px; text-align: center;">❌</td>
-                    <td style="padding: 15px; text-align: center;">❌</td>
-                    <td style="padding: 15px; text-align: center;">✅ Vor Ort</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-""", unsafe_allow_html=True)
-
-st.write("")
-st.write("")
-
-# --- PROZESS ---
-st.markdown("## 🚀 So funktioniert's - In 3 einfachen Schritten")
-st.markdown("""
-    <div class="process-container">
-        <div class="process-step">
-            <div class="process-number">1</div>
-            <h4>Paket wählen & Termin buchen</h4>
-            <p>Online in 2 Minuten - Flexibel vor Ort oder per App</p>
-        </div>
-        <div class="process-step">
-            <div class="process-number">2</div>
-            <h4>Experten-Analyse</h4>
-            <p>Unabhängige Begutachtung nach Audi-Standards</p>
-        </div>
-        <div class="process-step">
-            <div class="process-number">3</div>
-            <h4>Digitaler Bericht & Beratung</h4>
-            <p>Detailliertes Protokoll mit konkreten Handlungsempfehlungen</p>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
-
-st.write("")
-st.write("")
-
-# --- LEAD-GENERIERUNG ---
-st.markdown("""
-    <div class="lead-section">
-        <h2>🎯 Kostenlose Erstberatung sichern</h2>
-        <p>Unsere Experten melden sich innerhalb von 24 Stunden bei Ihnen</p>
-    </div>
-""", unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    email_input = st.text_input(
-        "E-Mail-Adresse",
-        placeholder="ihre.email@beispiel.de",
-        label_visibility="collapsed",
-        key="email_main"
-    )
-    
-    if st.button("🚀 Jetzt kostenlose Beratung anfordern", use_container_width=True, key="main_cta"):
-        if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email_input):
-            st.success("✅ Vielen Dank! Wir kontaktieren Sie innerhalb von 24 Stunden.")
-            st.balloons()
-        else:
-            st.error("❌ Bitte geben Sie eine gültige E-Mail-Adresse ein.")
-
-st.write("")
-st.write("")
-
-# --- FOOTER ---
-st.markdown("""
-    <div style="text-align: center; padding: 40px 20px; color: #718096;">
-        <p style="font-size: 0.9rem;">🛡️ ReturnGuard - Ihr Partner für faire Leasingrückgaben</p>
-        <p style="font-size: 0.8rem; margin-top: 10px;">
-            Datenschutz | AGB | Impressum | Kontakt
-        </p>
-    </div>
-""", unsafe_allow_html=True)
+                    <td style="padding: 15px; text-align: center
