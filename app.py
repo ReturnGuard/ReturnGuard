@@ -346,6 +346,14 @@ st.markdown("""
         background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     }
     
+    /* Email Input Styling */
+    input[type="text"] {
+        text-align: center !important;
+        font-size: 1.2rem !important;
+        padding: 20px !important;
+        height: 60px !important;
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
         .hero-title {
@@ -626,34 +634,8 @@ with col2:
         key="email_main"
     )
     
-    # Zentrierung des Textes im Input-Feld
-    st.markdown("""
-        <style>
-        input[type="text"] {
-            text-align: center !important;
-            font-size: 1.2rem !important;
-            padding: 20px !important;
-            height: 60px !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    
     if st.button("🚀 Jetzt kostenlose Beratung anfordern", use_container_width=True, key="main_cta"):
-        if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+
-
-st.write("")
-st.write("")
-
-# --- FOOTER ---
-st.markdown("""
-    <div style="text-align: center; padding: 40px 20px; color: #718096;">
-        <p style="font-size: 0.9rem;">🛡️ ReturnGuard - Ihr Partner für faire Leasingrückgaben</p>
-        <p style="font-size: 0.8rem; margin-top: 10px;">
-            Datenschutz | AGB | Impressum | Kontakt
-        </p>
-    </div>
-""", unsafe_allow_html=True)
-, email_input):
+        if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email_input):
             st.success("✅ Vielen Dank! Wir kontaktieren Sie innerhalb von 24 Stunden.")
             st.balloons()
         else:
