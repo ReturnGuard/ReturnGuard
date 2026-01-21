@@ -175,8 +175,7 @@ st.markdown("""
 }
 
 .process-steps {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    display: flex;
     gap: 40px;
     position: relative;
 }
@@ -189,6 +188,7 @@ st.markdown("""
     border: 2px solid #E8EBED;
     transition: all 0.3s ease;
     position: relative;
+    flex: 1;
 }
 
 .process-step:hover {
@@ -694,46 +694,52 @@ if st.session_state.page == 'home':
     ''', unsafe_allow_html=True)
     
     # 3-SCHRITTE PROZESS
-    st.markdown('''
-        <div class="process-section">
-            <div class="process-container">
-                <h2 class="process-title">So einfach funktioniert's</h2>
-                <p class="process-subtitle">In nur 3 Schritten zu Ihrer fairen Leasingrückgabe</p>
-                
-                <div class="process-steps">
-                    <div class="process-step">
-                        <div class="step-number">1</div>
-                        <div class="step-icon">📋</div>
-                        <h3 class="step-title">Daten eingeben</h3>
-                        <p class="step-description">
-                            Geben Sie die wichtigsten Infos zu Ihrem Fahrzeug ein. 
-                            Dauert weniger als 2 Minuten.
-                        </p>
-                    </div>
-                    
-                    <div class="process-step">
-                        <div class="step-number">2</div>
-                        <div class="step-icon">🔍</div>
-                        <h3 class="step-title">Kostenlose Prüfung</h3>
-                        <p class="step-description">
-                            Unsere Experten prüfen Ihr Fahrzeug und erstellen 
-                            eine detaillierte Bewertung.
-                        </p>
-                    </div>
-                    
-                    <div class="process-step">
-                        <div class="step-number">3</div>
-                        <div class="step-icon">💰</div>
-                        <h3 class="step-title">Geld sparen</h3>
-                        <p class="step-description">
-                            Wir verhandeln für Sie mit der Leasinggesellschaft 
-                            und sorgen für faire Bedingungen.
-                        </p>
-                    </div>
-                </div>
+    st.markdown('<div class="process-section"><div class="process-container">', unsafe_allow_html=True)
+    st.markdown('<h2 class="process-title">So einfach funktioniert\'s</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="process-subtitle">In nur 3 Schritten zu Ihrer fairen Leasingrückgabe</p>', unsafe_allow_html=True)
+    
+    step1, step2, step3 = st.columns(3)
+    
+    with step1:
+        st.markdown('''
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-icon">📋</div>
+                <h3 class="step-title">Daten eingeben</h3>
+                <p class="step-description">
+                    Geben Sie die wichtigsten Infos zu Ihrem Fahrzeug ein. 
+                    Dauert weniger als 2 Minuten.
+                </p>
             </div>
-        </div>
-    ''', unsafe_allow_html=True)
+        ''', unsafe_allow_html=True)
+    
+    with step2:
+        st.markdown('''
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-icon">🔍</div>
+                <h3 class="step-title">Kostenlose Prüfung</h3>
+                <p class="step-description">
+                    Unsere Experten prüfen Ihr Fahrzeug und erstellen 
+                    eine detaillierte Bewertung.
+                </p>
+            </div>
+        ''', unsafe_allow_html=True)
+    
+    with step3:
+        st.markdown('''
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-icon">💰</div>
+                <h3 class="step-title">Geld sparen</h3>
+                <p class="step-description">
+                    Wir verhandeln für Sie mit der Leasinggesellschaft 
+                    und sorgen für faire Bedingungen.
+                </p>
+            </div>
+        ''', unsafe_allow_html=True)
+    
+    st.markdown('</div></div>', unsafe_allow_html=True)
     
     # URGENCY BANNER
     st.markdown('''
