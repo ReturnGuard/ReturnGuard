@@ -7,69 +7,68 @@ st.set_page_config(page_title="ReturnGuard", layout="wide", initial_sidebar_stat
 
 st.markdown("""
     <style>
-    /* Hintergrund & Reduzierung des oberen Abstands */
-    .stApp { background-color: #f3f5f6; }
-    
-    /* Hero-Balken oben (Dunkelblau) - SCHMALER eingestellt */
+    /* Hintergrundfarbe */
+    .stApp {
+        background-color: #f4f4f4;
+    }
+
+    /* Hero-Balken */
     .hero-header {
-        background: linear-gradient(135deg, #002b5c 0%, #004080 100%);
-        height: 220px; /* Von 320px auf 220px reduziert */
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
+        background: #004080;
+        height: 200px;
+        position: relative;
         z-index: 0;
     }
 
     /* Container für den Inhalt */
     .block-container {
-        max-width: 1100px !important;
-        padding-top: 25px !important;
+        max-width: 1200px !important;
+        padding-top: 20px !important;
         z-index: 1;
     }
 
-    /* Weiße Haupt-Karte */
+    /* Hauptkarte */
     .main-card {
         background-color: white;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        margin-top: 100px; /* Angepasst an schmaleren Balken */
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        margin-top: 80px;
         position: relative;
     }
 
     .hero-title {
-        font-size: 3rem !important;
-        font-weight: 800 !important;
+        font-size: 2.5rem !important;
+        font-weight: bold;
         color: #002b5c;
-        line-height: 1.1;
-        margin-bottom: 20px;
+        line-height: 1.2;
+        margin-bottom: 15px;
     }
 
-    /* Lead-Box am Ende */
+    /* Leadbox */
     .lead-container {
-        background-color: #f8fafc;
-        padding: 25px;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        margin-top: 30px;
-        margin-bottom: 20px;
+        background-color: #e9ecef;
+        padding: 20px;
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        margin-top: 25px;
+        margin-bottom: 15px;
     }
 
     div.stButton > button {
-        border-radius: 6px;
-        font-weight: 700;
-        background-color: #002b5c;
+        border-radius: 5px;
+        font-weight: 600;
+        background-color: #007bff;
         color: white;
-        height: 3.5rem;
+        height: 40px;
         border: none;
     }
 
     .usp-item {
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
+        margin-bottom: 8px;
+        font-size: 1rem;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -98,14 +97,14 @@ with nav_col2:
 if st.session_state.current_page == "Kunde":
     st.markdown('<div class="main-card">', unsafe_allow_html=True)
     
-    c1, c2 = st.columns([1.1, 1], gap="large")
+    c1, c2 = st.columns([1.5, 1], gap="large")
     
     with c1:
         st.markdown('<h1 class="hero-title">Leasingrückgabe ohne Überraschungen</h1>', unsafe_allow_html=True)
-        st.markdown('<p style="font-size:1.2rem; color:#4a5568;">Schützen Sie sich vor unfairen Nachzahlungen durch unseren unabhängigen Check.</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:1.1rem; color:#4a5568;">Schützen Sie sich vor unfairen Nachzahlungen durch unseren unabhängigen Check.</p>', unsafe_allow_html=True)
         
         st.markdown("""
-        <div style="margin: 25px 0;">
+        <div style="margin: 20px 0;">
         <div class="usp-item">✅ <b>Präzise:</b> Detaillierte Schadensmarkierung</div>
         <div class="usp-item">✅ <b>Fair:</b> Bewertung nach offiziellen Standards</div>
         <div class="usp-item">✅ <b>Profitabel:</b> Bis zu 60% Ersparnis durch Tipps</div>
@@ -116,12 +115,10 @@ if st.session_state.current_page == "Kunde":
             st.toast("Bitte scrollen Sie zum E-Mail-Feld.")
 
     with c2:
-        st.image("Analyse.png", 
-                 caption="Unsere digitale Experten-Analyse", 
-                 use_container_width=True)
-        
+        st.image("Analyse.png", caption="Unsere digitale Experten-Analyse", use_container_width=True)
+
     st.write("---")
-    
+
     # Prozess
     st.subheader("In 3 Schritten zur Kostensicherheit")
     p1, p2, p3 = st.columns(3)
@@ -129,7 +126,7 @@ if st.session_state.current_page == "Kunde":
     p2.info("**2. Analyse**\nAbgleich mit den Kriterien Ihres Leasinggebers.")
     p3.info("**3. Bericht**\nErhalt des digitalen Rückgabe-Protokolls.")
 
-    # Lead-Sektion (WIEDER EINGEFÜGT)
+    # Lead-Sektion
     st.markdown("""
     <div class="lead-container">
         <h3 style="margin-top:0;">Interesse an einer kostenlosen Erstberatung?</h3>
