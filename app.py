@@ -941,35 +941,20 @@ div[data-testid="column"] > div.stButton > button:hover {
 """, unsafe_allow_html=True)
 
 # ==================== SCROLL TO TOP ====================
-st.markdown("""
-<script>
-function scrollToTop() {
-    window.parent.document.querySelector('section.main').scrollTo({top: 0, behavior: 'smooth'});
-}
-</script>
-<div class="scroll-to-top" onclick="scrollToTop()">⬆️</div>
-""", unsafe_allow_html=True)
+# Hinweis: Scroll-to-Top funktioniert in Streamlit nur begrenzt wegen iFrame
+# Für bessere UX: Nutzer können mit Tastatur (Pos1) oder Browser-Scroll nach oben
+# Alternative: Streamlit's st.rerun() nutzt automatisch Scroll-to-Top
 
 # ==================== COOKIE BANNER ====================
-if st.session_state.show_cookie_banner:
-    st.markdown("""
-    <div class="cookie-banner">
-        <div class="cookie-text">
-            🍪 Wir verwenden Cookies, um Ihre Erfahrung zu verbessern. Durch die Nutzung unserer Website stimmen Sie unserer
-            <a href="#" style="color: #059669;">Datenschutzerklärung</a> zu.
-        </div>
-        <div class="cookie-buttons">
-            <button onclick="acceptCookies()" style="background: #059669; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                Akzeptieren
-            </button>
-        </div>
-    </div>
-    <script>
-    function acceptCookies() {
-        document.querySelector('.cookie-banner').style.display = 'none';
-    }
-    </script>
-    """, unsafe_allow_html=True)
+# Deaktiviert für bessere Performance - für Produktion mit echtem Cookie-Management-Tool ersetzen
+# if st.session_state.show_cookie_banner:
+#     cookie_col1, cookie_col2 = st.columns([4, 1])
+#     with cookie_col1:
+#         st.info("🍪 Wir verwenden Cookies zur Verbesserung Ihrer Erfahrung. Details in unserer Datenschutzerklärung.")
+#     with cookie_col2:
+#         if st.button("OK", key="accept_cookies"):
+#             st.session_state.show_cookie_banner = False
+#             st.rerun()
 
 # ==================== FLOATING ACTION BUTTONS ====================
 st.markdown("""
