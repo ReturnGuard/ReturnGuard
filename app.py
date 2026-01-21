@@ -373,29 +373,37 @@ st.write("")
 st.write("")
 
 # TESTIMONIALS (NEU!)
-st.markdown("""
-    <div class="testimonial-section">
-        <h2 style="text-align: center; color: #2d3748; margin-bottom: 40px;">💬 Das sagen unsere Kunden</h2>
-        
-        <div class="testimonial-card">
-            <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-            <p class="testimonial-text">"ReturnGuard hat mir über 2.500€ an Nachzahlungen erspart! Die Gutachter waren extrem professionell und haben jeden Schaden genau dokumentiert. Absolute Empfehlung!"</p>
-            <p class="testimonial-author">— Michael S., Audi A4 Leasing</p>
+st.markdown("## 💬 Das sagen unsere Kunden")
+st.write("")
+
+test_col1, test_col2, test_col3 = st.columns(3)
+
+with test_col1:
+    st.markdown("""
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; border-radius: 15px; border-left: 4px solid #667eea; height: 100%;">
+            <div style="color: #FFD700; font-size: 1.2rem; margin-bottom: 10px;">⭐⭐⭐⭐⭐</div>
+            <p style="font-size: 1.1rem; color: #2d3748; font-style: italic; margin: 15px 0; line-height: 1.6;">"ReturnGuard hat mir über 2.500€ an Nachzahlungen erspart! Die Gutachter waren extrem professionell und haben jeden Schaden genau dokumentiert. Absolute Empfehlung!"</p>
+            <p style="font-weight: 700; color: #667eea; font-size: 1rem;">— Michael S., Audi A4 Leasing</p>
         </div>
-        
-        <div class="testimonial-card">
-            <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-            <p class="testimonial-text">"Ich war skeptisch, aber der Service ist sein Geld absolut wert. Die anwaltliche Beratung hat bei der Verhandlung mit dem Leasinggeber den entscheidenden Unterschied gemacht."</p>
-            <p class="testimonial-author">— Sandra K., Audi Q5 Leasing</p>
+    """, unsafe_allow_html=True)
+
+with test_col2:
+    st.markdown("""
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; border-radius: 15px; border-left: 4px solid #667eea; height: 100%;">
+            <div style="color: #FFD700; font-size: 1.2rem; margin-bottom: 10px;">⭐⭐⭐⭐⭐</div>
+            <p style="font-size: 1.1rem; color: #2d3748; font-style: italic; margin: 15px 0; line-height: 1.6;">"Ich war skeptisch, aber der Service ist sein Geld absolut wert. Die anwaltliche Beratung hat bei der Verhandlung mit dem Leasinggeber den entscheidenden Unterschied gemacht."</p>
+            <p style="font-weight: 700; color: #667eea; font-size: 1rem;">— Sandra K., Audi Q5 Leasing</p>
         </div>
-        
-        <div class="testimonial-card">
-            <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-            <p class="testimonial-text">"Schnell, unkompliziert und transparent. Das Premium-Paket war jeden Cent wert. Die Experten wussten genau, worauf es ankommt."</p>
-            <p class="testimonial-author">— Thomas B., Audi A6 Leasing</p>
+    """, unsafe_allow_html=True)
+
+with test_col3:
+    st.markdown("""
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; border-radius: 15px; border-left: 4px solid #667eea; height: 100%;">
+            <div style="color: #FFD700; font-size: 1.2rem; margin-bottom: 10px;">⭐⭐⭐⭐⭐</div>
+            <p style="font-size: 1.1rem; color: #2d3748; font-style: italic; margin: 15px 0; line-height: 1.6;">"Schnell, unkompliziert und transparent. Das Premium-Paket war jeden Cent wert. Die Experten wussten genau, worauf es ankommt."</p>
+            <p style="font-weight: 700; color: #667eea; font-size: 1rem;">— Thomas B., Audi A6 Leasing</p>
         </div>
-    </div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 st.write("")
 st.write("")
