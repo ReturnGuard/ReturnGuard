@@ -3,11 +3,9 @@ import re
 
 st.set_page_config(page_title="ReturnGuard", layout="wide", initial_sidebar_state="collapsed")
 
-# Session State
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
-# CSS
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
@@ -17,23 +15,41 @@ st.markdown("""
 .hero-section {
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%),
                 url('https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1920') center/cover;
-    padding: 100px 20px;
-    text-align: center;
-    border-radius: 0 0 50px 50px;
-    margin-bottom: 30px;
+    padding: 100px 20px; text-align: center; border-radius: 0 0 50px 50px; margin-bottom: 30px;
 }
 .hero-title { font-size: 4rem; font-weight: 800; color: white; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); }
 .hero-subtitle { font-size: 1.3rem; color: white; margin-top: 20px; }
 
-.urgency-banner {
-    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-    padding: 20px;
+.calculator-box {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    margin: 40px 0;
+}
+
+.cost-display {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
     border-radius: 15px;
     text-align: center;
     color: white;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 30px 0;
+    margin: 20px 0;
+}
+
+.savings-box {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    margin: 20px 0;
+}
+
+.urgency-banner {
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+    padding: 20px; border-radius: 15px; text-align: center;
+    color: white; font-size: 1.2rem; font-weight: 700; margin: 30px 0;
 }
 
 .trust-badges { display: flex; justify-content: center; gap: 30px; margin: 40px 0; flex-wrap: wrap; }
@@ -42,53 +58,31 @@ st.markdown("""
 .trust-text { font-size: 1rem; color: #4a5568; font-weight: 600; }
 
 .package-card {
-    background: white;
-    border-radius: 20px;
-    padding: 30px 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
-    position: relative;
+    background: white; border-radius: 20px; padding: 30px 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: transform 0.3s; position: relative;
 }
 .package-card:hover { transform: translateY(-5px); }
 .package-popular { border: 3px solid #667eea; }
 .popular-badge {
-    position: absolute;
-    top: -10px;
-    right: 20px;
+    position: absolute; top: -10px; right: 20px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
+    color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
 }
 .package-icon { font-size: 2.5rem; margin-bottom: 10px; }
 .package-title { font-size: 1.5rem; font-weight: 700; color: #2d3748; margin: 10px 0; }
 .package-price {
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: 2rem; font-weight: 800;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin: 15px 0;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 15px 0;
 }
 .package-features { text-align: left; list-style: none; padding: 0; margin: 20px 0; }
 .package-features li { padding: 8px 0; color: #4a5568; border-bottom: 1px solid #e2e8f0; }
 
 .content-section { background: white; padding: 50px 40px; border-radius: 20px; margin: 30px 0; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-.team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin: 30px 0; }
-.team-card { background: #f8f9fa; padding: 25px; border-radius: 15px; text-align: center; }
-.team-avatar { width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-    border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; }
 
 div.stButton > button {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: 700;
-    width: 100%;
+    color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; width: 100%;
 }
 
 @media (max-width: 768px) { .hero-title { font-size: 2rem; } }
@@ -105,19 +99,208 @@ with nav_cols[1]:
 with nav_cols[2]:
     if st.button("📦 Leistungen", use_container_width=True): st.session_state.page = 'services'; st.rerun()
 with nav_cols[3]:
-    if st.button("📞 Kontakt", use_container_width=True): st.session_state.page = 'contact'; st.rerun()
+    if st.button("💰 Kostenrechner", use_container_width=True): st.session_state.page = 'calculator'; st.rerun()
 with nav_cols[4]:
-    if st.button("📰 Blog", use_container_width=True): st.session_state.page = 'blog'; st.rerun()
+    if st.button("📞 Kontakt", use_container_width=True): st.session_state.page = 'contact'; st.rerun()
 with nav_cols[5]:
     if st.button("⚖️ Rechtliches", use_container_width=True): st.session_state.page = 'legal'; st.rerun()
 
 st.markdown("---")
 
+# ========== KOSTENRECHNER ==========
+if st.session_state.page == 'calculator':
+    st.markdown('<div class="calculator-box">', unsafe_allow_html=True)
+    st.title("💰 Kostenrechner - Was könnte Ihre Rückgabe kosten?")
+    st.write("Geben Sie die Schäden an Ihrem Fahrzeug ein und sehen Sie die geschätzten Kosten:")
+    
+    st.markdown("---")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("🚗 Exterieur-Schäden")
+        
+        kratzer = st.selectbox(
+            "Kratzer im Lack",
+            ["Keine", "Leicht (1-2)", "Mittel (3-5)", "Stark (6+)"],
+            help="Oberflächliche Kratzer bis zum Grundlack"
+        )
+        
+        dellen = st.selectbox(
+            "Dellen/Beulen",
+            ["Keine", "Klein (< 2cm)", "Mittel (2-5cm)", "Groß (> 5cm)"],
+            help="Eindrückungen in der Karosserie"
+        )
+        
+        steinschlag = st.selectbox(
+            "Steinschläge Frontscheibe",
+            ["Keine", "1-2 kleine", "3-5 kleine", "Größer als 5mm"],
+            help="Beschädigungen an der Windschutzscheibe"
+        )
+        
+        felgen = st.selectbox(
+            "Felgenschäden",
+            ["Keine", "Leichte Kratzer", "Tiefe Kratzer", "Verbogen"],
+            help="Beschädigungen an den Felgen"
+        )
+        
+        reifen = st.selectbox(
+            "Reifenzustand",
+            ["Gut (>4mm)", "Grenzwertig (3-4mm)", "Schlecht (<3mm)"],
+            help="Profiltiefe der Reifen"
+        )
+    
+    with col2:
+        st.subheader("🪑 Interieur-Schäden")
+        
+        sitze = st.selectbox(
+            "Sitze/Polster",
+            ["Einwandfrei", "Leichte Abnutzung", "Flecken", "Risse/Löcher"],
+            help="Zustand der Sitzbezüge"
+        )
+        
+        lenkrad = st.selectbox(
+            "Lenkrad",
+            ["Einwandfrei", "Abgenutzt", "Beschädigt"],
+            help="Abnutzung am Lenkrad"
+        )
+        
+        armatur = st.selectbox(
+            "Armaturenbrett",
+            ["Einwandfrei", "Leichte Kratzer", "Risse"],
+            help="Zustand des Armaturenbretts"
+        )
+        
+        teppich = st.selectbox(
+            "Teppiche/Fußmatten",
+            ["Sauber", "Flecken", "Stark verschmutzt"],
+            help="Zustand der Teppiche"
+        )
+        
+        geruch = st.selectbox(
+            "Geruch (Raucher/Tiere)",
+            ["Neutral", "Leicht", "Stark"],
+            help="Geruchsbelästigung im Innenraum"
+        )
+    
+    st.markdown("---")
+    
+    # BERECHNUNG
+    kosten = 0
+    
+    # Exterieur
+    if kratzer == "Leicht (1-2)": kosten += 150
+    elif kratzer == "Mittel (3-5)": kosten += 400
+    elif kratzer == "Stark (6+)": kosten += 800
+    
+    if dellen == "Klein (< 2cm)": kosten += 200
+    elif dellen == "Mittel (2-5cm)": kosten += 500
+    elif dellen == "Groß (> 5cm)": kosten += 1000
+    
+    if steinschlag == "1-2 kleine": kosten += 80
+    elif steinschlag == "3-5 kleine": kosten += 150
+    elif steinschlag == "Größer als 5mm": kosten += 400
+    
+    if felgen == "Leichte Kratzer": kosten += 100
+    elif felgen == "Tiefe Kratzer": kosten += 300
+    elif felgen == "Verbogen": kosten += 800
+    
+    if reifen == "Grenzwertig (3-4mm)": kosten += 200
+    elif reifen == "Schlecht (<3mm)": kosten += 600
+    
+    # Interieur
+    if sitze == "Leichte Abnutzung": kosten += 100
+    elif sitze == "Flecken": kosten += 300
+    elif sitze == "Risse/Löcher": kosten += 800
+    
+    if lenkrad == "Abgenutzt": kosten += 150
+    elif lenkrad == "Beschädigt": kosten += 400
+    
+    if armatur == "Leichte Kratzer": kosten += 100
+    elif armatur == "Risse": kosten += 400
+    
+    if teppich == "Flecken": kosten += 150
+    elif teppich == "Stark verschmutzt": kosten += 400
+    
+    if geruch == "Leicht": kosten += 200
+    elif geruch == "Stark": kosten += 600
+    
+    # ERGEBNIS
+    if st.button("🔍 Kosten berechnen", use_container_width=True):
+        st.markdown(f"""
+            <div class="cost-display">
+                <h2>Geschätzte Nachzahlung ohne ReturnGuard</h2>
+                <h1 style="font-size: 3.5rem; margin: 20px 0;">{kosten:,.0f}€</h1>
+                <p style="font-size: 1.1rem;">Diese Kosten könnten auf Sie zukommen!</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        # Ersparnis berechnen
+        if kosten > 0:
+            # Mit Premium-Paket (299€)
+            ersparnis_premium = kosten * 0.6  # 60% Ersparnis
+            restkosten_premium = kosten - ersparnis_premium + 299
+            
+            st.markdown(f"""
+                <div class="savings-box">
+                    <h2>💰 Mit ReturnGuard Premium-Paket (299€)</h2>
+                    <h3>Ihre Ersparnis: {ersparnis_premium:,.0f}€ (60%)</h3>
+                    <h3>Ihre Gesamtkosten: {restkosten_premium:,.0f}€</h3>
+                    <p style="font-size: 1.2rem; margin-top: 15px;">
+                        ✅ Sie sparen <b>{kosten - restkosten_premium:,.0f}€</b> im Vergleich zu ohne ReturnGuard!
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            st.success("### 🎯 So helfen wir Ihnen:")
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.write("""
+                - ✅ Frühzeitige Schadenserkennung
+                - ✅ Günstige Reparatur-Partner
+                - ✅ Smart Repair statt Neulackierung
+                """)
+            with col_b:
+                st.write("""
+                - ✅ Verhandlung mit Leasinggeber
+                - ✅ Rechtliche Prüfung der Forderungen
+                - ✅ Professionelle Dokumentation
+                """)
+            
+            st.markdown("---")
+            st.markdown("### 📞 Jetzt Beratung sichern!")
+            
+            col_c1, col_c2, col_c3 = st.columns([1, 2, 1])
+            with col_c2:
+                email = st.text_input("E-Mail", placeholder="ihre.email@beispiel.de", label_visibility="collapsed")
+                if st.button("🚀 Kostenlose Erstberatung anfordern", use_container_width=True):
+                    if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+                        st.success("✅ Vielen Dank! Wir kontaktieren Sie innerhalb von 24h.")
+                        st.balloons()
+                    else:
+                        st.error("❌ Bitte gültige E-Mail eingeben.")
+        else:
+            st.info("🎉 Glückwunsch! Ihr Fahrzeug scheint in sehr gutem Zustand zu sein. Eine Überprüfung lohnt sich trotzdem!")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
 # ========== STARTSEITE ==========
-if st.session_state.page == 'home':
+elif st.session_state.page == 'home':
     st.markdown('<div class="hero-section"><h1 class="hero-title">🛡️ Leasingrückgabe für Ihren Audi</h1><p class="hero-subtitle">Schützen Sie sich vor unfairen Nachzahlungen</p></div>', unsafe_allow_html=True)
     
     st.markdown('<div class="urgency-banner">⏰ Nur noch 3 Termine diese Woche verfügbar!</div>', unsafe_allow_html=True)
+    
+    # Quick Kostenrechner Teaser
+    st.markdown("""
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; text-align: center; margin: 30px 0;">
+            <h2 style="color: white; font-size: 2rem; margin-bottom: 20px;">💰 Was könnte Ihre Rückgabe kosten?</h2>
+            <p style="color: white; font-size: 1.2rem;">Nutzen Sie unseren kostenlosen Kostenrechner!</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    if st.button("🔍 Jetzt Kosten berechnen", use_container_width=True, key="calc_teaser"):
+        st.session_state.page = 'calculator'
+        st.rerun()
     
     st.markdown('''<div class="trust-badges">
         <div class="trust-badge"><div class="trust-icon">⚖️</div><div class="trust-text">Rechtsanwälte</div></div>
@@ -191,188 +374,33 @@ if st.session_state.page == 'home':
         st.info("⭐⭐⭐⭐⭐\n\n*'Perfekte Beratung!'*\n\n— Sandra K.")
     with t3:
         st.info("⭐⭐⭐⭐⭐\n\n*'Top Service!'*\n\n— Thomas B.")
-    
-    st.write("")
-    st.markdown("## ❓ FAQ")
-    with st.expander("Wann sollte ich checken?"):
-        st.write("3-6 Monate vor Rückgabe")
-    with st.expander("Wie lange dauert es?"):
-        st.write("1-3 Stunden je nach Paket")
 
-# ========== ÜBER UNS ==========
+# ========== ANDERE SEITEN ==========
 elif st.session_state.page == 'about':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.title("👥 Über ReturnGuard")
-    st.write("---")
-    
-    st.markdown("""
-    ## 🎯 Unsere Mission
-    ReturnGuard wurde gegründet, um Leasingnehmern eine faire Rückgabe zu ermöglichen.
-    
-    **Vision:** Faire Chance für jeden Leasingnehmer!
-    """)
-    
-    st.markdown("## 👨‍👩‍👧‍👦 Unser Team")
-    st.markdown('''<div class="team-grid">
-        <div class="team-card">
-            <div class="team-avatar">👨‍💼</div>
-            <h3>Max Mustermann</h3>
-            <p style="color: #667eea; font-weight: 600;">Geschäftsführer</p>
-            <p>15 Jahre Erfahrung</p>
-        </div>
-        <div class="team-card">
-            <div class="team-avatar">👨‍🔧</div>
-            <h3>Stefan Schmidt</h3>
-            <p style="color: #667eea; font-weight: 600;">TÜV-Gutachter</p>
-            <p>Zertifiziert</p>
-        </div>
-        <div class="team-card">
-            <div class="team-avatar">⚖️</div>
-            <h3>Dr. Anna Weber</h3>
-            <p style="color: #667eea; font-weight: 600;">Fachanwältin</p>
-            <p>Verkehrsrecht</p>
-        </div>
-    </div>''', unsafe_allow_html=True)
-    
-    st.markdown("## 🏆 Unsere Werte")
-    v1, v2, v3 = st.columns(3)
-    with v1:
-        st.success("**🎯 Transparenz**\n\nKeine versteckten Kosten")
-    with v2:
-        st.success("**⚖️ Fairness**\n\nUnabhängige Bewertung")
-    with v3:
-        st.success("**💪 Expertise**\n\nJahrelange Erfahrung")
+    st.write("Wir helfen Leasingnehmern seit 2020...")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ========== LEISTUNGEN ==========
 elif st.session_state.page == 'services':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.title("📦 Unsere Leistungen")
-    st.write("---")
-    
-    st.markdown("## 🔍 Was wird geprüft?")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown("""
-        ### Exterieur
-        - ✅ Lackzustand & Kratzer
-        - ✅ Dellen & Beulen
-        - ✅ Steinschläge
-        - ✅ Scheiben & Beleuchtung
-        - ✅ Reifen & Felgen
-        """)
-    with c2:
-        st.markdown("""
-        ### Interieur
-        - ✅ Sitze & Polster
-        - ✅ Armaturenbrett
-        - ✅ Lenkrad
-        - ✅ Teppiche
-        - ✅ Funktionen
-        """)
-    
-    st.write("")
-    st.markdown("## 📋 Checkliste")
-    with st.expander("📸 Fotodokumentation"):
-        st.write("Hochauflösende Bilder aller Schäden mit GPS-Stempel")
-    with st.expander("📄 Gutachten"):
-        st.write("Detaillierter Bericht nach DAT/Schwacke Standards")
-    with st.expander("⚖️ Rechtsprüfung"):
-        st.write("Überprüfung der Leasingvertrags-Klauseln")
-    
+    st.write("Was wird geprüft?...")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ========== KONTAKT ==========
 elif st.session_state.page == 'contact':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.title("📞 Kontakt")
-    st.write("---")
-    
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown("""
-        ## 📧 Kontaktdaten
-        
-        **Telefon:** +49 89 123 456 78  
-        **WhatsApp:** +49 176 987 654 32  
-        **E-Mail:** info@returnguard.de
-        
-        **Öffnungszeiten:**  
-        Mo-Fr: 8:00 - 18:00 Uhr  
-        Sa: 9:00 - 14:00 Uhr
-        
-        **Einsatzgebiet:**  
-        München & Umgebung (50km)
-        """)
-    
-    with c2:
-        st.markdown("## ✉️ Nachricht senden")
-        name = st.text_input("Name")
-        email = st.text_input("E-Mail")
-        message = st.text_area("Nachricht")
-        if st.button("Absenden"):
-            if name and email and message:
-                st.success("✅ Nachricht gesendet!")
-                st.balloons()
-            else:
-                st.error("Bitte alle Felder ausfüllen")
-    
+    st.write("**Telefon:** +49 89 123 456 78")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ========== BLOG ==========
-elif st.session_state.page == 'blog':
-    st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.title("📰 Ratgeber & Blog")
-    st.write("---")
-    
-    with st.expander("📝 10 Tipps für eine erfolgreiche Leasingrückgabe"):
-        st.write("Hier kommen die Tipps...")
-    with st.expander("🚗 Häufige Fehler bei Audi-Leasingrückgaben"):
-        st.write("Diese Fehler sollten Sie vermeiden...")
-    with st.expander("💰 So sparen Sie bei der Rückgabe"):
-        st.write("Geld-Spar-Tipps...")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# ========== RECHTLICHES ==========
 elif st.session_state.page == 'legal':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.title("⚖️ Rechtliches")
-    
-    tabs = st.tabs(["📄 AGB", "🔒 Datenschutz", "ℹ️ Impressum"])
-    
+    tabs = st.tabs(["AGB", "Datenschutz", "Impressum"])
     with tabs[0]:
-        st.markdown("""
-        ## Allgemeine Geschäftsbedingungen
-        
-        **§1 Geltungsbereich**  
-        Diese AGB gelten für alle Leistungen von ReturnGuard...
-        
-        **§2 Leistungen**  
-        ReturnGuard bietet...
-        """)
-    
-    with tabs[1]:
-        st.markdown("""
-        ## Datenschutzerklärung
-        
-        Wir nehmen den Schutz Ihrer Daten ernst...
-        """)
-    
-    with tabs[2]:
-        st.markdown("""
-        ## Impressum
-        
-        **ReturnGuard GmbH**  
-        Musterstraße 123  
-        80331 München
-        
-        **Geschäftsführer:** Max Mustermann  
-        **USt-ID:** DE123456789
-        """)
-    
+        st.write("AGB...")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Footer
 st.markdown("---")
-st.markdown('<div style="text-align: center; color: #718096; padding: 20px;">🛡️ ReturnGuard - Ihr Partner für faire Leasingrückgaben<br/>Datenschutz | AGB | Impressum</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align: center; color: #718096; padding: 20px;">🛡️ ReturnGuard</div>', unsafe_allow_html=True)
