@@ -14,16 +14,16 @@ st.markdown("""
     box-sizing: border-box;
 }
 
-/* OPTIMIERTE BANKING OPTIK */
-.stApp { 
-    background: #FAFBFC;
+/* PROFESSIONELLE SERIOESE OPTIK */
+.stApp {
+    background: #F9FAFB;
 }
 
 /* EMOTIONALER HERO - OHNE FORMULAR */
 .hero-section {
-    background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(46, 91, 255, 0.85) 100%),
+    background: linear-gradient(135deg, rgba(27, 54, 93, 0.95) 0%, rgba(30, 58, 138, 0.92) 100%),
                 url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920') center/cover;
-    padding: 120px 20px 80px 20px; 
+    padding: 120px 20px 80px 20px;
     text-align: center;
     color: white;
     position: relative;
@@ -68,14 +68,14 @@ st.markdown("""
 
 .hero-cta {
     display: inline-block;
-    background: #FF6B35;
+    background: #059669;
     color: white;
     padding: 18px 50px;
     border-radius: 8px;
     font-size: 1.2rem;
     font-weight: 600;
     text-decoration: none;
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
     transition: all 0.3s ease;
     animation: fadeInUp 0.8s ease-out 0.4s backwards;
     border: 2px solid transparent;
@@ -83,8 +83,8 @@ st.markdown("""
 
 .hero-cta:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(255, 107, 53, 0.5);
-    background: #FF8555;
+    box-shadow: 0 12px 35px rgba(5, 150, 105, 0.5);
+    background: #047857;
 }
 
 @keyframes fadeInUp {
@@ -101,8 +101,8 @@ st.markdown("""
 /* SOCIAL PROOF BANNER - DIREKT UNTER HERO */
 .social-proof-banner {
     background: white;
-    border-top: 3px solid #FF6B35;
-    border-bottom: 1px solid #E8EBED;
+    border-top: 3px solid #1B365D;
+    border-bottom: 1px solid #E5E7EB;
     padding: 35px 20px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -124,21 +124,21 @@ st.markdown("""
 .stat-number {
     font-size: 3rem;
     font-weight: 700;
-    color: #2E5BFF;
+    color: #1B365D;
     line-height: 1;
     margin-bottom: 8px;
 }
 
 .stat-label {
     font-size: 0.95rem;
-    color: #5F6B7A;
+    color: #6B7280;
     font-weight: 500;
 }
 
 .testimonial-preview {
     margin-top: 25px;
     font-size: 1.05rem;
-    color: #1A2332;
+    color: #1F2937;
     font-style: italic;
 }
 
@@ -163,14 +163,14 @@ st.markdown("""
     text-align: center;
     font-size: 2.5rem;
     font-weight: 600;
-    color: #1A2332;
+    color: #1F2937;
     margin-bottom: 15px;
 }
 
 .process-subtitle {
     text-align: center;
     font-size: 1.2rem;
-    color: #5F6B7A;
+    color: #6B7280;
     margin-bottom: 60px;
 }
 
@@ -183,9 +183,9 @@ st.markdown("""
 .process-step {
     text-align: center;
     padding: 40px 30px;
-    background: #FAFBFC;
+    background: white;
     border-radius: 12px;
-    border: 2px solid #E8EBED;
+    border: 2px solid #E5E7EB;
     transition: all 0.3s ease;
     position: relative;
     flex: 1;
@@ -193,14 +193,14 @@ st.markdown("""
 
 .process-step:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(46, 91, 255, 0.15);
-    border-color: #2E5BFF;
+    box-shadow: 0 12px 30px rgba(27, 54, 93, 0.15);
+    border-color: #1B365D;
 }
 
 .step-number {
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, #2E5BFF 0%, #0040DD 100%);
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -209,7 +209,7 @@ st.markdown("""
     font-size: 2rem;
     font-weight: 700;
     margin: 0 auto 25px auto;
-    box-shadow: 0 8px 20px rgba(46, 91, 255, 0.3);
+    box-shadow: 0 8px 20px rgba(27, 54, 93, 0.3);
 }
 
 .step-icon {
@@ -220,13 +220,13 @@ st.markdown("""
 .step-title {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #1A2332;
+    color: #1F2937;
     margin-bottom: 15px;
 }
 
 .step-description {
     font-size: 1rem;
-    color: #5F6B7A;
+    color: #6B7280;
     line-height: 1.6;
 }
 
@@ -262,7 +262,7 @@ st.markdown("""
 }
 
 .floating-phone {
-    background: linear-gradient(135deg, #2E5BFF 0%, #0040DD 100%);
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
 }
 
 .floating-whatsapp {
@@ -270,7 +270,7 @@ st.markdown("""
 }
 
 .floating-main {
-    background: linear-gradient(135deg, #FF6B35 0%, #FF8555 100%);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
     width: 70px;
     height: 70px;
     font-size: 2rem;
@@ -278,7 +278,7 @@ st.markdown("""
 
 /* URGENCY BANNER */
 .urgency-banner {
-    background: linear-gradient(135deg, #FF6B35 0%, #FF8555 100%);
+    background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
     color: white;
     padding: 18px 30px;
     text-align: center;
@@ -287,7 +287,7 @@ st.markdown("""
     margin: 40px auto;
     max-width: 800px;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
     animation: pulse 2s infinite;
 }
 
@@ -310,20 +310,20 @@ st.markdown("""
     margin: 0 auto;
 }
 
-.trust-badge { 
+.trust-badge {
     background: white;
     padding: 35px 25px;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 2px 10px rgba(26, 35, 50, 0.06);
-    border: 2px solid #E8EBED;
+    box-shadow: 0 2px 10px rgba(31, 41, 55, 0.06);
+    border: 2px solid #E5E7EB;
     transition: all 0.3s ease;
 }
 
 .trust-badge:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(26, 35, 50, 0.12);
-    border-color: #2E5BFF;
+    box-shadow: 0 8px 25px rgba(31, 41, 55, 0.12);
+    border-color: #1B365D;
 }
 
 .trust-icon { 
@@ -333,7 +333,7 @@ st.markdown("""
 
 .trust-title {
     font-size: 1rem;
-    color: #1A2332;
+    color: #1F2937;
     font-weight: 600;
     line-height: 1.5;
 }
@@ -352,13 +352,13 @@ st.markdown("""
 .section-title {
     font-size: 2.5rem;
     font-weight: 600;
-    color: #1A2332;
+    color: #1F2937;
     margin-bottom: 15px;
 }
 
 .section-subtitle {
     font-size: 1.2rem;
-    color: #5F6B7A;
+    color: #6B7280;
 }
 
 .packages-grid {
@@ -373,7 +373,7 @@ st.markdown("""
     background: white;
     border-radius: 12px;
     padding: 40px 30px;
-    border: 2px solid #E8EBED;
+    border: 2px solid #E5E7EB;
     transition: all 0.4s ease;
     position: relative;
     text-align: center;
@@ -381,13 +381,13 @@ st.markdown("""
 
 .package-card:hover {
     transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(26, 35, 50, 0.15);
-    border-color: #2E5BFF;
+    box-shadow: 0 15px 40px rgba(31, 41, 55, 0.15);
+    border-color: #1B365D;
 }
 
 .package-popular {
-    border: 3px solid #FF6B35;
-    background: linear-gradient(180deg, #FFFAF7 0%, white 100%);
+    border: 3px solid #059669;
+    background: linear-gradient(180deg, #F0FDF4 0%, white 100%);
     transform: scale(1.05);
 }
 
@@ -400,14 +400,14 @@ st.markdown("""
     top: -15px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #FF6B35 0%, #FF8555 100%);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
     color: white;
     padding: 6px 20px;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
 }
 
 .package-icon {
@@ -418,27 +418,27 @@ st.markdown("""
 .package-title {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #1A2332;
+    color: #1F2937;
     margin-bottom: 8px;
 }
 
 .package-subtitle {
     font-size: 0.95rem;
-    color: #5F6B7A;
+    color: #6B7280;
     margin-bottom: 25px;
 }
 
 .package-price {
     font-size: 3.5rem;
     font-weight: 300;
-    color: #2E5BFF;
+    color: #1B365D;
     margin: 25px 0;
     line-height: 1;
 }
 
 .package-price-unit {
     font-size: 1.2rem;
-    color: #5F6B7A;
+    color: #6B7280;
     font-weight: 400;
 }
 
@@ -451,8 +451,8 @@ st.markdown("""
 
 .package-features li {
     padding: 14px 0;
-    color: #1A2332;
-    border-bottom: 1px solid #F5F7FA;
+    color: #1F2937;
+    border-bottom: 1px solid #F3F4F6;
     font-size: 0.95rem;
     line-height: 1.5;
 }
@@ -463,7 +463,7 @@ st.markdown("""
 
 /* FORMULAR-SECTION */
 .calculator-section {
-    background: linear-gradient(135deg, #F5F7FA 0%, #E8EBED 100%);
+    background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
     padding: 80px 20px;
 }
 
@@ -473,21 +473,21 @@ st.markdown("""
     border-radius: 12px;
     max-width: 700px;
     margin: 0 auto;
-    box-shadow: 0 10px 40px rgba(26, 35, 50, 0.1);
-    border: 2px solid #E8EBED;
+    box-shadow: 0 10px 40px rgba(31, 41, 55, 0.1);
+    border: 2px solid #E5E7EB;
 }
 
 .calculator-title {
     font-size: 2rem;
     font-weight: 600;
-    color: #1A2332;
+    color: #1F2937;
     text-align: center;
     margin-bottom: 15px;
 }
 
 .calculator-subtitle {
     font-size: 1.1rem;
-    color: #5F6B7A;
+    color: #6B7280;
     text-align: center;
     margin-bottom: 40px;
 }
@@ -495,13 +495,13 @@ st.markdown("""
 .form-label {
     display: block;
     font-weight: 600;
-    color: #1A2332;
+    color: #1F2937;
     margin-bottom: 8px;
     font-size: 0.95rem;
 }
 
 .result-box {
-    background: linear-gradient(135deg, #2E5BFF 0%, #0040DD 100%);
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
     padding: 40px;
     border-radius: 10px;
     text-align: center;
@@ -538,13 +538,13 @@ st.markdown("""
     padding: 60px 40px;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 15px rgba(26, 35, 50, 0.06);
-    border: 1px solid #E8EBED;
+    box-shadow: 0 2px 15px rgba(31, 41, 55, 0.06);
+    border: 1px solid #E5E7EB;
 }
 
 /* BUTTONS */
 div.stButton > button {
-    background: linear-gradient(135deg, #2E5BFF 0%, #0040DD 100%);
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
     color: white;
     border: none;
     padding: 16px 35px;
@@ -554,19 +554,19 @@ div.stButton > button {
     width: 100%;
     transition: all 0.3s ease;
     letter-spacing: 0.3px;
-    box-shadow: 0 4px 15px rgba(46, 91, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(27, 54, 93, 0.3);
 }
 
 div.stButton > button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(46, 91, 255, 0.4);
-    background: linear-gradient(135deg, #0040DD 0%, #2E5BFF 100%);
+    box-shadow: 0 8px 25px rgba(27, 54, 93, 0.4);
+    background: linear-gradient(135deg, #1E3A8A 0%, #1B365D 100%);
 }
 
 /* NAVIGATION */
 .top-nav {
     background: white;
-    border-bottom: 1px solid #E8EBED;
+    border-bottom: 1px solid #E5E7EB;
     padding: 20px 0;
     position: sticky;
     top: 0;
@@ -578,23 +578,23 @@ div.stButton > button:hover {
     text-align: center;
     font-size: 1.6rem;
     font-weight: 600;
-    color: #1A2332;
+    color: #1B365D;
     margin-bottom: 15px;
 }
 
 div[data-testid="column"] > div.stButton > button {
     background: transparent;
-    color: #5F6B7A;
-    border: 1px solid #E8EBED;
+    color: #6B7280;
+    border: 1px solid #E5E7EB;
     box-shadow: none;
     font-weight: 500;
     padding: 12px 20px;
 }
 
 div[data-testid="column"] > div.stButton > button:hover {
-    background: #F5F7FA;
-    color: #1A2332;
-    border-color: #2E5BFF;
+    background: #F3F4F6;
+    color: #1F2937;
+    border-color: #1B365D;
     transform: none;
 }
 
@@ -852,60 +852,266 @@ if st.session_state.page == 'home':
             </div>
         ''', unsafe_allow_html=True)
         st.button("Jetzt buchen", key="b4", use_container_width=True)
-    
-    # CALCULATOR SECTION
-    st.markdown('<div id="calculator" class="calculator-section">', unsafe_allow_html=True)
-    st.markdown('''
-        <div class="calculator-box">
-            <h2 class="calculator-title">💰 Kostenrechner</h2>
-            <p class="calculator-subtitle">Berechnen Sie Ihre voraussichtlichen Rückgabekosten</p>
-        </div>
-    ''', unsafe_allow_html=True)
-    
-    calc_col1, calc_col2 = st.columns(2)
-    
-    with calc_col1:
-        st.markdown('<label class="form-label">Fahrzeugmarke</label>', unsafe_allow_html=True)
-        brand = st.selectbox("", ["Audi", "BMW", "Mercedes", "VW", "Andere"], label_visibility="collapsed", key="brand")
-    
-    with calc_col2:
-        st.markdown('<label class="form-label">Modell</label>', unsafe_allow_html=True)
-        model = st.selectbox("", ["A3", "A4", "A6", "Q3", "Q5", "Q7"], label_visibility="collapsed", key="model")
-    
-    calc_col3, calc_col4 = st.columns(2)
-    
-    with calc_col3:
-        st.markdown('<label class="form-label">Laufleistung (km)</label>', unsafe_allow_html=True)
-        mileage = st.number_input("", min_value=0, max_value=200000, value=50000, step=1000, label_visibility="collapsed", key="mileage")
-    
-    with calc_col4:
-        st.markdown('<label class="form-label">Leasingdauer (Monate)</label>', unsafe_allow_html=True)
-        duration = st.number_input("", min_value=12, max_value=60, value=36, step=6, label_visibility="collapsed", key="duration")
-    
-    if st.button("Jetzt kostenlos berechnen", key="calc", use_container_width=True):
-        estimated_cost = 1500 + (mileage / 1000) * 0.5
-        savings = estimated_cost * 0.65
-        
-        st.markdown(f'''
-            <div class="result-box">
-                <div class="result-label">Geschätzte Rückgabekosten</div>
-                <div class="result-amount">{estimated_cost:,.0f} €</div>
-            </div>
-            
-            <div class="savings-box">
-                <div class="result-label">Mögliche Ersparnis mit ReturnGuard</div>
-                <div class="result-amount" style="font-size: 3rem;">bis zu {savings:,.0f} €</div>
-            </div>
-        ''', unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== ANDERE SEITEN ====================
 elif st.session_state.page == 'calculator':
-    st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h1 class="section-title">💰 Kostenrechner</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Detaillierte Kostenberechnung für Ihre Leasingrückgabe</p>', unsafe_allow_html=True)
-    st.write("Vollständiger Rechner hier...")
+    # GUTACHTERTABELLE - Basierend auf typischen Leasingrücknahmegutachten
+    damage_costs = {
+        'Frontschürze': [0, 120, 280, 650, 1200],
+        'Heckschürze': [0, 110, 260, 620, 1150],
+        'Kotflügel vorn links': [0, 130, 320, 720, 1350],
+        'Kotflügel vorn rechts': [0, 130, 320, 720, 1350],
+        'Kotflügel hinten links': [0, 125, 310, 700, 1300],
+        'Kotflügel hinten rechts': [0, 125, 310, 700, 1300],
+        'Tür Fahrerseite': [0, 140, 350, 780, 1450],
+        'Tür Beifahrerseite': [0, 140, 350, 780, 1450],
+        'Tür hinten links': [0, 135, 340, 760, 1420],
+        'Tür hinten rechts': [0, 135, 340, 760, 1420],
+        'Motorhaube': [0, 150, 380, 850, 1550],
+        'Dach': [0, 180, 450, 950, 1800],
+        'Heckklappe/Kofferraum': [0, 145, 370, 820, 1500],
+        'Felgen (Satz)': [0, 200, 480, 1100, 2200],
+        'Windschutzscheibe': [0, 80, 350, 850, 1200],
+        'Seitenscheiben': [0, 60, 180, 420, 800],
+        'Sitze': [0, 90, 240, 580, 1100],
+        'Armaturenbrett': [0, 70, 190, 450, 900],
+        'Teppich/Fußmatten': [0, 50, 140, 320, 650],
+        'Lackierung gesamt': [0, 250, 650, 1500, 3500],
+    }
+
+    damage_levels = [
+        '0 - Keine Beschädigung',
+        '1 - Leichte Kratzer/Gebrauchsspuren',
+        '2 - Mittlere Kratzer/Dellen',
+        '3 - Starke Beschädigungen',
+        '4 - Sehr starke Beschädigungen/Austausch'
+    ]
+
+    st.markdown('<div class="calculator-section">', unsafe_allow_html=True)
+    st.markdown('''
+        <div class="calculator-box" style="max-width: 900px;">
+            <h1 class="calculator-title">🔧 Schadensrechner</h1>
+            <p class="calculator-subtitle">
+                Bewerten Sie die Beschädigungen an Ihrem Fahrzeug basierend auf einem Leasingrücknahmegutachten
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # Initialisiere Session State für Beschädigungen
+    if 'damages' not in st.session_state:
+        st.session_state.damages = {part: 0 for part in damage_costs.keys()}
+
+    st.markdown("### 🚗 Außenbereich")
+    st.markdown("Bewerten Sie den Zustand der Karosserieteile:")
+
+    exterior_parts = [
+        'Frontschürze', 'Heckschürze',
+        'Kotflügel vorn links', 'Kotflügel vorn rechts',
+        'Kotflügel hinten links', 'Kotflügel hinten rechts',
+        'Tür Fahrerseite', 'Tür Beifahrerseite',
+        'Tür hinten links', 'Tür hinten rechts',
+        'Motorhaube', 'Dach', 'Heckklappe/Kofferraum'
+    ]
+
+    col1, col2 = st.columns(2)
+    for idx, part in enumerate(exterior_parts):
+        with col1 if idx % 2 == 0 else col2:
+            st.session_state.damages[part] = st.slider(
+                f"**{part}**",
+                min_value=0,
+                max_value=4,
+                value=st.session_state.damages[part],
+                format="%d",
+                help=f"0 = Keine Schäden | 4 = Sehr starke Schäden",
+                key=f"slider_{part}"
+            )
+            st.caption(f"Stufe {st.session_state.damages[part]}: {damage_levels[st.session_state.damages[part]].split(' - ')[1]}")
+
+    st.markdown("---")
+    st.markdown("### 🎨 Lackierung & Scheiben")
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.session_state.damages['Lackierung gesamt'] = st.slider(
+            "**Lackierung gesamt**",
+            min_value=0,
+            max_value=4,
+            value=st.session_state.damages['Lackierung gesamt'],
+            format="%d",
+            help="Allgemeiner Lackzustand des Fahrzeugs",
+            key="slider_Lackierung gesamt"
+        )
+        st.caption(f"Stufe {st.session_state.damages['Lackierung gesamt']}: {damage_levels[st.session_state.damages['Lackierung gesamt']].split(' - ')[1]}")
+
+        st.session_state.damages['Windschutzscheibe'] = st.slider(
+            "**Windschutzscheibe**",
+            min_value=0,
+            max_value=4,
+            value=st.session_state.damages['Windschutzscheibe'],
+            format="%d",
+            help="Steinschläge, Risse, etc.",
+            key="slider_Windschutzscheibe"
+        )
+        st.caption(f"Stufe {st.session_state.damages['Windschutzscheibe']}: {damage_levels[st.session_state.damages['Windschutzscheibe']].split(' - ')[1]}")
+
+    with col4:
+        st.session_state.damages['Felgen (Satz)'] = st.slider(
+            "**Felgen (Satz)**",
+            min_value=0,
+            max_value=4,
+            value=st.session_state.damages['Felgen (Satz)'],
+            format="%d",
+            help="Bordsteinschäden, Kratzer an allen Felgen",
+            key="slider_Felgen (Satz)"
+        )
+        st.caption(f"Stufe {st.session_state.damages['Felgen (Satz)']}: {damage_levels[st.session_state.damages['Felgen (Satz)']].split(' - ')[1]}")
+
+        st.session_state.damages['Seitenscheiben'] = st.slider(
+            "**Seitenscheiben**",
+            min_value=0,
+            max_value=4,
+            value=st.session_state.damages['Seitenscheiben'],
+            format="%d",
+            help="Alle Seitenscheiben",
+            key="slider_Seitenscheiben"
+        )
+        st.caption(f"Stufe {st.session_state.damages['Seitenscheiben']}: {damage_levels[st.session_state.damages['Seitenscheiben']].split(' - ')[1]}")
+
+    st.markdown("---")
+    st.markdown("### 🪑 Innenraum")
+
+    col5, col6 = st.columns(2)
+
+    interior_parts = ['Sitze', 'Armaturenbrett', 'Teppich/Fußmatten']
+
+    with col5:
+        st.session_state.damages['Sitze'] = st.slider(
+            "**Sitze**",
+            min_value=0,
+            max_value=4,
+            value=st.session_state.damages['Sitze'],
+            format="%d",
+            help="Flecken, Risse, Abnutzung",
+            key="slider_Sitze"
+        )
+        st.caption(f"Stufe {st.session_state.damages['Sitze']}: {damage_levels[st.session_state.damages['Sitze']].split(' - ')[1]}")
+
+        st.session_state.damages['Armaturenbrett'] = st.slider(
+            "**Armaturenbrett**",
+            min_value=0,
+            max_value=4,
+            value=st.session_state.damages['Armaturenbrett'],
+            format="%d",
+            help="Kratzer, Risse im Kunststoff",
+            key="slider_Armaturenbrett"
+        )
+        st.caption(f"Stufe {st.session_state.damages['Armaturenbrett']}: {damage_levels[st.session_state.damages['Armaturenbrett']].split(' - ')[1]}")
+
+    with col6:
+        st.session_state.damages['Teppich/Fußmatten'] = st.slider(
+            "**Teppich/Fußmatten**",
+            min_value=0,
+            max_value=4,
+            value=st.session_state.damages['Teppich/Fußmatten'],
+            format="%d",
+            help="Flecken, Abnutzung, Gerüche",
+            key="slider_Teppich/Fußmatten"
+        )
+        st.caption(f"Stufe {st.session_state.damages['Teppich/Fußmatten']}: {damage_levels[st.session_state.damages['Teppich/Fußmatten']].split(' - ')[1]}")
+
+    st.markdown("---")
+
+    # BERECHNUNG
+    if st.button("🔍 Beschädigungen schätzen", use_container_width=True, type="primary"):
+        total_cost = 0
+        damage_breakdown = []
+
+        for part, level in st.session_state.damages.items():
+            if level > 0:
+                cost = damage_costs[part][level]
+                total_cost += cost
+                damage_breakdown.append({
+                    'part': part,
+                    'level': level,
+                    'level_desc': damage_levels[level],
+                    'cost': cost
+                })
+
+        if total_cost > 0:
+            st.markdown(f'''
+                <div class="result-box">
+                    <div class="result-label">Geschätzte Gesamtkosten der Beschädigungen</div>
+                    <div class="result-amount">{total_cost:,.0f} €</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+            # Detaillierte Aufschlüsselung
+            st.markdown("---")
+            st.markdown("### 📋 Detaillierte Aufschlüsselung")
+
+            for item in sorted(damage_breakdown, key=lambda x: x['cost'], reverse=True):
+                st.markdown(f"""
+                <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #1B365D;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #1F2937;">{item['part']}</strong>
+                            <div style="color: #6B7280; font-size: 0.9rem;">{item['level_desc']}</div>
+                        </div>
+                        <div style="font-size: 1.3rem; font-weight: 600; color: #1B365D;">
+                            {item['cost']:,.0f} €
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # Ersparnis mit ReturnGuard
+            potential_savings = total_cost * 0.60
+            st.markdown(f'''
+                <div class="savings-box">
+                    <div class="result-label">💰 Mögliche Ersparnis mit ReturnGuard</div>
+                    <div class="result-amount" style="font-size: 3rem;">bis zu {potential_savings:,.0f} €</div>
+                    <p style="margin-top: 15px; font-size: 0.95rem; opacity: 0.9;">
+                        Unsere Experten verhandeln mit der Leasinggesellschaft und können durchschnittlich 60% der Kosten einsparen.
+                    </p>
+                </div>
+            ''', unsafe_allow_html=True)
+
+            st.markdown("---")
+            st.markdown("### 📞 Nächste Schritte")
+
+            col_a, col_b, col_c = st.columns(3)
+            with col_a:
+                st.markdown("""
+                <div style="text-align: center; padding: 20px; background: white; border-radius: 8px; border: 2px solid #E5E7EB;">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">📞</div>
+                    <strong>Kostenlose Beratung</strong>
+                    <div style="margin-top: 10px; color: #1B365D; font-weight: 600;">+49 89 123 456 78</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col_b:
+                st.markdown("""
+                <div style="text-align: center; padding: 20px; background: white; border-radius: 8px; border: 2px solid #E5E7EB;">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">💬</div>
+                    <strong>WhatsApp Kontakt</strong>
+                    <div style="margin-top: 10px; color: #25D366; font-weight: 600;">Jetzt chatten</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col_c:
+                st.markdown("""
+                <div style="text-align: center; padding: 20px; background: white; border-radius: 8px; border: 2px solid #E5E7EB;">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">📧</div>
+                    <strong>E-Mail Anfrage</strong>
+                    <div style="margin-top: 10px; color: #1B365D; font-weight: 600;">info@returnguard.de</div>
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info("ℹ️ Bitte bewerten Sie mindestens eine Beschädigung, um eine Schätzung zu erhalten.")
+
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.page == 'about':
