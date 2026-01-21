@@ -309,6 +309,168 @@ elif st.session_state.page == 'home':
         <div class="trust-badge"><div class="trust-icon">⭐</div><div class="trust-text">500+ Kunden</div></div>
     </div>''', unsafe_allow_html=True)
     
+    st.write("")
+    st.write("")
+    
+    # ========== NEU: USP SECTION ==========
+    st.markdown("## 🚀 Warum ReturnGuard anders ist")
+    
+    st.markdown("""
+        <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 30px 0;">
+            <h3 style="text-align: center; color: #2d3748; margin-bottom: 30px; font-size: 1.8rem;">
+                Wir sind nicht wie die anderen - Wir sind spezialisiert!
+            </h3>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    usp_col1, usp_col2, usp_col3, usp_col4 = st.columns(4)
+    
+    with usp_col1:
+        st.markdown("""
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-size: 3.5rem; margin-bottom: 15px;">🎯</div>
+                <h4 style="color: white; margin-bottom: 10px;">100% Leasing-Fokus</h4>
+                <p style="color: white; font-size: 0.95rem;">Wir machen NUR Leasingrückgaben - keine Ankäufe, kein Verkauf</p>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    with usp_col2:
+        st.markdown("""
+            <div style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); padding: 30px; border-radius: 15px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-size: 3.5rem; margin-bottom: 15px;">🤝</div>
+                <h4 style="color: white; margin-bottom: 10px;">Komplettservice</h4>
+                <p style="color: white; font-size: 0.95rem;">Gutachter + Anwalt + Werkstatt - alles aus einer Hand</p>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    with usp_col3:
+        st.markdown("""
+            <div style="background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); padding: 30px; border-radius: 15px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-size: 3.5rem; margin-bottom: 15px;">💎</div>
+                <h4 style="color: white; margin-bottom: 10px;">Digital + Persönlich</h4>
+                <p style="color: white; font-size: 0.95rem;">Online-Tools UND persönliche Betreuung vor Ort</p>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    with usp_col4:
+        st.markdown("""
+            <div style="background: linear-gradient(135deg, #E53E3E 0%, #C53030 100%); padding: 30px; border-radius: 15px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-size: 3.5rem; margin-bottom: 15px;">🏆</div>
+                <h4 style="color: white; margin-bottom: 10px;">Audi-Experten</h4>
+                <p style="color: white; font-size: 0.95rem;">Spezialisiert auf Audi - wir kennen ALLE Standards</p>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    st.write("")
+    st.write("")
+    
+    # ========== NEU: VERGLEICHS-TABELLE ==========
+    st.markdown("## 📊 ReturnGuard vs. Alternativen")
+    
+    st.markdown("""
+        <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 30px 0;">
+            <h3 style="text-align: center; color: #2d3748; margin-bottom: 40px; font-size: 1.8rem;">
+                Der direkte Vergleich - Wer bietet was?
+            </h3>
+            
+            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <th style="padding: 20px; text-align: left; border-radius: 10px 0 0 0; font-size: 1.1rem;">Leistung</th>
+                        <th style="padding: 20px; font-size: 1.1rem;">Alleine machen</th>
+                        <th style="padding: 20px; font-size: 1.1rem;">Einzelner Gutachter</th>
+                        <th style="padding: 20px; font-size: 1.1rem; background: #FFD700; color: #2d3748; border-radius: 0 10px 0 0;">ReturnGuard ⭐</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background: #f8f9fa;">
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Gutachten vor Rückgabe</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px;">✅</td>
+                        <td style="padding: 15px; background: #e6f7ff;">✅✅</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Rechtliche Beratung</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px; background: #e6f7ff;">✅ Fachanwalt</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Verhandlung mit Leasinggeber</td>
+                        <td style="padding: 15px;">❌ Selbst</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px; background: #e6f7ff;">✅ Professionell</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Werkstatt-Netzwerk</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px;">Ggf. 1-2</td>
+                        <td style="padding: 15px; background: #e6f7ff;">✅ 50+ Partner</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Kostenoptimierung</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px;">Bedingt</td>
+                        <td style="padding: 15px; background: #e6f7ff;">✅ Bis 60%</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Zeitaufwand für Sie</td>
+                        <td style="padding: 15px;">⏰ 10-20h</td>
+                        <td style="padding: 15px;">⏰ 5-10h</td>
+                        <td style="padding: 15px; background: #e6f7ff;">⏰ 1-2h</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Dokumentation</td>
+                        <td style="padding: 15px;">Handy-Fotos</td>
+                        <td style="padding: 15px;">Professionell</td>
+                        <td style="padding: 15px; background: #e6f7ff;">Digital + GPS</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Erfolgsgarantie</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px; background: #e6f7ff;">✅ Geld-zurück</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td style="padding: 15px; text-align: left; font-weight: 600;">Support</td>
+                        <td style="padding: 15px;">❌</td>
+                        <td style="padding: 15px;">Werktags</td>
+                        <td style="padding: 15px; background: #e6f7ff;">✅ 24/7</td>
+                    </tr>
+                    <tr style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; font-weight: 700;">
+                        <td style="padding: 20px; text-align: left; font-size: 1.1rem; border-radius: 0 0 0 10px;">Durchschnittliche Kosten</td>
+                        <td style="padding: 20px; font-size: 1.2rem;">3.500€</td>
+                        <td style="padding: 20px; font-size: 1.2rem;">2.000€</td>
+                        <td style="padding: 20px; font-size: 1.3rem; background: #FFD700; color: #2d3748; border-radius: 0 0 10px 0;">
+                            699€ - 999€<br/>
+                            <span style="font-size: 0.9rem;">💰 Ersparnis: 2.500€+</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    st.write("")
+    
+    # Zusammenfassung unter Tabelle
+    st.markdown("""
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0;">
+            <h3 style="color: white; font-size: 1.8rem; margin-bottom: 15px;">
+                🎯 Das Ergebnis ist klar!
+            </h3>
+            <p style="color: white; font-size: 1.2rem; margin-bottom: 20px;">
+                Mit ReturnGuard sparen Sie durchschnittlich <b>2.500€</b> und über <b>15 Stunden Zeit</b>
+            </p>
+            <p style="color: white; font-size: 1rem;">
+                ✅ Mehr Service • ✅ Weniger Kosten • ✅ Garantierte Ersparnis
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    st.write("")
+    st.write("")
+    
     st.markdown("## 🎁 Unsere Pakete")
     pkg1, pkg2, pkg3, pkg4 = st.columns(4)
     
