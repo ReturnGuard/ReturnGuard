@@ -1,4 +1,31 @@
-import streamlit as st
+# NEUE: Sticky Contact Buttons
+.sticky-contact {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.3s;
+    text-decoration: none;
+}
+
+.contact-button:hover { transform: scale(1.1); }
+.whatsapp-btn { background: #25D366; }
+.phone-btn { background: #667eea; }import streamlit as st
 import re
 
 st.set_page_config(page_title="ReturnGuard", layout="wide", initial_sidebar_state="collapsed")
