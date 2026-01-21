@@ -422,9 +422,12 @@ st.write("")
 st.markdown("## 🎁 Wählen Sie Ihr perfektes Paket")
 st.markdown('<p style="text-align: center; font-size: 1.1rem; color: #4a5568; margin-bottom: 40px;">Transparente Preise - Keine versteckten Kosten - Volle Kontrolle</p>', unsafe_allow_html=True)
 
-st.markdown("""
-    <div class="package-comparison">
-        <!-- BASIS PAKET -->
+# Pakete in Spalten aufteilen
+pkg_col1, pkg_col2, pkg_col3, pkg_col4 = st.columns(4)
+
+# BASIS PAKET
+with pkg_col1:
+    st.markdown("""
         <div class="package-card">
             <span class="package-icon">🥉</span>
             <h3 class="package-title">Basis</h3>
@@ -436,10 +439,13 @@ st.markdown("""
                 <li><span class="feature-icon">✓</span> Email-Support (48h)</li>
                 <li><span class="feature-icon">✓</span> Checkliste Rückgabe</li>
             </ul>
-            <button class="cta-button">Jetzt buchen</button>
         </div>
-        
-        <!-- STANDARD PAKET -->
+    """, unsafe_allow_html=True)
+    st.button("Jetzt buchen", key="btn_basis", use_container_width=True)
+
+# STANDARD PAKET
+with pkg_col2:
+    st.markdown("""
         <div class="package-card">
             <span class="package-icon">🥈</span>
             <h3 class="package-title">Standard</h3>
@@ -453,10 +459,13 @@ st.markdown("""
                 <li><span class="feature-icon">✓</span> Optimierungs-Tipps</li>
                 <li><span class="feature-icon">✓</span> Priority Email-Support (24h)</li>
             </ul>
-            <button class="cta-button">Jetzt buchen</button>
         </div>
-        
-        <!-- PREMIUM PAKET (BELIEBT) -->
+    """, unsafe_allow_html=True)
+    st.button("Jetzt buchen", key="btn_standard", use_container_width=True)
+
+# PREMIUM PAKET (BELIEBT)
+with pkg_col3:
+    st.markdown("""
         <div class="package-card package-popular">
             <div class="popular-badge">🔥 BELIEBT</div>
             <span class="package-icon">🥇</span>
@@ -472,10 +481,13 @@ st.markdown("""
                 <li><span class="feature-icon">✓</span> 24/7 Hotline-Support</li>
                 <li><span class="feature-icon">✓</span> Schadensbehebungs-Netzwerk</li>
             </ul>
-            <button class="cta-button">Jetzt buchen</button>
         </div>
-        
-        <!-- VIP PAKET -->
+    """, unsafe_allow_html=True)
+    st.button("Jetzt buchen", key="btn_premium", use_container_width=True)
+
+# VIP PAKET
+with pkg_col4:
+    st.markdown("""
         <div class="package-card">
             <span class="package-icon">💎</span>
             <h3 class="package-title">VIP All-Inclusive</h3>
@@ -491,10 +503,9 @@ st.markdown("""
                 <li><span class="feature-icon">✓</span> Vor-Ort Begleitung Rückgabe</li>
                 <li><span class="feature-icon">✓</span> Premium-Hotline 24/7</li>
             </ul>
-            <button class="cta-button">Jetzt buchen</button>
         </div>
-    </div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+    st.button("Jetzt buchen", key="btn_vip", use_container_width=True)
 
 st.write("")
 st.write("")
