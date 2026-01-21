@@ -918,16 +918,17 @@ elif st.session_state.page == 'calculator':
     col1, col2 = st.columns(2)
     for idx, part in enumerate(exterior_parts):
         with col1 if idx % 2 == 0 else col2:
-            st.session_state.damages[part] = st.slider(
+            current_value = st.slider(
                 f"**{part}**",
                 min_value=0,
                 max_value=4,
-                value=st.session_state.damages[part],
+                value=st.session_state.damages.get(part, 0),
                 format="%d",
                 help=f"0 = Keine Schäden | 4 = Sehr starke Schäden",
                 key=f"slider_{part}"
             )
-            st.caption(f"Stufe {st.session_state.damages[part]}: {damage_levels[st.session_state.damages[part]].split(' - ')[1]}")
+            st.session_state.damages[part] = current_value
+            st.caption(f"Stufe {current_value}: {damage_levels[current_value].split(' - ')[1]}")
 
     st.markdown("---")
     st.markdown("### 🎨 Lackierung & Scheiben")
@@ -935,50 +936,54 @@ elif st.session_state.page == 'calculator':
     col3, col4 = st.columns(2)
 
     with col3:
-        st.session_state.damages['Lackierung gesamt'] = st.slider(
+        lackierung_value = st.slider(
             "**Lackierung gesamt**",
             min_value=0,
             max_value=4,
-            value=st.session_state.damages['Lackierung gesamt'],
+            value=st.session_state.damages.get('Lackierung gesamt', 0),
             format="%d",
             help="Allgemeiner Lackzustand des Fahrzeugs",
             key="slider_Lackierung gesamt"
         )
-        st.caption(f"Stufe {st.session_state.damages['Lackierung gesamt']}: {damage_levels[st.session_state.damages['Lackierung gesamt']].split(' - ')[1]}")
+        st.session_state.damages['Lackierung gesamt'] = lackierung_value
+        st.caption(f"Stufe {lackierung_value}: {damage_levels[lackierung_value].split(' - ')[1]}")
 
-        st.session_state.damages['Windschutzscheibe'] = st.slider(
+        windschutz_value = st.slider(
             "**Windschutzscheibe**",
             min_value=0,
             max_value=4,
-            value=st.session_state.damages['Windschutzscheibe'],
+            value=st.session_state.damages.get('Windschutzscheibe', 0),
             format="%d",
             help="Steinschläge, Risse, etc.",
             key="slider_Windschutzscheibe"
         )
-        st.caption(f"Stufe {st.session_state.damages['Windschutzscheibe']}: {damage_levels[st.session_state.damages['Windschutzscheibe']].split(' - ')[1]}")
+        st.session_state.damages['Windschutzscheibe'] = windschutz_value
+        st.caption(f"Stufe {windschutz_value}: {damage_levels[windschutz_value].split(' - ')[1]}")
 
     with col4:
-        st.session_state.damages['Felgen (Satz)'] = st.slider(
+        felgen_value = st.slider(
             "**Felgen (Satz)**",
             min_value=0,
             max_value=4,
-            value=st.session_state.damages['Felgen (Satz)'],
+            value=st.session_state.damages.get('Felgen (Satz)', 0),
             format="%d",
             help="Bordsteinschäden, Kratzer an allen Felgen",
             key="slider_Felgen (Satz)"
         )
-        st.caption(f"Stufe {st.session_state.damages['Felgen (Satz)']}: {damage_levels[st.session_state.damages['Felgen (Satz)']].split(' - ')[1]}")
+        st.session_state.damages['Felgen (Satz)'] = felgen_value
+        st.caption(f"Stufe {felgen_value}: {damage_levels[felgen_value].split(' - ')[1]}")
 
-        st.session_state.damages['Seitenscheiben'] = st.slider(
+        seiten_value = st.slider(
             "**Seitenscheiben**",
             min_value=0,
             max_value=4,
-            value=st.session_state.damages['Seitenscheiben'],
+            value=st.session_state.damages.get('Seitenscheiben', 0),
             format="%d",
             help="Alle Seitenscheiben",
             key="slider_Seitenscheiben"
         )
-        st.caption(f"Stufe {st.session_state.damages['Seitenscheiben']}: {damage_levels[st.session_state.damages['Seitenscheiben']].split(' - ')[1]}")
+        st.session_state.damages['Seitenscheiben'] = seiten_value
+        st.caption(f"Stufe {seiten_value}: {damage_levels[seiten_value].split(' - ')[1]}")
 
     st.markdown("---")
     st.markdown("### 🪑 Innenraum")
@@ -988,39 +993,42 @@ elif st.session_state.page == 'calculator':
     interior_parts = ['Sitze', 'Armaturenbrett', 'Teppich/Fußmatten']
 
     with col5:
-        st.session_state.damages['Sitze'] = st.slider(
+        sitze_value = st.slider(
             "**Sitze**",
             min_value=0,
             max_value=4,
-            value=st.session_state.damages['Sitze'],
+            value=st.session_state.damages.get('Sitze', 0),
             format="%d",
             help="Flecken, Risse, Abnutzung",
             key="slider_Sitze"
         )
-        st.caption(f"Stufe {st.session_state.damages['Sitze']}: {damage_levels[st.session_state.damages['Sitze']].split(' - ')[1]}")
+        st.session_state.damages['Sitze'] = sitze_value
+        st.caption(f"Stufe {sitze_value}: {damage_levels[sitze_value].split(' - ')[1]}")
 
-        st.session_state.damages['Armaturenbrett'] = st.slider(
+        armatur_value = st.slider(
             "**Armaturenbrett**",
             min_value=0,
             max_value=4,
-            value=st.session_state.damages['Armaturenbrett'],
+            value=st.session_state.damages.get('Armaturenbrett', 0),
             format="%d",
             help="Kratzer, Risse im Kunststoff",
             key="slider_Armaturenbrett"
         )
-        st.caption(f"Stufe {st.session_state.damages['Armaturenbrett']}: {damage_levels[st.session_state.damages['Armaturenbrett']].split(' - ')[1]}")
+        st.session_state.damages['Armaturenbrett'] = armatur_value
+        st.caption(f"Stufe {armatur_value}: {damage_levels[armatur_value].split(' - ')[1]}")
 
     with col6:
-        st.session_state.damages['Teppich/Fußmatten'] = st.slider(
+        teppich_value = st.slider(
             "**Teppich/Fußmatten**",
             min_value=0,
             max_value=4,
-            value=st.session_state.damages['Teppich/Fußmatten'],
+            value=st.session_state.damages.get('Teppich/Fußmatten', 0),
             format="%d",
             help="Flecken, Abnutzung, Gerüche",
             key="slider_Teppich/Fußmatten"
         )
-        st.caption(f"Stufe {st.session_state.damages['Teppich/Fußmatten']}: {damage_levels[st.session_state.damages['Teppich/Fußmatten']].split(' - ')[1]}")
+        st.session_state.damages['Teppich/Fußmatten'] = teppich_value
+        st.caption(f"Stufe {teppich_value}: {damage_levels[teppich_value].split(' - ')[1]}")
 
     st.markdown("---")
 
