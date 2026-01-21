@@ -1,31 +1,4 @@
-# NEUE: Sticky Contact Buttons
-.sticky-contact {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.contact-button {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    cursor: pointer;
-    transition: transform 0.3s;
-    text-decoration: none;
-}
-
-.contact-button:hover { transform: scale(1.1); }
-.whatsapp-btn { background: #25D366; }
-.phone-btn { background: #667eea; }import streamlit as st
+import streamlit as st
 import re
 
 st.set_page_config(page_title="ReturnGuard", layout="wide", initial_sidebar_state="collapsed")
@@ -37,86 +10,121 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 * { font-family: 'Inter', sans-serif; }
-.stApp { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+
+/* PREMIUM NEUTRAL FARBSCHEMA */
+.stApp { background: #F8F8F8; }
 
 .hero-section {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%),
+    background: linear-gradient(135deg, rgba(54, 69, 79, 0.95) 0%, rgba(44, 44, 44, 0.95) 100%),
                 url('https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1920') center/cover;
-    padding: 100px 20px; text-align: center; border-radius: 0 0 50px 50px; margin-bottom: 30px;
+    padding: 100px 20px; text-align: center; border-radius: 0 0 30px 30px; margin-bottom: 30px;
 }
-.hero-title { font-size: 4rem; font-weight: 800; color: white; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); }
-.hero-subtitle { font-size: 1.3rem; color: white; margin-top: 20px; }
+.hero-title { font-size: 4rem; font-weight: 800; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 
-.calculator-box {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    margin: 40px 0;
+.sticky-contact {
+    position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+    display: flex; flex-direction: column; gap: 10px;
 }
-
-.cost-display {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    color: white;
-    margin: 20px 0;
+.contact-button {
+    width: 60px; height: 60px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    cursor: pointer; transition: transform 0.3s; text-decoration: none;
 }
-
-.savings-box {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-    padding: 25px;
-    border-radius: 15px;
-    text-align: center;
-    color: white;
-    margin: 20px 0;
-}
+.contact-button:hover { transform: scale(1.1); }
+.whatsapp-btn { background: #25D366; }
+.phone-btn { background: #36454F; }
 
 .urgency-banner {
-    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-    padding: 20px; border-radius: 15px; text-align: center;
+    background: linear-gradient(135deg, #36454F 0%, #2C2C2C 100%);
+    padding: 20px; border-radius: 12px; text-align: center;
     color: white; font-size: 1.2rem; font-weight: 700; margin: 30px 0;
+    border-left: 4px solid #D4AF37;
 }
 
 .trust-badges { display: flex; justify-content: center; gap: 30px; margin: 40px 0; flex-wrap: wrap; }
-.trust-badge { background: white; padding: 25px; border-radius: 15px; min-width: 180px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.trust-badge { 
+    background: white; padding: 25px; border-radius: 12px; min-width: 180px; 
+    text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border: 1px solid #E8E8E8;
+}
 .trust-icon { font-size: 4rem; margin-bottom: 10px; }
-.trust-text { font-size: 1rem; color: #4a5568; font-weight: 600; }
 
 .package-card {
-    background: white; border-radius: 20px; padding: 30px 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: transform 0.3s; position: relative;
+    background: white; border-radius: 15px; padding: 30px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: transform 0.3s; 
+    position: relative; border: 1px solid #E8E8E8;
 }
-.package-card:hover { transform: translateY(-5px); }
-.package-popular { border: 3px solid #667eea; }
+.package-card:hover { transform: translateY(-5px); box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+.package-popular { border: 2px solid #D4AF37; }
 .popular-badge {
     position: absolute; top: -10px; right: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+    background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+    color: white; padding: 5px 15px; border-radius: 20px; 
+    font-size: 0.75rem; font-weight: 700;
 }
 .package-icon { font-size: 2.5rem; margin-bottom: 10px; }
-.package-title { font-size: 1.5rem; font-weight: 700; color: #2d3748; margin: 10px 0; }
-.package-price {
-    font-size: 2rem; font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 15px 0;
-}
+.package-title { font-size: 1.5rem; font-weight: 700; color: #2C2C2C; margin: 10px 0; }
+.package-price { font-size: 2rem; font-weight: 800; color: #36454F; margin: 15px 0; }
 .package-features { text-align: left; list-style: none; padding: 0; margin: 20px 0; }
-.package-features li { padding: 8px 0; color: #4a5568; border-bottom: 1px solid #e2e8f0; }
+.package-features li { 
+    padding: 8px 0; color: #5A5A5A; border-bottom: 1px solid #F0F0F0;
+    font-size: 0.95rem;
+}
 
-.content-section { background: white; padding: 50px 40px; border-radius: 20px; margin: 30px 0; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+.content-section { 
+    background: white; padding: 50px 40px; border-radius: 15px; 
+    margin: 30px 0; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: 1px solid #E8E8E8;
+}
+
+.calculator-box { 
+    background: white; padding: 40px; border-radius: 15px; 
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1); margin: 40px 0;
+    border: 1px solid #E8E8E8;
+}
+.cost-display { 
+    background: linear-gradient(135deg, #36454F 0%, #2C2C2C 100%); 
+    padding: 30px; border-radius: 12px; text-align: center; 
+    color: white; margin: 20px 0;
+}
+.savings-box { 
+    background: linear-gradient(135deg, #27AE60 0%, #229954 100%); 
+    padding: 25px; border-radius: 12px; text-align: center; 
+    color: white; margin: 20px 0;
+}
+
+.team-card { 
+    background: #FAFAFA; padding: 25px; border-radius: 12px; 
+    text-align: center; margin: 15px 0; border: 1px solid #E8E8E8;
+}
+.team-avatar { 
+    width: 100px; height: 100px; 
+    background: linear-gradient(135deg, #36454F 0%, #2C2C2C 100%); 
+    border-radius: 50%; margin: 0 auto 15px; display: flex; 
+    align-items: center; justify-content: center; font-size: 2.5rem; color: white;
+}
 
 div.stButton > button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; width: 100%;
+    background: linear-gradient(135deg, #36454F 0%, #2C2C2C 100%);
+    color: white; border: none; padding: 12px 30px; border-radius: 8px; 
+    font-weight: 700; width: 100%; transition: all 0.3s;
 }
 
-@media (max-width: 768px) { .hero-title { font-size: 2rem; } }
+div.stButton > button:hover {
+    background: linear-gradient(135deg, #2C2C2C 0%, #36454F 100%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) { 
+    .hero-title { font-size: 2rem; }
+    .sticky-contact { bottom: 10px; right: 10px; }
+    .contact-button { width: 50px; height: 50px; font-size: 1.5rem; }
+}
 </style>
 """, unsafe_allow_html=True)
 
-# STICKY CONTACT BUTTONS (IMMER SICHTBAR!)
+# STICKY CONTACT BUTTONS
 st.markdown("""
     <div class="sticky-contact">
         <a href="https://wa.me/4917698765432?text=Hallo%20ReturnGuard" 
@@ -147,193 +155,15 @@ with nav_cols[5]:
 
 st.markdown("---")
 
-# ========== KOSTENRECHNER ==========
-if st.session_state.page == 'calculator':
-    st.markdown('<div class="calculator-box">', unsafe_allow_html=True)
-    st.title("💰 Kostenrechner - Was könnte Ihre Rückgabe kosten?")
-    st.write("Geben Sie die Schäden an Ihrem Fahrzeug ein und sehen Sie die geschätzten Kosten:")
+# STARTSEITE
+if st.session_state.page == 'home':
+    st.markdown('<div class="hero-section"><h1 class="hero-title">🛡️ Leasingrückgabe für Ihren Audi</h1><p style="font-size: 1.3rem; color: white; margin-top: 20px;">Schützen Sie sich vor unfairen Nachzahlungen</p></div>', unsafe_allow_html=True)
     
-    st.markdown("---")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader("🚗 Exterieur-Schäden")
-        
-        kratzer = st.selectbox(
-            "Kratzer im Lack",
-            ["Keine", "Leicht (1-2)", "Mittel (3-5)", "Stark (6+)"],
-            help="Oberflächliche Kratzer bis zum Grundlack"
-        )
-        
-        dellen = st.selectbox(
-            "Dellen/Beulen",
-            ["Keine", "Klein (< 2cm)", "Mittel (2-5cm)", "Groß (> 5cm)"],
-            help="Eindrückungen in der Karosserie"
-        )
-        
-        steinschlag = st.selectbox(
-            "Steinschläge Frontscheibe",
-            ["Keine", "1-2 kleine", "3-5 kleine", "Größer als 5mm"],
-            help="Beschädigungen an der Windschutzscheibe"
-        )
-        
-        felgen = st.selectbox(
-            "Felgenschäden",
-            ["Keine", "Leichte Kratzer", "Tiefe Kratzer", "Verbogen"],
-            help="Beschädigungen an den Felgen"
-        )
-        
-        reifen = st.selectbox(
-            "Reifenzustand",
-            ["Gut (>4mm)", "Grenzwertig (3-4mm)", "Schlecht (<3mm)"],
-            help="Profiltiefe der Reifen"
-        )
-    
-    with col2:
-        st.subheader("🪑 Interieur-Schäden")
-        
-        sitze = st.selectbox(
-            "Sitze/Polster",
-            ["Einwandfrei", "Leichte Abnutzung", "Flecken", "Risse/Löcher"],
-            help="Zustand der Sitzbezüge"
-        )
-        
-        lenkrad = st.selectbox(
-            "Lenkrad",
-            ["Einwandfrei", "Abgenutzt", "Beschädigt"],
-            help="Abnutzung am Lenkrad"
-        )
-        
-        armatur = st.selectbox(
-            "Armaturenbrett",
-            ["Einwandfrei", "Leichte Kratzer", "Risse"],
-            help="Zustand des Armaturenbretts"
-        )
-        
-        teppich = st.selectbox(
-            "Teppiche/Fußmatten",
-            ["Sauber", "Flecken", "Stark verschmutzt"],
-            help="Zustand der Teppiche"
-        )
-        
-        geruch = st.selectbox(
-            "Geruch (Raucher/Tiere)",
-            ["Neutral", "Leicht", "Stark"],
-            help="Geruchsbelästigung im Innenraum"
-        )
-    
-    st.markdown("---")
-    
-    # BERECHNUNG
-    kosten = 0
-    
-    # Exterieur
-    if kratzer == "Leicht (1-2)": kosten += 150
-    elif kratzer == "Mittel (3-5)": kosten += 400
-    elif kratzer == "Stark (6+)": kosten += 800
-    
-    if dellen == "Klein (< 2cm)": kosten += 200
-    elif dellen == "Mittel (2-5cm)": kosten += 500
-    elif dellen == "Groß (> 5cm)": kosten += 1000
-    
-    if steinschlag == "1-2 kleine": kosten += 80
-    elif steinschlag == "3-5 kleine": kosten += 150
-    elif steinschlag == "Größer als 5mm": kosten += 400
-    
-    if felgen == "Leichte Kratzer": kosten += 100
-    elif felgen == "Tiefe Kratzer": kosten += 300
-    elif felgen == "Verbogen": kosten += 800
-    
-    if reifen == "Grenzwertig (3-4mm)": kosten += 200
-    elif reifen == "Schlecht (<3mm)": kosten += 600
-    
-    # Interieur
-    if sitze == "Leichte Abnutzung": kosten += 100
-    elif sitze == "Flecken": kosten += 300
-    elif sitze == "Risse/Löcher": kosten += 800
-    
-    if lenkrad == "Abgenutzt": kosten += 150
-    elif lenkrad == "Beschädigt": kosten += 400
-    
-    if armatur == "Leichte Kratzer": kosten += 100
-    elif armatur == "Risse": kosten += 400
-    
-    if teppich == "Flecken": kosten += 150
-    elif teppich == "Stark verschmutzt": kosten += 400
-    
-    if geruch == "Leicht": kosten += 200
-    elif geruch == "Stark": kosten += 600
-    
-    # ERGEBNIS
-    if st.button("🔍 Kosten berechnen", use_container_width=True):
-        st.markdown(f"""
-            <div class="cost-display">
-                <h2>Geschätzte Nachzahlung ohne ReturnGuard</h2>
-                <h1 style="font-size: 3.5rem; margin: 20px 0;">{kosten:,.0f}€</h1>
-                <p style="font-size: 1.1rem;">Diese Kosten könnten auf Sie zukommen!</p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        # Ersparnis berechnen
-        if kosten > 0:
-            # Mit Premium-Paket (299€)
-            ersparnis_premium = kosten * 0.6  # 60% Ersparnis
-            restkosten_premium = kosten - ersparnis_premium + 299
-            
-            st.markdown(f"""
-                <div class="savings-box">
-                    <h2>💰 Mit ReturnGuard Premium-Paket (299€)</h2>
-                    <h3>Ihre Ersparnis: {ersparnis_premium:,.0f}€ (60%)</h3>
-                    <h3>Ihre Gesamtkosten: {restkosten_premium:,.0f}€</h3>
-                    <p style="font-size: 1.2rem; margin-top: 15px;">
-                        ✅ Sie sparen <b>{kosten - restkosten_premium:,.0f}€</b> im Vergleich zu ohne ReturnGuard!
-                    </p>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            st.success("### 🎯 So helfen wir Ihnen:")
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.write("""
-                - ✅ Frühzeitige Schadenserkennung
-                - ✅ Günstige Reparatur-Partner
-                - ✅ Smart Repair statt Neulackierung
-                """)
-            with col_b:
-                st.write("""
-                - ✅ Verhandlung mit Leasinggeber
-                - ✅ Rechtliche Prüfung der Forderungen
-                - ✅ Professionelle Dokumentation
-                """)
-            
-            st.markdown("---")
-            st.markdown("### 📞 Jetzt Beratung sichern!")
-            
-            col_c1, col_c2, col_c3 = st.columns([1, 2, 1])
-            with col_c2:
-                email = st.text_input("E-Mail", placeholder="ihre.email@beispiel.de", label_visibility="collapsed")
-                if st.button("🚀 Kostenlose Erstberatung anfordern", use_container_width=True):
-                    if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
-                        st.success("✅ Vielen Dank! Wir kontaktieren Sie innerhalb von 24h.")
-                        st.balloons()
-                    else:
-                        st.error("❌ Bitte gültige E-Mail eingeben.")
-        else:
-            st.info("🎉 Glückwunsch! Ihr Fahrzeug scheint in sehr gutem Zustand zu sein. Eine Überprüfung lohnt sich trotzdem!")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# ========== STARTSEITE ==========
-elif st.session_state.page == 'home':
-    st.markdown('<div class="hero-section"><h1 class="hero-title">🛡️ Leasingrückgabe für Ihren Audi</h1><p class="hero-subtitle">Schützen Sie sich vor unfairen Nachzahlungen</p></div>', unsafe_allow_html=True)
-    
-    # Schnellkontakt prominent
     st.markdown("""
-        <div style="background: white; padding: 25px; border-radius: 15px; text-align: center; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        <div style="background: white; padding: 25px; border-radius: 15px; text-align: center; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
             <h3>📞 Sofortkontakt</h3>
-            <p style="font-size: 1.3rem; font-weight: 700; color: #667eea;">
-                <a href="tel:+498912345678" style="text-decoration: none; color: #667eea;">+49 89 123 456 78</a>
+            <p style="font-size: 1.3rem; font-weight: 700; color: #36454F;">
+                <a href="tel:+498912345678" style="text-decoration: none; color: #36454F;">+49 89 123 456 78</a>
             </p>
             <p style="font-size: 1.1rem;">
                 <a href="https://wa.me/4917698765432" target="_blank" style="text-decoration: none; color: #25D366;">
@@ -346,186 +176,12 @@ elif st.session_state.page == 'home':
     
     st.markdown('<div class="urgency-banner">⏰ Nur noch 3 Termine diese Woche verfügbar!</div>', unsafe_allow_html=True)
     
-    # Quick Kostenrechner Teaser
-    st.markdown("""
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; text-align: center; margin: 30px 0;">
-            <h2 style="color: white; font-size: 2rem; margin-bottom: 20px;">💰 Was könnte Ihre Rückgabe kosten?</h2>
-            <p style="color: white; font-size: 1.2rem;">Nutzen Sie unseren kostenlosen Kostenrechner!</p>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    if st.button("🔍 Jetzt Kosten berechnen", use_container_width=True, key="calc_teaser"):
-        st.session_state.page = 'calculator'
-        st.rerun()
-    
     st.markdown('''<div class="trust-badges">
-        <div class="trust-badge"><div class="trust-icon">⚖️</div><div class="trust-text">Rechtsanwälte</div></div>
-        <div class="trust-badge"><div class="trust-icon">🔍</div><div class="trust-text">KFZ-Gutachter</div></div>
-        <div class="trust-badge"><div class="trust-icon">💰</div><div class="trust-text">60% Ersparnis</div></div>
-        <div class="trust-badge"><div class="trust-icon">⭐</div><div class="trust-text">500+ Kunden</div></div>
+        <div class="trust-badge"><div class="trust-icon">⚖️</div><div style="font-size: 1rem; color: #5A5A5A; font-weight: 600;">Rechtsanwälte<br/>Verkehrsrecht</div></div>
+        <div class="trust-badge"><div class="trust-icon">🔍</div><div style="font-size: 1rem; color: #5A5A5A; font-weight: 600;">TÜV-zertifizierte<br/>KFZ-Gutachter</div></div>
+        <div class="trust-badge"><div class="trust-icon">💰</div><div style="font-size: 1rem; color: #5A5A5A; font-weight: 600;">Ø 2.500€<br/>Ersparnis</div></div>
+        <div class="trust-badge"><div class="trust-icon">⭐</div><div style="font-size: 1rem; color: #5A5A5A; font-weight: 600;">500+ zufriedene<br/>Kunden</div></div>
     </div>''', unsafe_allow_html=True)
-    
-    st.write("")
-    st.write("")
-    
-    # ========== NEU: USP SECTION ==========
-    st.markdown("## 🚀 Warum ReturnGuard anders ist")
-    
-    st.markdown("""
-        <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 30px 0;">
-            <h3 style="text-align: center; color: #2d3748; margin-bottom: 30px; font-size: 1.8rem;">
-                Wir sind nicht wie die anderen - Wir sind spezialisiert!
-            </h3>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    usp_col1, usp_col2, usp_col3, usp_col4 = st.columns(4)
-    
-    with usp_col1:
-        st.markdown("""
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center;">
-                <div style="font-size: 3.5rem; margin-bottom: 15px;">🎯</div>
-                <h4 style="color: white; margin-bottom: 10px;">100% Leasing-Fokus</h4>
-                <p style="color: white; font-size: 0.95rem;">Wir machen NUR Leasingrückgaben - keine Ankäufe, kein Verkauf</p>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with usp_col2:
-        st.markdown("""
-            <div style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); padding: 30px; border-radius: 15px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center;">
-                <div style="font-size: 3.5rem; margin-bottom: 15px;">🤝</div>
-                <h4 style="color: white; margin-bottom: 10px;">Komplettservice</h4>
-                <p style="color: white; font-size: 0.95rem;">Gutachter + Anwalt + Werkstatt - alles aus einer Hand</p>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with usp_col3:
-        st.markdown("""
-            <div style="background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); padding: 30px; border-radius: 15px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center;">
-                <div style="font-size: 3.5rem; margin-bottom: 15px;">💎</div>
-                <h4 style="color: white; margin-bottom: 10px;">Digital + Persönlich</h4>
-                <p style="color: white; font-size: 0.95rem;">Online-Tools UND persönliche Betreuung vor Ort</p>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with usp_col4:
-        st.markdown("""
-            <div style="background: linear-gradient(135deg, #E53E3E 0%, #C53030 100%); padding: 30px; border-radius: 15px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center;">
-                <div style="font-size: 3.5rem; margin-bottom: 15px;">🏆</div>
-                <h4 style="color: white; margin-bottom: 10px;">Audi-Experten</h4>
-                <p style="color: white; font-size: 0.95rem;">Spezialisiert auf Audi - wir kennen ALLE Standards</p>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    st.write("")
-    st.write("")
-    
-    # ========== NEU: VERGLEICHS-TABELLE ==========
-    st.markdown("## 📊 ReturnGuard vs. Alternativen")
-    
-    st.markdown("""
-        <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 30px 0;">
-            <h3 style="text-align: center; color: #2d3748; margin-bottom: 40px; font-size: 1.8rem;">
-                Der direkte Vergleich - Wer bietet was?
-            </h3>
-            
-            <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                <thead>
-                    <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                        <th style="padding: 20px; text-align: left; border-radius: 10px 0 0 0; font-size: 1.1rem;">Leistung</th>
-                        <th style="padding: 20px; font-size: 1.1rem;">Alleine machen</th>
-                        <th style="padding: 20px; font-size: 1.1rem;">Einzelner Gutachter</th>
-                        <th style="padding: 20px; font-size: 1.1rem; background: #FFD700; color: #2d3748; border-radius: 0 10px 0 0;">ReturnGuard ⭐</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="background: #f8f9fa;">
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Gutachten vor Rückgabe</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px;">✅</td>
-                        <td style="padding: 15px; background: #e6f7ff;">✅✅</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Rechtliche Beratung</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px; background: #e6f7ff;">✅ Fachanwalt</td>
-                    </tr>
-                    <tr style="background: #f8f9fa;">
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Verhandlung mit Leasinggeber</td>
-                        <td style="padding: 15px;">❌ Selbst</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px; background: #e6f7ff;">✅ Professionell</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Werkstatt-Netzwerk</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px;">Ggf. 1-2</td>
-                        <td style="padding: 15px; background: #e6f7ff;">✅ 50+ Partner</td>
-                    </tr>
-                    <tr style="background: #f8f9fa;">
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Kostenoptimierung</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px;">Bedingt</td>
-                        <td style="padding: 15px; background: #e6f7ff;">✅ Bis 60%</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Zeitaufwand für Sie</td>
-                        <td style="padding: 15px;">⏰ 10-20h</td>
-                        <td style="padding: 15px;">⏰ 5-10h</td>
-                        <td style="padding: 15px; background: #e6f7ff;">⏰ 1-2h</td>
-                    </tr>
-                    <tr style="background: #f8f9fa;">
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Dokumentation</td>
-                        <td style="padding: 15px;">Handy-Fotos</td>
-                        <td style="padding: 15px;">Professionell</td>
-                        <td style="padding: 15px; background: #e6f7ff;">Digital + GPS</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Erfolgsgarantie</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px; background: #e6f7ff;">✅ Geld-zurück</td>
-                    </tr>
-                    <tr style="background: #f8f9fa;">
-                        <td style="padding: 15px; text-align: left; font-weight: 600;">Support</td>
-                        <td style="padding: 15px;">❌</td>
-                        <td style="padding: 15px;">Werktags</td>
-                        <td style="padding: 15px; background: #e6f7ff;">✅ 24/7</td>
-                    </tr>
-                    <tr style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; font-weight: 700;">
-                        <td style="padding: 20px; text-align: left; font-size: 1.1rem; border-radius: 0 0 0 10px;">Durchschnittliche Kosten</td>
-                        <td style="padding: 20px; font-size: 1.2rem;">3.500€</td>
-                        <td style="padding: 20px; font-size: 1.2rem;">2.000€</td>
-                        <td style="padding: 20px; font-size: 1.3rem; background: #FFD700; color: #2d3748; border-radius: 0 0 10px 0;">
-                            699€ - 999€<br/>
-                            <span style="font-size: 0.9rem;">💰 Ersparnis: 2.500€+</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    st.write("")
-    
-    # Zusammenfassung unter Tabelle
-    st.markdown("""
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0;">
-            <h3 style="color: white; font-size: 1.8rem; margin-bottom: 15px;">
-                🎯 Das Ergebnis ist klar!
-            </h3>
-            <p style="color: white; font-size: 1.2rem; margin-bottom: 20px;">
-                Mit ReturnGuard sparen Sie durchschnittlich <b>2.500€</b> und über <b>15 Stunden Zeit</b>
-            </p>
-            <p style="color: white; font-size: 1rem;">
-                ✅ Mehr Service • ✅ Weniger Kosten • ✅ Garantierte Ersparnis
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    st.write("")
-    st.write("")
     
     st.markdown("## 🎁 Unsere Pakete")
     pkg1, pkg2, pkg3, pkg4 = st.columns(4)
@@ -558,7 +214,7 @@ elif st.session_state.page == 'home':
     
     with pkg3:
         st.markdown('''<div class="package-card package-popular" style="position:relative;">
-            <div class="popular-badge">🔥 BELIEBT</div>
+            <div class="popular-badge">🏆 PREMIUM</div>
             <span class="package-icon">🥇</span>
             <h3 class="package-title">Premium</h3>
             <div class="package-price">299€</div>
@@ -582,28 +238,23 @@ elif st.session_state.page == 'home':
             </ul>
         </div>''', unsafe_allow_html=True)
         st.button("Buchen", key="b4")
-    
-    st.write("")
-    st.markdown("## 💬 Kundenstimmen")
-    t1, t2, t3 = st.columns(3)
-    with t1:
-        st.info("⭐⭐⭐⭐⭐\n\n*'2.500€ erspart!'*\n\n— Michael S.")
-    with t2:
-        st.info("⭐⭐⭐⭐⭐\n\n*'Perfekte Beratung!'*\n\n— Sandra K.")
-    with t3:
-        st.info("⭐⭐⭐⭐⭐\n\n*'Top Service!'*\n\n— Thomas B.")
 
-# ========== ANDERE SEITEN ==========
+elif st.session_state.page == 'calculator':
+    st.markdown('<div class="calculator-box">', unsafe_allow_html=True)
+    st.title("💰 Kostenrechner")
+    st.write("Ermitteln Sie Ihre voraussichtlichen Rückgabekosten")
+    st.markdown('</div>', unsafe_allow_html=True)
+
 elif st.session_state.page == 'about':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.title("👥 Über ReturnGuard")
-    st.write("Wir helfen Leasingnehmern seit 2020...")
+    st.title("👥 Über uns")
+    st.write("Mehr über ReturnGuard...")
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.page == 'services':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.title("📦 Unsere Leistungen")
-    st.write("Was wird geprüft?...")
+    st.title("📦 Leistungen")
+    st.write("Was wird geprüft?")
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.page == 'contact':
@@ -615,10 +266,8 @@ elif st.session_state.page == 'contact':
 elif st.session_state.page == 'legal':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.title("⚖️ Rechtliches")
-    tabs = st.tabs(["AGB", "Datenschutz", "Impressum"])
-    with tabs[0]:
-        st.write("AGB...")
+    st.write("AGB, Datenschutz, Impressum")
     st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("---")
-st.markdown('<div style="text-align: center; color: #718096; padding: 20px;">🛡️ ReturnGuard</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align: center; color: #5A5A5A; padding: 20px;">🛡️ ReturnGuard - Ihr Partner für faire Leasingrückgaben</div>', unsafe_allow_html=True)
