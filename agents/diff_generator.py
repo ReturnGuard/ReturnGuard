@@ -46,16 +46,29 @@ class ReviewNotes:
     warum: str  # Warum diese Änderung?
     risiko: str  # Welche Risiken?
     test: str  # Wie testen?
+    dependencies: str = ""  # Guardrail #6: Dependency-Transparenz
+    negative_tests: str = ""  # Guardrail #5: Negative Tests
 
     def to_markdown(self) -> str:
         """Formatiert als Markdown."""
-        return f"""## Review Notes
+        lines = ["## Review Notes\n"]
+        lines.append(f"- **Was**: {self.was}")
+        lines.append(f"- **Warum**: {self.warum}")
+        lines.append(f"- **Risiko**: {self.risiko}")
+        lines.append(f"- **Test**: {self.test}")
 
-- **Was**: {self.was}
-- **Warum**: {self.warum}
-- **Risiko**: {self.risiko}
-- **Test**: {self.test}
-"""
+        # Guardrail #6: Dependency-Transparenz
+        if self.dependencies:
+            lines.append(f"- **Dependencies**: {self.dependencies}")
+
+        # Guardrail #5: Negative Tests
+        if self.negative_tests:
+            lines.append(f"- **Negative Tests**: {self.negative_tests}")
+        else:
+            lines.append("- **Negative Tests**: ⚠️ FEHLT - Mindestens ein Test für Contract-Verletzung nötig!")
+
+        lines.append("")
+        return "\n".join(lines)
 
 
 @dataclass
@@ -164,7 +177,12 @@ def export_to_pdf(damages: dict, vehicle_class: str, total: float) -> bytes:
         risiko="fpdf Dependency muss in requirements.txt (ist bereits vorhanden). "
                "Encoding latin1 könnte bei Umlauten Probleme machen.",
         test="Test mit pytest: Mock damages dict, prüfe PDF-Header (%PDF), "
-             "prüfe dass output bytes sind"
+             "prüfe dass output bytes sind",
+        dependencies="fpdf: PDF-Generierung (bereits in requirements.txt). "
+                    "Wird genutzt um Calculator-Ergebnisse als downloadbare PDF zu exportieren.",
+        negative_tests="test_export_empty_damages() - ValueError bei leerem dict, "
+                      "test_export_invalid_vehicle_class() - ValueError bei ungültiger Klasse, "
+                      "test_export_negative_total() - ValueError bei negativen Kosten"
     )
 
     patch = PatchOutput(

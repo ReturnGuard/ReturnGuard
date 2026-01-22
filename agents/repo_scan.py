@@ -13,6 +13,7 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 from dataclasses import dataclass, field
+from .guardrails import track_performance
 
 
 @dataclass
@@ -67,6 +68,7 @@ class RepoScanner:
         if not self.repo_path.exists():
             raise ValueError(f"Repo-Pfad existiert nicht: {repo_path}")
 
+    @track_performance("Repo-Scan", threshold_ms=500.0)
     def scan(self) -> RepoScanResult:
         """
         Führt vollständigen Repo-Scan durch.

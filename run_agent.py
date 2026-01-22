@@ -13,6 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from agents.tech_lead import TechLeadAgent
+from agents.guardrails import print_guardrails_summary
 
 
 def print_banner():
@@ -31,6 +32,7 @@ def print_usage():
     usage = """
 Usage:
     python run_agent.py "<feature request>"
+    python run_agent.py --guardrails  # Zeige alle Guardrails
 
 Examples:
     python run_agent.py "Füge Versicherungsvergleich hinzu"
@@ -40,13 +42,18 @@ Examples:
 Workflow:
     1. Tech Lead scannt Repo und erstellt Plan
     2. Contract-Template wird erstellt (muss ausgefüllt werden!)
-    3. Backend/Frontend/Testing/Review folgen in M2-M4
+    3. Contract wird validiert (Contract-First Enforcement)
+    4. Patch wird erzeugt (Dry-Run, nur Diff)
 
 Meilensteine:
-    ✅ M1: Minimaler Orchestrator läuft (CURRENT)
-    ⏳ M2: Repo-Scan verlässlich
-    ⏳ M3: Contract-First enforced
-    ⏳ M4: Patch-Erzeugung + Review-Ausgabe
+    ✅ M1: Minimaler Orchestrator läuft
+    ✅ M2: Repo-Scan verlässlich
+    ✅ M3: Contract-First enforced
+    ✅ M4: Patch-Erzeugung + Review (mit Guardrails)
+
+Guardrails:
+    3 Haupt + 6 Zusatz-Guardrails aktiv
+    Siehe: python run_agent.py --guardrails
 """
     print(usage)
 
@@ -54,6 +61,11 @@ Meilensteine:
 def main():
     """Haupt-Funktion."""
     print_banner()
+
+    # Prüfe auf --guardrails Flag
+    if "--guardrails" in sys.argv:
+        print_guardrails_summary()
+        sys.exit(0)
 
     # Prüfe Argumente
     if len(sys.argv) < 2:

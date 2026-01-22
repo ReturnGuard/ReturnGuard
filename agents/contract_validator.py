@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 from typing import Optional, List
 from dataclasses import dataclass
+from .guardrails import track_performance
 
 
 @dataclass
@@ -49,6 +50,7 @@ class ContractValidator:
     def __init__(self, contracts_path: Path):
         self.contracts_path = contracts_path
 
+    @track_performance("Contract-Validierung", threshold_ms=500.0)
     def validate(self, feature_slug: str) -> ValidationResult:
         """
         Validiert Contract für ein Feature.

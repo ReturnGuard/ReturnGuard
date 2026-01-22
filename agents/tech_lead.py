@@ -16,6 +16,7 @@ from .prompts import (
 from .repo_scan import RepoScanner, RepoScanResult, format_scan_result
 from .contract_validator import ContractValidator, ValidationResult, format_validation_result
 from .diff_generator import PatchOutput, create_example_patch
+from .guardrails import AssumptionTracker, detect_conflicts, print_guardrails_summary
 
 
 class TechLeadAgent:
@@ -49,6 +50,9 @@ class TechLeadAgent:
         """
         print(f"\n🚀 Tech Lead Agent startet für: '{feature_request}'")
         print("=" * 80)
+
+        # Guardrail #4: Assumption Tracker
+        assumptions = AssumptionTracker()
 
         # Feature-Slug für Dateinamen
         feature_slug = self._create_slug(feature_request)
@@ -126,25 +130,35 @@ class TechLeadAgent:
             print("   ✓ Default dry-run (keine Files geändert)")
             print("   ✓ Strict scope (nur Contract-relevante Files)")
 
-            return {
-                "plan": str(plan_path),
-                "contract": str(contract_path),
-                "feature_slug": feature_slug,
-                "scan_result": scan_result,
-                "validation_result": validation_result,
-                "patch_file": str(patch_file)
-            }
-        else:
-            print("\n🚫 BLOCKIERT: Backend/Frontend/Testing können nicht starten!")
-            print("   Contract muss erst vollständig ausgefüllt werden.")
-            print("   Siehe obige Fehler und behebe sie.")
+            # Guardrail #4: Zeige Assumptions (falls vorhanden)
+            if assumptions.has_assumptions():
+                print("\n" + assumptions.format_all())
 
             return {
                 "plan": str(plan_path),
                 "contract": str(contract_path),
                 "feature_slug": feature_slug,
                 "scan_result": scan_result,
-                "validation_result": validation_result
+                "validation_result": validation_result,
+                "patch_file": str(patch_file),
+                "assumptions": assumptions
+            }
+        else:
+            print("\n🚫 BLOCKIERT: Backend/Frontend/Testing können nicht starten!")
+            print("   Contract muss erst vollständig ausgefüllt werden.")
+            print("   Siehe obige Fehler und behebe sie.")
+
+            # Guardrail #4: Zeige Assumptions (falls vorhanden)
+            if assumptions.has_assumptions():
+                print("\n" + assumptions.format_all())
+
+            return {
+                "plan": str(plan_path),
+                "contract": str(contract_path),
+                "feature_slug": feature_slug,
+                "scan_result": scan_result,
+                "validation_result": validation_result,
+                "assumptions": assumptions
             }
 
     def _create_slug(self, text: str) -> str:
