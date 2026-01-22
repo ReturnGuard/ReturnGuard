@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 
 # ==================== FEATURE FLAGS ====================
-SHOW_AUTO_DIAGRAM = False  # Safari zeigt SVG als Raw-Code - deaktiviert für V1
+SHOW_AUTO_DIAGRAM = True  # Desktop: Grafik AN, Mobile: CSS versteckt Grafik
 
 # ==================== KONFIGURATION ====================
 st.set_page_config(
@@ -2314,7 +2314,7 @@ elif st.session_state.page == 'contact':
                     # Fallback 1: st.components.v1.html (bessere Mobile/Safari-Unterstützung)
                     import streamlit.components.v1 as components
 
-                    # Vollständiges HTML mit inline SVG (Safari-kompatibel)
+                    # Vollständiges HTML mit inline SVG + Mobile-Fallback
                     html_content = f"""
                     <!DOCTYPE html>
                     <html>
@@ -2329,6 +2329,24 @@ elif st.session_state.page == 'contact':
                                 justify-content: center;
                                 align-items: center;
                                 background: transparent;
+                                min-height: 260px;
+                            }}
+
+                            /* Desktop: Grafik zeigen */
+                            svg {{
+                                display: block;
+                            }}
+
+                            /* Mobile: Grafik + Container verstecken */
+                            @media (max-width: 768px) {{
+                                body {{
+                                    display: none !important;
+                                    min-height: 0 !important;
+                                    padding: 0 !important;
+                                }}
+                                svg {{
+                                    display: none !important;
+                                }}
                             }}
                         </style>
                     </head>
