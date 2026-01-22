@@ -3,6 +3,9 @@ import re
 from datetime import datetime
 import json
 
+# ==================== FEATURE FLAGS ====================
+SHOW_AUTO_DIAGRAM = True  # True = Auto-Grafik aktiv, False = Checkbox-only
+
 # ==================== KONFIGURATION ====================
 st.set_page_config(
     page_title="ReturnGuard - Leasingrückgabe ohne Sorgen",
@@ -26,10 +29,11 @@ if 'total_cost' not in st.session_state:
     st.session_state.total_cost = 0
 if 'show_cookie_banner' not in st.session_state:
     st.session_state.show_cookie_banner = True
+if 'form_submitted' not in st.session_state:
+    st.session_state.form_submitted = False
 
 # ==================== GUTACHTERTABELLE ====================
 # Preise nach Fahrzeugklasse: [Kompakt, Mittel, Ober, Luxus]
-@st.cache_data
 def get_damage_costs(vehicle_class):
     multipliers = {
         'Kompaktklasse': 0.7,
@@ -69,6 +73,200 @@ def get_damage_costs(vehicle_class):
 
     return adjusted_costs
 
+# ==================== LEAD-FORMULAR VALIDIERUNG ====================
+def sanitize_phone(phone: str) -> str:
+    """
+    Normalisiert Telefonnummer (entfernt Leerzeichen, Bindestriche).
+
+    Args:
+        phone: Rohe Telefoneingabe
+
+    Returns:
+        str: Bereinigte Telefonnummer (nur Zahlen und +)
+    """
+    if not phone:
+        return ""
+    # Entferne Leerzeichen und Bindestriche
+    return phone.replace(" ", "").replace("-", "")
+
+def validate_lead_form(name: str, email: str, phone: str, lease_end: str) -> dict:
+    """
+    Validiert Lead-Formular Eingaben und gibt Validierungsergebnis zurück.
+
+    Args:
+        name: Vollständiger Name des Kunden
+        email: Email-Adresse des Kunden
+        phone: Telefonnummer des Kunden
+        lease_end: Wann endet das Leasing (Zeitfenster)
+
+    Returns:
+        dict: {'is_valid': bool, 'errors': dict[str, str]}
+    """
+    errors = {}
+
+    # Name validieren
+    if not name or not name.strip():
+        errors['name'] = "Name ist erforderlich"
+    elif len(name.strip()) < 2:
+        errors['name'] = "Name muss mindestens 2 Zeichen haben"
+    elif len(name.strip()) > 100:
+        errors['name'] = "Name darf maximal 100 Zeichen haben"
+
+    # Email validieren
+    if not email or not email.strip():
+        errors['email'] = "Email ist erforderlich"
+    else:
+        # Regex für Email-Validierung
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, email.strip()):
+            errors['email'] = "Bitte geben Sie eine gültige Email-Adresse ein"
+
+    # Telefon validieren
+    phone_clean = sanitize_phone(phone)
+    if not phone or not phone.strip():
+        errors['phone'] = "Telefonnummer ist erforderlich"
+    elif len(phone_clean) < 5:
+        errors['phone'] = "Telefonnummer zu kurz"
+    elif len(phone_clean) > 20:
+        errors['phone'] = "Telefonnummer zu lang"
+
+    # Leasingende validieren
+    valid_lease_options = ['Unter 1 Monat', '1-3 Monate', '3-6 Monate', 'Über 6 Monate']
+    if not lease_end or lease_end not in valid_lease_options:
+        errors['lease_end'] = "Bitte wählen Sie einen Zeitraum"
+
+    return {
+        'is_valid': len(errors) == 0,
+        'errors': errors
+    }
+
+# ==================== AUTO-GRAFIK (SVG) ====================
+def generate_auto_svg(selected_damages):
+    """
+    Generiert SVG-Auto mit Markern basierend auf ausgewählten Schäden.
+
+    Args:
+        selected_damages: Liste von Strings wie ['kratzer', 'felgen']
+
+    Returns:
+        str: SVG-Code (nur statische Strings, kein User-Input!)
+    """
+    # SVG mit responsive viewBox
+    svg = '''
+    <svg viewBox="0 0 400 250"
+         preserveAspectRatio="xMidYMid meet"
+         style="width:100%; height:auto; max-width:400px; margin:0 auto; display:block;">
+
+        <!-- Hintergrund -->
+        <rect width="400" height="250" fill="#f9fafb"/>
+
+        <!-- Auto-Outline (Draufsicht) -->
+        <rect x="100" y="30" width="200" height="190"
+              fill="none" stroke="#d1d5db" stroke-width="2" rx="15"/>
+
+        <!-- Motorhaube -->
+        <rect x="100" y="30" width="200" height="50"
+              fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5" rx="15"/>
+        <text x="200" y="60" text-anchor="middle"
+              font-size="12" fill="#6b7280" font-family="Arial">Motorhaube</text>
+
+        <!-- Windschutzscheibe -->
+        <rect x="120" y="85" width="160" height="15"
+              fill="#dbeafe" stroke="#60a5fa" stroke-width="1"/>
+        <text x="200" y="96" text-anchor="middle"
+              font-size="10" fill="#1e40af" font-family="Arial">Scheibe</text>
+
+        <!-- Türen Links -->
+        <rect x="80" y="105" width="18" height="60"
+              fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+        <text x="89" y="138" text-anchor="middle"
+              font-size="10" fill="#6b7280" font-family="Arial" transform="rotate(-90 89,138)">Tür L</text>
+
+        <!-- Innenraum -->
+        <rect x="120" y="110" width="160" height="70"
+              fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+        <text x="200" y="150" text-anchor="middle"
+              font-size="12" fill="#6b7280" font-family="Arial">Innenraum</text>
+
+        <!-- Türen Rechts -->
+        <rect x="302" y="105" width="18" height="60"
+              fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+        <text x="311" y="138" text-anchor="middle"
+              font-size="10" fill="#6b7280" font-family="Arial" transform="rotate(90 311,138)">Tür R</text>
+
+        <!-- Heckklappe -->
+        <rect x="100" y="170" width="200" height="50"
+              fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5" rx="15"/>
+        <text x="200" y="200" text-anchor="middle"
+              font-size="12" fill="#6b7280" font-family="Arial">Heckklappe</text>
+
+        <!-- Felgen (4 Ecken) -->
+        <circle cx="130" cy="50" r="15" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+        <circle cx="270" cy="50" r="15" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+        <circle cx="130" cy="200" r="15" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+        <circle cx="270" cy="200" r="15" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+    '''
+
+    # Dynamische Marker basierend auf selected_damages
+    # WICHTIG: Nur vordefinierte Keys, kein User-Input!
+
+    if 'kratzer' in selected_damages:
+        # Kratzer = Motorhaube + Türen
+        svg += '''
+        <circle cx="200" cy="55" r="12" fill="red" opacity="0.8"/>
+        <text x="200" y="60" text-anchor="middle" font-size="14" fill="white" font-weight="bold">!</text>
+        <circle cx="89" cy="135" r="10" fill="red" opacity="0.8"/>
+        <text x="89" y="139" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        <circle cx="311" cy="135" r="10" fill="red" opacity="0.8"/>
+        <text x="311" y="139" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'dellen' in selected_damages:
+        # Dellen = Türen + Seitenwand
+        svg += '''
+        <circle cx="89" cy="120" r="10" fill="orange" opacity="0.8"/>
+        <text x="89" y="124" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        <circle cx="311" cy="120" r="10" fill="orange" opacity="0.8"/>
+        <text x="311" y="124" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'felgen' in selected_damages:
+        # Felgen = 4 Räder
+        svg += '''
+        <circle cx="130" cy="50" r="8" fill="red" opacity="0.9"/>
+        <text x="130" y="54" text-anchor="middle" font-size="10" fill="white" font-weight="bold">!</text>
+        <circle cx="270" cy="50" r="8" fill="red" opacity="0.9"/>
+        <text x="270" y="54" text-anchor="middle" font-size="10" fill="white" font-weight="bold">!</text>
+        <circle cx="130" cy="200" r="8" fill="red" opacity="0.9"/>
+        <text x="130" y="204" text-anchor="middle" font-size="10" fill="white" font-weight="bold">!</text>
+        <circle cx="270" cy="200" r="8" fill="red" opacity="0.9"/>
+        <text x="270" y="204" text-anchor="middle" font-size="10" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'scheibe' in selected_damages:
+        # Scheibe = Windschutzscheibe
+        svg += '''
+        <circle cx="200" cy="92" r="10" fill="red" opacity="0.8"/>
+        <text x="200" y="96" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'innenraum' in selected_damages:
+        # Innenraum = Mitte
+        svg += '''
+        <circle cx="200" cy="145" r="12" fill="red" opacity="0.8"/>
+        <text x="200" y="150" text-anchor="middle" font-size="14" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'unsure' in selected_damages:
+        # Nicht sicher = Fragezeichen in Mitte
+        svg += '''
+        <circle cx="200" cy="125" r="15" fill="#fbbf24" opacity="0.9"/>
+        <text x="200" y="132" text-anchor="middle" font-size="18" fill="white" font-weight="bold">?</text>
+        '''
+
+    svg += '</svg>'
+    return svg
+
 damage_levels = [
     '0 - Keine Beschädigung',
     '1 - Leichte Kratzer/Gebrauchsspuren',
@@ -77,64 +275,866 @@ damage_levels = [
     '4 - Sehr starke Beschädigungen/Austausch'
 ]
 
-# ==================== MINIMAL CSS FÜR MOBILE ====================
+# ==================== CSS STYLES ====================
 st.markdown("""
 <style>
-* { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; box-sizing: border-box; }
-.stApp { background: #F9FAFB; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+* {
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+}
 
-/* NAV */
-.top-nav { background: white; border-bottom: 1px solid #E5E7EB; padding: 15px 0; position: sticky; top: 0; z-index: 999; }
-.nav-brand { text-align: center; font-size: 1.4rem; font-weight: 600; color: #1B365D; margin-bottom: 12px; }
-div[data-testid="column"] > div.stButton > button { background: transparent; color: #6B7280; border: 1px solid #E5E7EB; box-shadow: none; font-weight: 500; padding: 10px; font-size: 0.9rem; }
-div[data-testid="column"] > div.stButton > button:hover { background: #F3F4F6; color: #1F2937; border-color: #1B365D; }
+/* PROFESSIONELLE SERIOESE OPTIK */
+.stApp {
+    background: #F9FAFB;
+}
 
-/* BUTTONS */
-div.stButton > button { background: #1B365D; color: white; border: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; width: 100%; }
+/* EMOTIONALER HERO */
+.hero-section {
+    background: linear-gradient(135deg, rgba(27, 54, 93, 0.95) 0%, rgba(30, 58, 138, 0.92) 100%),
+                url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920') center/cover;
+    padding: 120px 20px 80px 20px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
 
-/* SECTIONS */
-.hero-section { background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%); padding: 80px 20px 60px 20px; text-align: center; color: white; }
-.hero-title { font-size: 2.2rem; font-weight: 700; line-height: 1.2; margin-bottom: 20px; }
-.hero-subtitle { font-size: 1.1rem; margin-bottom: 30px; opacity: 0.95; line-height: 1.6; }
-.hero-cta { display: inline-block; background: #059669; color: white; padding: 14px 40px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-decoration: none; }
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(26, 35, 50, 0.3) 100%);
+}
 
-.social-proof-banner { background: white; border-top: 3px solid #1B365D; padding: 30px 20px; text-align: center; }
-.social-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-.stat-number { font-size: 2.5rem; font-weight: 700; color: #1B365D; }
-.stat-label { font-size: 0.9rem; color: #6B7280; margin-top: 5px; }
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+}
 
-.section-title { font-size: 2rem; font-weight: 600; color: #1F2937; text-align: center; margin-bottom: 15px; }
-.section-subtitle { font-size: 1.1rem; color: #6B7280; text-align: center; margin-bottom: 40px; }
+.hero-title {
+    font-size: 3.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 25px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.8s ease-out;
+}
 
-/* CARDS */
-.process-step, .testimonial-card, .trust-badge, .package-card, .faq-item, .checklist-item, .blog-card { background: white; padding: 25px; border-radius: 10px; border: 2px solid #E5E7EB; margin-bottom: 20px; }
-.process-step { text-align: center; }
-.step-number { width: 60px; height: 60px; background: #1B365D; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; margin: 0 auto 20px auto; }
+.hero-subtitle {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin: 20px auto 40px auto;
+    max-width: 700px;
+    opacity: 0.95;
+    line-height: 1.6;
+    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
 
-.partner-logo { background: white; padding: 25px; border-radius: 8px; text-align: center; border: 2px solid #E5E7EB; }
-.partner-logo-text { font-size: 1.3rem; font-weight: 700; color: #1B365D; }
+.hero-cta {
+    display: inline-block;
+    background: #059669;
+    color: white;
+    padding: 18px 50px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
 
-/* CALCULATOR */
-.progress-bar { height: 25px; background: #E5E7EB; border-radius: 12px; overflow: hidden; margin: 20px 0; }
-.progress-fill { height: 100%; background: #059669; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; }
+.hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(5, 150, 105, 0.5);
+    background: #047857;
+}
 
-.result-box { background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%); padding: 35px; border-radius: 10px; text-align: center; color: white; margin: 25px 0; }
-.result-amount { font-size: 2.8rem; font-weight: 300; }
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-.savings-box { background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 30px; border-radius: 10px; text-align: center; color: white; margin: 20px 0; }
+/* SCROLL TO TOP BUTTON */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 50px;
+    height: 50px;
+    background: #1B365D;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(27, 54, 93, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(27, 54, 93, 0.4);
+}
+
+/* COOKIE BANNER */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1F2937;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    z-index: 1001;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.cookie-text {
+    flex: 1;
+    font-size: 0.95rem;
+}
+
+.cookie-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* PROGRESS BAR */
+.progress-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.progress-bar {
+    height: 25px;
+    background: #E5E7EB;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #059669 0%, #047857 100%);
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.progress-text {
+    margin-top: 10px;
+    text-align: center;
+    color: #6B7280;
+    font-size: 0.95rem;
+}
+
+/* SOCIAL PROOF */
+.social-proof-banner {
+    background: white;
+    border-top: 3px solid #1B365D;
+    border-bottom: 1px solid #E5E7EB;
+    padding: 35px 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.social-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1B365D;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    color: #6B7280;
+    font-weight: 500;
+}
+
+/* TESTIMONIALS */
+.testimonial-section {
+    padding: 80px 20px;
+    background: white;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.testimonial-card {
+    background: #F9FAFB;
+    padding: 30px;
+    border-radius: 12px;
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-color: #1B365D;
+}
+
+.testimonial-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.testimonial-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.testimonial-info {
+    flex: 1;
+}
+
+.testimonial-name {
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 5px;
+}
+
+.testimonial-role {
+    font-size: 0.85rem;
+    color: #6B7280;
+}
+
+.testimonial-stars {
+    color: #FFB800;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.testimonial-text {
+    color: #4B5563;
+    line-height: 1.7;
+    font-style: italic;
+}
+
+.testimonial-savings {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #E5E7EB;
+    color: #059669;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* PARTNER LOGOS */
+.partner-section {
+    padding: 60px 20px;
+    background: #F9FAFB;
+}
+
+.partner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.partner-logo {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.partner-logo:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-color: #1B365D;
+}
+
+.partner-logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1B365D;
+}
 
 /* FLOATING CTA */
-.floating-cta { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
-.floating-btn { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-decoration: none; border: 2px solid white; }
-.floating-phone { background: #1B365D; }
-.floating-whatsapp { background: #25D366; }
-.floating-main { background: #059669; width: 64px; height: 64px; font-size: 1.8rem; }
+.floating-cta {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
+.floating-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 3px solid white;
+}
+
+.floating-btn:hover {
+    transform: scale(1.1) translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.floating-phone {
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
+}
+
+.floating-whatsapp {
+    background: #25D366;
+}
+
+.floating-main {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+}
+
+/* PROZESS */
+.process-section {
+    padding: 80px 20px;
+    background: white;
+}
+
+.process-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 15px;
+}
+
+.process-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #6B7280;
+    margin-bottom: 60px;
+}
+
+.process-step {
+    text-align: center;
+    padding: 40px 30px;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.process-step:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(27, 54, 93, 0.15);
+    border-color: #1B365D;
+}
+
+.step-number {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 auto 25px auto;
+    box-shadow: 0 8px 20px rgba(27, 54, 93, 0.3);
+}
+
+.step-icon {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.step-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 15px;
+}
+
+.step-description {
+    font-size: 1rem;
+    color: #6B7280;
+    line-height: 1.6;
+}
+
+/* TRUST BADGES */
+.trust-section {
+    background: #F5F7FA;
+    padding: 60px 20px;
+}
+
+.trust-badges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.trust-badge {
+    background: white;
+    padding: 35px 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(31, 41, 55, 0.06);
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.trust-badge:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(31, 41, 55, 0.12);
+    border-color: #1B365D;
+}
+
+.trust-icon {
+    font-size: 3.5rem;
+    margin-bottom: 18px;
+}
+
+.trust-title {
+    font-size: 1rem;
+    color: #1F2937;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* PAKETE */
+.packages-section {
+    padding: 80px 20px;
+    background: white;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: #6B7280;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.package-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px 30px;
+    border: 2px solid #E5E7EB;
+    transition: all 0.4s ease;
+    text-align: center;
+}
+
+.package-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(31, 41, 55, 0.15);
+    border-color: #1B365D;
+}
+
+.package-popular {
+    border: 3px solid #059669;
+    background: linear-gradient(180deg, #F0FDF4 0%, white 100%);
+    transform: scale(1.05);
+}
+
+.package-popular:hover {
+    transform: translateY(-10px) scale(1.07);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.package-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.package-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 8px;
+}
+
+.package-subtitle {
+    font-size: 0.95rem;
+    color: #6B7280;
+    margin-bottom: 25px;
+}
+
+.package-price {
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: #1B365D;
+    margin: 25px 0;
+}
+
+.package-price-unit {
+    font-size: 1.2rem;
+    color: #6B7280;
+}
+
+.package-features {
+    text-align: left;
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+}
+
+.package-features li {
+    padding: 14px 0;
+    color: #1F2937;
+    border-bottom: 1px solid #F3F4F6;
+    font-size: 0.95rem;
+}
+
+/* CALCULATOR */
+.calculator-section {
+    background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+    padding: 60px 20px;
+}
+
+.calculator-box {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 10px 40px rgba(31, 41, 55, 0.1);
+    border: 2px solid #E5E7EB;
+}
+
+.calculator-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1F2937;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.calculator-subtitle {
+    font-size: 1.1rem;
+    color: #6B7280;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* RESULT BOXES */
+.result-box {
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    margin-top: 30px;
+}
+
+.result-label {
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.result-amount {
+    font-size: 3.5rem;
+    font-weight: 300;
+}
+
+.savings-box {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    padding: 35px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    margin-top: 20px;
+}
+
+/* CONTENT SECTIONS */
+.content-section {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 60px 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(31, 41, 55, 0.06);
+    border: 1px solid #E5E7EB;
+}
+
+/* FAQ */
+.faq-item {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    border: 2px solid #E5E7EB;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    border-color: #1B365D;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.faq-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 10px;
+}
+
+.faq-answer {
+    color: #6B7280;
+    line-height: 1.7;
+}
+
+/* CHECKLIST */
+.checklist-item {
+    display: flex;
+    align-items: start;
+    gap: 15px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    border-left: 4px solid #059669;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.checklist-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.checklist-content {
+    flex: 1;
+}
+
+.checklist-title {
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 5px;
+}
+
+.checklist-description {
+    color: #6B7280;
+    font-size: 0.95rem;
+}
+
+/* BLOG */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.blog-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-color: #1B365D;
+}
+
+.blog-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+}
+
+.blog-content {
+    padding: 25px;
+}
+
+.blog-category {
+    display: inline-block;
+    background: #E0F2FE;
+    color: #1B365D;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.blog-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 10px;
+}
+
+.blog-excerpt {
+    color: #6B7280;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.blog-meta {
+    color: #9CA3AF;
+    font-size: 0.85rem;
+}
+
+/* BUTTONS */
+div.stButton > button {
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
+    color: white;
+    border: none;
+    padding: 16px 35px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(27, 54, 93, 0.3);
+}
+
+div.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(27, 54, 93, 0.4);
+}
+
+/* NAVIGATION */
+.top-nav {
+    background: white;
+    border-bottom: 1px solid #E5E7EB;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+.nav-brand {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #1B365D;
+    margin-bottom: 15px;
+}
+
+div[data-testid="column"] > div.stButton > button {
+    background: transparent;
+    color: #6B7280;
+    border: 1px solid #E5E7EB;
+    box-shadow: none;
+    font-weight: 500;
+    padding: 12px 20px;
+}
+
+div[data-testid="column"] > div.stButton > button:hover {
+    background: #F3F4F6;
+    color: #1F2937;
+    border-color: #1B365D;
+    transform: none;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
-    .hero-title { font-size: 1.8rem; }
-    .hero-subtitle { font-size: 1rem; }
-    .stat-number { font-size: 2rem; }
-    .section-title { font-size: 1.6rem; }
+    .hero-title { font-size: 2.2rem; }
+    .hero-subtitle { font-size: 1.1rem; }
+    .social-stats { gap: 30px; }
+    .stat-number { font-size: 2.2rem; }
+    .process-title, .section-title { font-size: 1.8rem; }
+    .floating-cta { bottom: 15px; right: 15px; }
+    .floating-btn { width: 56px; height: 56px; font-size: 1.5rem; }
+    .floating-main { width: 60px; height: 60px; font-size: 1.7rem; }
+    .scroll-to-top { bottom: 15px; left: 15px; width: 45px; height: 45px; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -1224,6 +2224,163 @@ elif st.session_state.page == 'contact':
         Parkplätze vorhanden
         U-Bahn, S-Bahn, Tram
         """)
+
+    # LEAD-FORMULAR
+    st.markdown("---")
+    st.markdown('<div id="rg-contact-form">', unsafe_allow_html=True)
+
+    # CSS-Scoping für Auto-Grafik
+    st.markdown("""
+    <style>
+    /* Scoped nur für Contact-Form */
+    #rg-contact-form .auto-diagram {
+        display: block;
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    #rg-contact-form .auto-diagram svg {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Mobile: Grafik ausblenden */
+    @media (max-width: 768px) {
+        #rg-contact-form .auto-diagram {
+            display: none;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("### 📝 Kostenlose Erstberatung")
+    st.markdown("Beschreiben Sie kurz Ihre Situation - wir melden uns innerhalb von 24h bei Ihnen.")
+
+    # Success State
+    if st.session_state.form_submitted:
+        st.success("✅ Vielen Dank! Wir melden uns innerhalb von 24h bei Ihnen.")
+        if st.button("Neue Anfrage"):
+            st.session_state.form_submitted = False
+            st.rerun()
+    else:
+        # Formular nur zeigen wenn nicht gerade submitted
+        with st.form("lead_form"):
+            # Kontaktdaten
+            st.markdown("**Ihre Kontaktdaten**")
+            col_form1, col_form2 = st.columns(2)
+
+            with col_form1:
+                name = st.text_input("Name *", placeholder="Max Mustermann")
+                email = st.text_input("Email *", placeholder="max@beispiel.de")
+
+            with col_form2:
+                phone = st.text_input("Telefon *", placeholder="+49 176 12345678")
+                lease_end = st.selectbox(
+                    "Wann endet Ihr Leasing? *",
+                    ['Unter 1 Monat', '1-3 Monate', '3-6 Monate', 'Über 6 Monate'],
+                    index=1
+                )
+
+            # Schäden erfassen (optional)
+            st.markdown("---")
+            st.markdown("**Welche Schäden sind vorhanden? (optional)**")
+
+            col_damage1, col_damage2 = st.columns(2)
+
+            with col_damage1:
+                damage_kratzer = st.checkbox("Kratzer / Lackschäden")
+                damage_dellen = st.checkbox("Dellen / Beulen")
+                damage_felgen = st.checkbox("Felgen")
+
+            with col_damage2:
+                damage_scheibe = st.checkbox("Scheibe")
+                damage_innenraum = st.checkbox("Innenraum")
+                damage_unsure = st.checkbox("Nicht sicher")
+
+            # Auto-Grafik mit Markern (wenn Feature aktiv)
+            if SHOW_AUTO_DIAGRAM:
+                # Sammle selected damages (nur vordefinierte Keys!)
+                selected_damages = []
+                if damage_kratzer:
+                    selected_damages.append('kratzer')
+                if damage_dellen:
+                    selected_damages.append('dellen')
+                if damage_felgen:
+                    selected_damages.append('felgen')
+                if damage_scheibe:
+                    selected_damages.append('scheibe')
+                if damage_innenraum:
+                    selected_damages.append('innenraum')
+                if damage_unsure:
+                    selected_damages.append('unsure')
+
+                # SVG generieren und rendern (3-Stufen-Fallback)
+                try:
+                    svg_code = generate_auto_svg(selected_damages)
+                    st.markdown(
+                        f'<div class="auto-diagram">{svg_code}</div>',
+                        unsafe_allow_html=True
+                    )
+                except Exception as e:
+                    # Fallback 2: st.components (wenn st.markdown zickt)
+                    try:
+                        import streamlit.components.v1 as components
+                        components.html(svg_code, height=280)
+                    except:
+                        # Fallback 3: Silent fail, Checkboxen funktionieren weiter
+                        pass
+
+            # Freitext für Schaden-Details
+            damage_details = st.text_area(
+                "Weitere Details zu den Schäden (optional)",
+                placeholder="z.B. Kratzer ca. 10cm an Tür links, Delle in Heckklappe...",
+                height=80
+            )
+
+            # Foto-Upload (optional)
+            st.markdown("---")
+            st.markdown("**Fotos der Schäden (optional, aber hilfreich)**")
+            uploaded_files = st.file_uploader(
+                "Laden Sie Fotos hoch",
+                type=["jpg", "jpeg", "png"],
+                accept_multiple_files=True,
+                help="Maximal 5 Bilder",
+                label_visibility="collapsed"
+            )
+
+            # Validierung: Max 5 Bilder
+            if uploaded_files and len(uploaded_files) > 5:
+                st.error("❌ Maximal 5 Bilder erlaubt")
+            elif uploaded_files:
+                st.success(f"✅ {len(uploaded_files)} Foto(s) hochgeladen")
+
+            st.caption("💡 Tipp: Machen Sie Nahaufnahmen der Schäden + eine Gesamtansicht des Fahrzeugs")
+
+            # Nachricht (optional)
+            st.markdown("---")
+            message = st.text_area(
+                "Ihre Nachricht (optional)",
+                placeholder="Erzählen Sie uns mehr über Ihre Situation...",
+                height=100
+            )
+
+            submitted = st.form_submit_button("💬 Kostenlose Beratung anfordern", use_container_width=True)
+
+            if submitted:
+                with st.spinner("Anfrage wird gesendet..."):
+                    # Validierung (nur Pflichtfelder)
+                    result = validate_lead_form(name, email, phone, lease_end)
+
+                    if result['is_valid']:
+                        # Erfolg - hier könnte später Email-Versand implementiert werden
+                        st.session_state.form_submitted = True
+                        st.rerun()
+                    else:
+                        # Fehler anzeigen
+                        for field, error_msg in result['errors'].items():
+                            st.error(f"❌ {error_msg}")
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
