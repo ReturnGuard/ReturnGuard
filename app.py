@@ -2229,7 +2229,7 @@ elif st.session_state.page == 'contact':
     st.markdown("---")
     st.markdown('<div id="rg-contact-form">', unsafe_allow_html=True)
 
-    # CSS-Scoping für Auto-Grafik
+    # CSS-Scoping für Auto-Grafik (falls st.markdown Fallback genutzt wird)
     st.markdown("""
     <style>
     /* Scoped nur für Contact-Form */
@@ -2242,13 +2242,6 @@ elif st.session_state.page == 'contact':
     #rg-contact-form .auto-diagram svg {
         width: 100%;
         height: auto;
-    }
-
-    /* Mobile: Grafik ausblenden */
-    @media (max-width: 768px) {
-        #rg-contact-form .auto-diagram {
-            display: none;
-        }
     }
     </style>
     """, unsafe_allow_html=True)
@@ -2314,18 +2307,46 @@ elif st.session_state.page == 'contact':
                 if damage_unsure:
                     selected_damages.append('unsure')
 
-                # SVG generieren und rendern (3-Stufen-Fallback)
+                # SVG generieren und rendern (Mobile-First Fallback)
                 try:
                     svg_code = generate_auto_svg(selected_damages)
-                    st.markdown(
-                        f'<div class="auto-diagram">{svg_code}</div>',
-                        unsafe_allow_html=True
-                    )
+
+                    # Fallback 1: st.components.v1.html (bessere Mobile/Safari-Unterstützung)
+                    import streamlit.components.v1 as components
+
+                    # Vollständiges HTML mit inline SVG (Safari-kompatibel)
+                    html_content = f"""
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                            body {{
+                                margin: 0;
+                                padding: 10px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                background: transparent;
+                            }}
+                        </style>
+                    </head>
+                    <body>
+                        {svg_code}
+                    </body>
+                    </html>
+                    """
+
+                    components.html(html_content, height=280, scrolling=False)
+
                 except Exception as e:
-                    # Fallback 2: st.components (wenn st.markdown zickt)
+                    # Fallback 2: st.markdown (Desktop-Browser)
                     try:
-                        import streamlit.components.v1 as components
-                        components.html(svg_code, height=280)
+                        st.markdown(
+                            f'<div class="auto-diagram">{svg_code}</div>',
+                            unsafe_allow_html=True
+                        )
                     except:
                         # Fallback 3: Silent fail, Checkboxen funktionieren weiter
                         pass
