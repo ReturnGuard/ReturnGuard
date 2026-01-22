@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 
 # ==================== FEATURE FLAGS ====================
-SHOW_AUTO_DIAGRAM = True  # True = Auto-Grafik aktiv, False = Checkbox-only
+SHOW_AUTO_DIAGRAM = False  # Safari zeigt SVG als Raw-Code - deaktiviert für V1
 
 # ==================== KONFIGURATION ====================
 st.set_page_config(
