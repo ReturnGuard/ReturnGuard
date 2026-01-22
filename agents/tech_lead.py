@@ -14,6 +14,7 @@ from .prompts import (
     format_prompt
 )
 from .repo_scan import RepoScanner, RepoScanResult, format_scan_result
+from .contract_validator import ContractValidator, ValidationResult, format_validation_result
 
 
 class TechLeadAgent:
@@ -67,19 +68,41 @@ class TechLeadAgent:
         print(f"✅ Plan gespeichert: {plan_path}")
 
         # Phase 2: Contract erstellen (wird vom User/Claude manuell ausgefüllt)
-        print("\n📝 Phase 2: Contract-Template erstellt...")
-        contract_path = self._create_contract_template(feature_request, feature_slug)
-        print(f"✅ Contract-Template gespeichert: {contract_path}")
-        print("⚠️  WICHTIG: Contract muss ausgefüllt werden bevor Backend-Phase startet!")
+        contract_file = self.contracts_path / f"{feature_slug}.md"
+        if contract_file.exists():
+            print("\n📝 Phase 2: Contract existiert bereits - verwende bestehenden...")
+            print(f"   {contract_file}")
+            contract_path = contract_file
+        else:
+            print("\n📝 Phase 2: Contract-Template erstellt...")
+            contract_path = self._create_contract_template(feature_request, feature_slug)
+            print(f"✅ Contract-Template gespeichert: {contract_path}")
+            print("⚠️  WICHTIG: Contract muss ausgefüllt werden bevor Backend-Phase startet!")
 
-        # Phase 3-6: Werden in M3-M4 implementiert
-        print("\n⏭️  Weitere Phasen (Backend/Frontend/Testing/Review) folgen in M3-M4")
+        # Phase 3: Contract-Validierung (M3 - Contract-First Enforcement)
+        print("\n🔍 Phase 3: Validiere Contract (M3 - Contract-First Enforcement)...")
+        validator = ContractValidator(self.contracts_path)
+        validation_result = validator.validate(feature_slug)
+
+        # Zeige Validierungsergebnis
+        validation_output = format_validation_result(validation_result, feature_slug)
+        print("\n" + validation_output)
+
+        # Entscheide ob weitere Phasen möglich sind
+        if validation_result.is_valid:
+            print("\n✅ Contract ist gültig - bereit für M4 Phasen (Backend/Frontend/Testing/Review)")
+            print("⏭️  M4 Phasen werden nach Abnahme von M3 implementiert")
+        else:
+            print("\n🚫 BLOCKIERT: Backend/Frontend/Testing können nicht starten!")
+            print("   Contract muss erst vollständig ausgefüllt werden.")
+            print("   Siehe obige Fehler und behebe sie.")
 
         return {
             "plan": str(plan_path),
             "contract": str(contract_path),
             "feature_slug": feature_slug,
-            "scan_result": scan_result
+            "scan_result": scan_result,
+            "validation_result": validation_result
         }
 
     def _create_slug(self, text: str) -> str:
