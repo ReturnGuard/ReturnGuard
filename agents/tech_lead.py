@@ -15,6 +15,7 @@ from .prompts import (
 )
 from .repo_scan import RepoScanner, RepoScanResult, format_scan_result
 from .contract_validator import ContractValidator, ValidationResult, format_validation_result
+from .diff_generator import PatchOutput, create_example_patch
 
 
 class TechLeadAgent:
@@ -90,20 +91,61 @@ class TechLeadAgent:
 
         # Entscheide ob weitere Phasen möglich sind
         if validation_result.is_valid:
-            print("\n✅ Contract ist gültig - bereit für M4 Phasen (Backend/Frontend/Testing/Review)")
-            print("⏭️  M4 Phasen werden nach Abnahme von M3 implementiert")
+            print("\n✅ Contract ist gültig - starte M4 Phasen...")
+
+            # Phase 4: Patch-Erzeugung (M4 - Dry-Run)
+            print("\n🔧 Phase 4: Erzeuge Patch-Vorschläge (M4 - Dry-Run)...")
+            print("   ⚠️  HINWEIS: Dies ist ein Beispiel-Output. Echte Code-Generierung")
+            print("   wird in einer späteren Iteration implementiert.")
+            print("   Das Format zeigt wie M4 Output aussehen würde.\n")
+
+            # Erstelle Beispiel-Patch (zeigt Format)
+            example_patch = create_example_patch()
+
+            # Speichere Patch in docs/
+            patch_file = self.docs_path / f"patch_{feature_slug}.md"
+            patch_file.write_text(example_patch.to_markdown(), encoding="utf-8")
+            print(f"✅ Patch-Vorschlag gespeichert: {patch_file}")
+            print("   Öffne die Datei um unified diffs + Review Notes zu sehen")
+
+            # Zeige kurze Zusammenfassung
+            print("\n📋 Patch-Zusammenfassung:")
+            print(f"   - Modified Files: {', '.join(example_patch.files_modified)}")
+            print(f"   - New Files: {', '.join(example_patch.files_created) if example_patch.files_created else 'Keine'}")
+            print(f"   - Review Notes: Was/Warum/Risiko/Test dokumentiert")
+
+            print("\n💡 Nächste Schritte:")
+            print("   1. Öffne docs/patch_*.md und prüfe Änderungen")
+            print("   2. Unified diff zeigt genau was geändert würde")
+            print("   3. Review Notes erklären Kontext")
+            print("   4. Wenn OK: Manuell anwenden (cp oder patch-Befehl)")
+            print("   5. Tests laufen lassen")
+
+            print("\n🛡️ M4 Guardrails aktiv:")
+            print("   ✓ Output als PR-ready unified diff")
+            print("   ✓ Default dry-run (keine Files geändert)")
+            print("   ✓ Strict scope (nur Contract-relevante Files)")
+
+            return {
+                "plan": str(plan_path),
+                "contract": str(contract_path),
+                "feature_slug": feature_slug,
+                "scan_result": scan_result,
+                "validation_result": validation_result,
+                "patch_file": str(patch_file)
+            }
         else:
             print("\n🚫 BLOCKIERT: Backend/Frontend/Testing können nicht starten!")
             print("   Contract muss erst vollständig ausgefüllt werden.")
             print("   Siehe obige Fehler und behebe sie.")
 
-        return {
-            "plan": str(plan_path),
-            "contract": str(contract_path),
-            "feature_slug": feature_slug,
-            "scan_result": scan_result,
-            "validation_result": validation_result
-        }
+            return {
+                "plan": str(plan_path),
+                "contract": str(contract_path),
+                "feature_slug": feature_slug,
+                "scan_result": scan_result,
+                "validation_result": validation_result
+            }
 
     def _create_slug(self, text: str) -> str:
         """Erstellt einen URL-safe Slug aus dem Text."""
