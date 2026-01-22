@@ -26,6 +26,8 @@ if 'total_cost' not in st.session_state:
     st.session_state.total_cost = 0
 if 'show_cookie_banner' not in st.session_state:
     st.session_state.show_cookie_banner = True
+if 'form_submitted' not in st.session_state:
+    st.session_state.form_submitted = False
 
 # ==================== GUTACHTERTABELLE ====================
 # Preise nach Fahrzeugklasse: [Kompakt, Mittel, Ober, Luxus]
@@ -67,6 +69,82 @@ def get_damage_costs(vehicle_class):
         adjusted_costs[part] = [int(cost * mult) for cost in costs]
 
     return adjusted_costs
+
+# ==================== LEAD-FORMULAR VALIDIERUNG ====================
+def sanitize_phone(phone: str) -> str:
+    """
+    Normalisiert Telefonnummer (entfernt Leerzeichen, Bindestriche).
+
+    Args:
+        phone: Rohe Telefoneingabe
+
+    Returns:
+        str: Bereinigte Telefonnummer (nur Zahlen und +)
+    """
+    if not phone:
+        return ""
+    # Entferne Leerzeichen und Bindestriche
+    return phone.replace(" ", "").replace("-", "")
+
+def validate_lead_form(name: str, email: str, phone: str, message: str, vehicle_type: str) -> dict:
+    """
+    Validiert Lead-Formular Eingaben und gibt Validierungsergebnis zurück.
+
+    Args:
+        name: Vollständiger Name des Kunden
+        email: Email-Adresse des Kunden
+        phone: Telefonnummer des Kunden
+        message: Nachricht/Anfrage des Kunden
+        vehicle_type: Fahrzeugklasse für Anfrage
+
+    Returns:
+        dict: {'is_valid': bool, 'errors': dict[str, str]}
+    """
+    errors = {}
+
+    # Name validieren
+    if not name or not name.strip():
+        errors['name'] = "Name ist erforderlich"
+    elif len(name.strip()) < 2:
+        errors['name'] = "Name muss mindestens 2 Zeichen haben"
+    elif len(name.strip()) > 100:
+        errors['name'] = "Name darf maximal 100 Zeichen haben"
+
+    # Email validieren
+    if not email or not email.strip():
+        errors['email'] = "Email ist erforderlich"
+    else:
+        # Regex für Email-Validierung
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, email.strip()):
+            errors['email'] = "Bitte geben Sie eine gültige Email-Adresse ein"
+
+    # Telefon validieren
+    phone_clean = sanitize_phone(phone)
+    if not phone or not phone.strip():
+        errors['phone'] = "Telefonnummer ist erforderlich"
+    elif len(phone_clean) < 5:
+        errors['phone'] = "Telefonnummer zu kurz"
+    elif len(phone_clean) > 20:
+        errors['phone'] = "Telefonnummer zu lang"
+
+    # Nachricht validieren
+    if not message or not message.strip():
+        errors['message'] = "Nachricht ist erforderlich"
+    elif len(message.strip()) < 10:
+        errors['message'] = "Nachricht muss mindestens 10 Zeichen haben"
+    elif len(message.strip()) > 1000:
+        errors['message'] = "Nachricht darf maximal 1000 Zeichen haben"
+
+    # Fahrzeugtyp validieren
+    valid_types = ['Kompaktklasse', 'Mittelklasse', 'Oberklasse', 'Luxusklasse']
+    if vehicle_type not in valid_types:
+        errors['vehicle_type'] = "Bitte wählen Sie einen Fahrzeugtyp aus"
+
+    return {
+        'is_valid': len(errors) == 0,
+        'errors': errors
+    }
 
 damage_levels = [
     '0 - Keine Beschädigung',
@@ -2025,6 +2103,56 @@ elif st.session_state.page == 'contact':
         Parkplätze vorhanden
         U-Bahn, S-Bahn, Tram
         """)
+
+    # LEAD-FORMULAR
+    st.markdown("---")
+    st.markdown("### 📝 Anfrage senden")
+    st.markdown("Senden Sie uns Ihre Anfrage - wir melden uns innerhalb von 24h bei Ihnen.")
+
+    # Success State
+    if st.session_state.form_submitted:
+        st.success("✅ Vielen Dank! Wir melden uns innerhalb von 24h bei Ihnen.")
+        if st.button("Neue Anfrage"):
+            st.session_state.form_submitted = False
+            st.rerun()
+    else:
+        # Formular nur zeigen wenn nicht gerade submitted
+        with st.form("lead_form"):
+            col_form1, col_form2 = st.columns(2)
+
+            with col_form1:
+                name = st.text_input("Name *", placeholder="Max Mustermann")
+                email = st.text_input("Email *", placeholder="max@beispiel.de")
+
+            with col_form2:
+                phone = st.text_input("Telefon *", placeholder="+49 176 12345678")
+                vehicle_type = st.selectbox(
+                    "Fahrzeugklasse *",
+                    ['Kompaktklasse', 'Mittelklasse', 'Oberklasse', 'Luxusklasse'],
+                    index=1
+                )
+
+            message = st.text_area(
+                "Ihre Nachricht *",
+                placeholder="Beschreiben Sie Ihr Anliegen...",
+                height=150
+            )
+
+            submitted = st.form_submit_button("📨 Anfrage senden", use_container_width=True)
+
+            if submitted:
+                with st.spinner("Anfrage wird gesendet..."):
+                    # Validierung
+                    result = validate_lead_form(name, email, phone, message, vehicle_type)
+
+                    if result['is_valid']:
+                        # Erfolg - hier könnte später Email-Versand implementiert werden
+                        st.session_state.form_submitted = True
+                        st.rerun()
+                    else:
+                        # Fehler anzeigen
+                        for field, error_msg in result['errors'].items():
+                            st.error(f"❌ {error_msg}")
 
     st.markdown('</div>', unsafe_allow_html=True)
 

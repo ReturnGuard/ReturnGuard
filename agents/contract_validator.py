@@ -39,7 +39,7 @@ class ContractValidator:
 
     # Patterns die darauf hindeuten dass Contract unvollständig ist
     INCOMPLETE_PATTERNS = [
-        r'\[.*?\]',  # [Platzhalter]
+        r'\[(?!["\'])(?![\w]+["\'])[\w\s,\.\-/]+\]',  # [Platzhalter] aber nicht ['quoted'] oder word['key']
         r'TODO',
         r'\?\?\?',
         r'Beschreibung:.*?\n\s*$',  # Leere Beschreibung
@@ -140,7 +140,8 @@ class ContractValidator:
         issues = []
 
         # Entferne Code-Blöcke vor der Suche (um False Positives zu vermeiden)
-        content_without_code = re.sub(r'```.*?```', '', content, flags=re.DOTALL)
+        # Verwende re.DOTALL damit . auch Newlines matched
+        content_without_code = re.sub(r'```[\s\S]*?```', '', content)
 
         for pattern in self.INCOMPLETE_PATTERNS:
             matches = re.findall(pattern, content_without_code, re.MULTILINE | re.IGNORECASE)
