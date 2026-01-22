@@ -3,6 +3,9 @@ import re
 from datetime import datetime
 import json
 
+# ==================== FEATURE FLAGS ====================
+SHOW_AUTO_DIAGRAM = True  # True = Auto-Grafik aktiv, False = Checkbox-only
+
 # ==================== KONFIGURATION ====================
 st.set_page_config(
     page_title="ReturnGuard - Leasingrückgabe ohne Sorgen",
@@ -86,7 +89,7 @@ def sanitize_phone(phone: str) -> str:
     # Entferne Leerzeichen und Bindestriche
     return phone.replace(" ", "").replace("-", "")
 
-def validate_lead_form(name: str, email: str, phone: str, message: str, vehicle_type: str) -> dict:
+def validate_lead_form(name: str, email: str, phone: str, lease_end: str) -> dict:
     """
     Validiert Lead-Formular Eingaben und gibt Validierungsergebnis zurück.
 
@@ -94,8 +97,7 @@ def validate_lead_form(name: str, email: str, phone: str, message: str, vehicle_
         name: Vollständiger Name des Kunden
         email: Email-Adresse des Kunden
         phone: Telefonnummer des Kunden
-        message: Nachricht/Anfrage des Kunden
-        vehicle_type: Fahrzeugklasse für Anfrage
+        lease_end: Wann endet das Leasing (Zeitfenster)
 
     Returns:
         dict: {'is_valid': bool, 'errors': dict[str, str]}
@@ -128,23 +130,142 @@ def validate_lead_form(name: str, email: str, phone: str, message: str, vehicle_
     elif len(phone_clean) > 20:
         errors['phone'] = "Telefonnummer zu lang"
 
-    # Nachricht validieren
-    if not message or not message.strip():
-        errors['message'] = "Nachricht ist erforderlich"
-    elif len(message.strip()) < 10:
-        errors['message'] = "Nachricht muss mindestens 10 Zeichen haben"
-    elif len(message.strip()) > 1000:
-        errors['message'] = "Nachricht darf maximal 1000 Zeichen haben"
-
-    # Fahrzeugtyp validieren
-    valid_types = ['Kompaktklasse', 'Mittelklasse', 'Oberklasse', 'Luxusklasse']
-    if vehicle_type not in valid_types:
-        errors['vehicle_type'] = "Bitte wählen Sie einen Fahrzeugtyp aus"
+    # Leasingende validieren
+    valid_lease_options = ['Unter 1 Monat', '1-3 Monate', '3-6 Monate', 'Über 6 Monate']
+    if not lease_end or lease_end not in valid_lease_options:
+        errors['lease_end'] = "Bitte wählen Sie einen Zeitraum"
 
     return {
         'is_valid': len(errors) == 0,
         'errors': errors
     }
+
+# ==================== AUTO-GRAFIK (SVG) ====================
+def generate_auto_svg(selected_damages):
+    """
+    Generiert SVG-Auto mit Markern basierend auf ausgewählten Schäden.
+
+    Args:
+        selected_damages: Liste von Strings wie ['kratzer', 'felgen']
+
+    Returns:
+        str: SVG-Code (nur statische Strings, kein User-Input!)
+    """
+    # SVG mit responsive viewBox
+    svg = '''
+    <svg viewBox="0 0 400 250"
+         preserveAspectRatio="xMidYMid meet"
+         style="width:100%; height:auto; max-width:400px; margin:0 auto; display:block;">
+
+        <!-- Hintergrund -->
+        <rect width="400" height="250" fill="#f9fafb"/>
+
+        <!-- Auto-Outline (Draufsicht) -->
+        <rect x="100" y="30" width="200" height="190"
+              fill="none" stroke="#d1d5db" stroke-width="2" rx="15"/>
+
+        <!-- Motorhaube -->
+        <rect x="100" y="30" width="200" height="50"
+              fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5" rx="15"/>
+        <text x="200" y="60" text-anchor="middle"
+              font-size="12" fill="#6b7280" font-family="Arial">Motorhaube</text>
+
+        <!-- Windschutzscheibe -->
+        <rect x="120" y="85" width="160" height="15"
+              fill="#dbeafe" stroke="#60a5fa" stroke-width="1"/>
+        <text x="200" y="96" text-anchor="middle"
+              font-size="10" fill="#1e40af" font-family="Arial">Scheibe</text>
+
+        <!-- Türen Links -->
+        <rect x="80" y="105" width="18" height="60"
+              fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+        <text x="89" y="138" text-anchor="middle"
+              font-size="10" fill="#6b7280" font-family="Arial" transform="rotate(-90 89,138)">Tür L</text>
+
+        <!-- Innenraum -->
+        <rect x="120" y="110" width="160" height="70"
+              fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+        <text x="200" y="150" text-anchor="middle"
+              font-size="12" fill="#6b7280" font-family="Arial">Innenraum</text>
+
+        <!-- Türen Rechts -->
+        <rect x="302" y="105" width="18" height="60"
+              fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+        <text x="311" y="138" text-anchor="middle"
+              font-size="10" fill="#6b7280" font-family="Arial" transform="rotate(90 311,138)">Tür R</text>
+
+        <!-- Heckklappe -->
+        <rect x="100" y="170" width="200" height="50"
+              fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5" rx="15"/>
+        <text x="200" y="200" text-anchor="middle"
+              font-size="12" fill="#6b7280" font-family="Arial">Heckklappe</text>
+
+        <!-- Felgen (4 Ecken) -->
+        <circle cx="130" cy="50" r="15" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+        <circle cx="270" cy="50" r="15" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+        <circle cx="130" cy="200" r="15" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+        <circle cx="270" cy="200" r="15" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+    '''
+
+    # Dynamische Marker basierend auf selected_damages
+    # WICHTIG: Nur vordefinierte Keys, kein User-Input!
+
+    if 'kratzer' in selected_damages:
+        # Kratzer = Motorhaube + Türen
+        svg += '''
+        <circle cx="200" cy="55" r="12" fill="red" opacity="0.8"/>
+        <text x="200" y="60" text-anchor="middle" font-size="14" fill="white" font-weight="bold">!</text>
+        <circle cx="89" cy="135" r="10" fill="red" opacity="0.8"/>
+        <text x="89" y="139" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        <circle cx="311" cy="135" r="10" fill="red" opacity="0.8"/>
+        <text x="311" y="139" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'dellen' in selected_damages:
+        # Dellen = Türen + Seitenwand
+        svg += '''
+        <circle cx="89" cy="120" r="10" fill="orange" opacity="0.8"/>
+        <text x="89" y="124" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        <circle cx="311" cy="120" r="10" fill="orange" opacity="0.8"/>
+        <text x="311" y="124" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'felgen' in selected_damages:
+        # Felgen = 4 Räder
+        svg += '''
+        <circle cx="130" cy="50" r="8" fill="red" opacity="0.9"/>
+        <text x="130" y="54" text-anchor="middle" font-size="10" fill="white" font-weight="bold">!</text>
+        <circle cx="270" cy="50" r="8" fill="red" opacity="0.9"/>
+        <text x="270" y="54" text-anchor="middle" font-size="10" fill="white" font-weight="bold">!</text>
+        <circle cx="130" cy="200" r="8" fill="red" opacity="0.9"/>
+        <text x="130" y="204" text-anchor="middle" font-size="10" fill="white" font-weight="bold">!</text>
+        <circle cx="270" cy="200" r="8" fill="red" opacity="0.9"/>
+        <text x="270" y="204" text-anchor="middle" font-size="10" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'scheibe' in selected_damages:
+        # Scheibe = Windschutzscheibe
+        svg += '''
+        <circle cx="200" cy="92" r="10" fill="red" opacity="0.8"/>
+        <text x="200" y="96" text-anchor="middle" font-size="12" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'innenraum' in selected_damages:
+        # Innenraum = Mitte
+        svg += '''
+        <circle cx="200" cy="145" r="12" fill="red" opacity="0.8"/>
+        <text x="200" y="150" text-anchor="middle" font-size="14" fill="white" font-weight="bold">!</text>
+        '''
+
+    if 'unsure' in selected_damages:
+        # Nicht sicher = Fragezeichen in Mitte
+        svg += '''
+        <circle cx="200" cy="125" r="15" fill="#fbbf24" opacity="0.9"/>
+        <text x="200" y="132" text-anchor="middle" font-size="18" fill="white" font-weight="bold">?</text>
+        '''
+
+    svg += '</svg>'
+    return svg
 
 damage_levels = [
     '0 - Keine Beschädigung',
@@ -2106,8 +2227,34 @@ elif st.session_state.page == 'contact':
 
     # LEAD-FORMULAR
     st.markdown("---")
-    st.markdown("### 📝 Anfrage senden")
-    st.markdown("Senden Sie uns Ihre Anfrage - wir melden uns innerhalb von 24h bei Ihnen.")
+    st.markdown('<div id="rg-contact-form">', unsafe_allow_html=True)
+
+    # CSS-Scoping für Auto-Grafik
+    st.markdown("""
+    <style>
+    /* Scoped nur für Contact-Form */
+    #rg-contact-form .auto-diagram {
+        display: block;
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    #rg-contact-form .auto-diagram svg {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Mobile: Grafik ausblenden */
+    @media (max-width: 768px) {
+        #rg-contact-form .auto-diagram {
+            display: none;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("### 📝 Kostenlose Erstberatung")
+    st.markdown("Beschreiben Sie kurz Ihre Situation - wir melden uns innerhalb von 24h bei Ihnen.")
 
     # Success State
     if st.session_state.form_submitted:
@@ -2118,6 +2265,8 @@ elif st.session_state.page == 'contact':
     else:
         # Formular nur zeigen wenn nicht gerade submitted
         with st.form("lead_form"):
+            # Kontaktdaten
+            st.markdown("**Ihre Kontaktdaten**")
             col_form1, col_form2 = st.columns(2)
 
             with col_form1:
@@ -2126,24 +2275,101 @@ elif st.session_state.page == 'contact':
 
             with col_form2:
                 phone = st.text_input("Telefon *", placeholder="+49 176 12345678")
-                vehicle_type = st.selectbox(
-                    "Fahrzeugklasse *",
-                    ['Kompaktklasse', 'Mittelklasse', 'Oberklasse', 'Luxusklasse'],
+                lease_end = st.selectbox(
+                    "Wann endet Ihr Leasing? *",
+                    ['Unter 1 Monat', '1-3 Monate', '3-6 Monate', 'Über 6 Monate'],
                     index=1
                 )
 
-            message = st.text_area(
-                "Ihre Nachricht *",
-                placeholder="Beschreiben Sie Ihr Anliegen...",
-                height=150
+            # Schäden erfassen (optional)
+            st.markdown("---")
+            st.markdown("**Welche Schäden sind vorhanden? (optional)**")
+
+            col_damage1, col_damage2 = st.columns(2)
+
+            with col_damage1:
+                damage_kratzer = st.checkbox("Kratzer / Lackschäden")
+                damage_dellen = st.checkbox("Dellen / Beulen")
+                damage_felgen = st.checkbox("Felgen")
+
+            with col_damage2:
+                damage_scheibe = st.checkbox("Scheibe")
+                damage_innenraum = st.checkbox("Innenraum")
+                damage_unsure = st.checkbox("Nicht sicher")
+
+            # Auto-Grafik mit Markern (wenn Feature aktiv)
+            if SHOW_AUTO_DIAGRAM:
+                # Sammle selected damages (nur vordefinierte Keys!)
+                selected_damages = []
+                if damage_kratzer:
+                    selected_damages.append('kratzer')
+                if damage_dellen:
+                    selected_damages.append('dellen')
+                if damage_felgen:
+                    selected_damages.append('felgen')
+                if damage_scheibe:
+                    selected_damages.append('scheibe')
+                if damage_innenraum:
+                    selected_damages.append('innenraum')
+                if damage_unsure:
+                    selected_damages.append('unsure')
+
+                # SVG generieren und rendern (3-Stufen-Fallback)
+                try:
+                    svg_code = generate_auto_svg(selected_damages)
+                    st.markdown(
+                        f'<div class="auto-diagram">{svg_code}</div>',
+                        unsafe_allow_html=True
+                    )
+                except Exception as e:
+                    # Fallback 2: st.components (wenn st.markdown zickt)
+                    try:
+                        import streamlit.components.v1 as components
+                        components.html(svg_code, height=280)
+                    except:
+                        # Fallback 3: Silent fail, Checkboxen funktionieren weiter
+                        pass
+
+            # Freitext für Schaden-Details
+            damage_details = st.text_area(
+                "Weitere Details zu den Schäden (optional)",
+                placeholder="z.B. Kratzer ca. 10cm an Tür links, Delle in Heckklappe...",
+                height=80
             )
 
-            submitted = st.form_submit_button("📨 Anfrage senden", use_container_width=True)
+            # Foto-Upload (optional)
+            st.markdown("---")
+            st.markdown("**Fotos der Schäden (optional, aber hilfreich)**")
+            uploaded_files = st.file_uploader(
+                "Laden Sie Fotos hoch",
+                type=["jpg", "jpeg", "png"],
+                accept_multiple_files=True,
+                help="Maximal 5 Bilder",
+                label_visibility="collapsed"
+            )
+
+            # Validierung: Max 5 Bilder
+            if uploaded_files and len(uploaded_files) > 5:
+                st.error("❌ Maximal 5 Bilder erlaubt")
+            elif uploaded_files:
+                st.success(f"✅ {len(uploaded_files)} Foto(s) hochgeladen")
+
+            st.caption("💡 Tipp: Machen Sie Nahaufnahmen der Schäden + eine Gesamtansicht des Fahrzeugs")
+
+            # Nachricht (optional)
+            st.markdown("---")
+            message = st.text_area(
+                "Ihre Nachricht (optional)",
+                placeholder="Erzählen Sie uns mehr über Ihre Situation...",
+                height=100
+            )
+
+            submitted = st.form_submit_button("💬 Kostenlose Beratung anfordern", use_container_width=True)
 
             if submitted:
                 with st.spinner("Anfrage wird gesendet..."):
-                    # Validierung
-                    result = validate_lead_form(name, email, phone, message, vehicle_type)
+                    # Validierung (nur Pflichtfelder)
+                    result = validate_lead_form(name, email, phone, lease_end)
 
                     if result['is_valid']:
                         # Erfolg - hier könnte später Email-Versand implementiert werden
@@ -2153,6 +2379,8 @@ elif st.session_state.page == 'contact':
                         # Fehler anzeigen
                         for field, error_msg in result['errors'].items():
                             st.error(f"❌ {error_msg}")
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
