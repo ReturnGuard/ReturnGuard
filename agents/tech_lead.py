@@ -13,6 +13,7 @@ from .prompts import (
     REVIEW_PROMPT,
     format_prompt
 )
+from .repo_scan import RepoScanner, RepoScanResult, format_scan_result
 
 
 class TechLeadAgent:
@@ -50,9 +51,19 @@ class TechLeadAgent:
         # Feature-Slug für Dateinamen
         feature_slug = self._create_slug(feature_request)
 
-        # Phase 1: Plan erstellen
+        # Phase 0: Repo-Scan (M2)
+        print("\n🔍 Phase 0: Scanne Repository...")
+        scanner = RepoScanner(str(self.repo_path))
+        scan_result = scanner.scan()
+        print(f"✅ Repo gescannt: {scan_result.entry_point} ({scan_result.entry_point_lines} Zeilen)")
+        print(f"   - Pages: {len(scan_result.pages)}")
+        print(f"   - Funktionen: {len(scan_result.functions)}")
+        print(f"   - Tests: {'Ja' if scan_result.has_tests else 'Nein'}")
+        print(f"   - Dependencies: {len(scan_result.dependencies)}")
+
+        # Phase 1: Plan erstellen (mit echten Repo-Daten - M2)
         print("\n📋 Phase 1: Erstelle Implementierungsplan...")
-        plan_path = self._create_plan(feature_request, feature_slug)
+        plan_path = self._create_plan(feature_request, feature_slug, scan_result)
         print(f"✅ Plan gespeichert: {plan_path}")
 
         # Phase 2: Contract erstellen (wird vom User/Claude manuell ausgefüllt)
@@ -61,13 +72,14 @@ class TechLeadAgent:
         print(f"✅ Contract-Template gespeichert: {contract_path}")
         print("⚠️  WICHTIG: Contract muss ausgefüllt werden bevor Backend-Phase startet!")
 
-        # Phase 3-6: Werden in den nächsten Meilensteinen implementiert
-        print("\n⏭️  Weitere Phasen (Backend/Frontend/Testing/Review) folgen in M2-M4")
+        # Phase 3-6: Werden in M3-M4 implementiert
+        print("\n⏭️  Weitere Phasen (Backend/Frontend/Testing/Review) folgen in M3-M4")
 
         return {
             "plan": str(plan_path),
             "contract": str(contract_path),
-            "feature_slug": feature_slug
+            "feature_slug": feature_slug,
+            "scan_result": scan_result
         }
 
     def _create_slug(self, text: str) -> str:
@@ -78,12 +90,17 @@ class TechLeadAgent:
         slug = re.sub(r'[-\s]+', '-', slug)
         return slug[:50]  # Max 50 Zeichen
 
-    def _create_plan(self, feature_request: str, feature_slug: str) -> Path:
+    def _create_plan(self, feature_request: str, feature_slug: str, scan_result: RepoScanResult) -> Path:
         """
-        Erstellt den Implementierungsplan.
+        Erstellt den Implementierungsplan mit echten Repo-Daten.
 
-        Für M1: Template mit Platzhaltern.
-        Ab M2: Wird mit echtem Repo-Scan gefüllt.
+        Args:
+            feature_request: Feature-Beschreibung
+            feature_slug: URL-safe Slug
+            scan_result: Ergebnis des Repo-Scans
+
+        Returns:
+            Path zum generierten Plan
         """
         prompt = format_prompt(
             TECH_LEAD_PROMPT,
@@ -91,18 +108,24 @@ class TechLeadAgent:
             feature_slug=feature_slug
         )
 
-        # M1: Template-Plan (wird in M2 mit echtem Repo-Scan gefüllt)
+        # M2: Plan mit echten Repo-Daten
         plan_content = f"""# Implementierungsplan: {feature_request}
 
 ## Status
-🚧 Dieser Plan ist ein Template für M1. Ab M2 wird er mit echtem Repo-Scan gefüllt.
+✅ M2: Plan mit echten Repo-Scan-Daten
 
 ## 1. Repo-Überblick
-- Entry Point: [Wird in M2 gescannt]
-- Relevante Module: [Wird in M2 gescannt]
-- Vorhandene Features: [Wird in M2 gescannt]
-- Tests vorhanden: [Wird in M2 gescannt]
-- Dependencies: [Wird in M2 gescannt]
+- **Entry Point**: `{scan_result.entry_point or 'Nicht gefunden'}` ({scan_result.entry_point_lines} Zeilen)
+- **Streamlit App**: {'Ja' if scan_result.has_streamlit else 'Nein'}
+- **Pages/Features** ({len(scan_result.pages)}): {', '.join(scan_result.pages) if scan_result.pages else 'Keine'}
+- **Funktionen** ({len(scan_result.functions)}): {', '.join(f['name'] for f in scan_result.functions[:5])}{'...' if len(scan_result.functions) > 5 else ''}
+- **Cached Functions**: {', '.join(scan_result.cached_functions) if scan_result.cached_functions else 'Keine'}
+- **Tests vorhanden**: {'Ja (' + scan_result.test_framework + ')' if scan_result.has_tests else 'Nein - muss erstellt werden!'}
+- **Test-Dateien**: {', '.join(scan_result.test_files) if scan_result.test_files else 'Keine'}
+- **Dependencies** ({len(scan_result.dependencies)}): {', '.join(scan_result.dependencies) if scan_result.dependencies else 'Keine'}
+- **Dependency-Quelle**: {scan_result.dependency_source or 'Keine'}
+- **Python-Dateien**: {len(scan_result.python_files)}
+- **Repo-Größe**: {scan_result.repo_size_kb} KB
 
 ## 2. Contract
 ⚠️ Contract muss in `contracts/{feature_slug}.md` erstellt werden.
