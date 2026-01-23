@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 
 # ==================== FEATURE FLAGS ====================
-SHOW_AUTO_DIAGRAM = True  # Desktop: Grafik AN, Mobile: CSS versteckt Grafik
+SHOW_AUTO_DIAGRAM = False  # Streamlit Cloud crashed mit iframe-Lösung - deaktiviert für Stabilität
 
 # ==================== KONFIGURATION ====================
 st.set_page_config(
