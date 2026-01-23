@@ -280,9 +280,9 @@ damage_levels = [
 # ==================== CSS STYLES ====================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* PERFORMANCE: System Fonts statt Google Fonts (keine externe Request) */
 * {
-    font-family: 'Inter', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     box-sizing: border-box;
 }
 
@@ -291,10 +291,9 @@ st.markdown("""
     background: #F9FAFB;
 }
 
-/* EMOTIONALER HERO */
+/* EMOTIONALER HERO - OPTIMIERT (kein Background-Image) */
 .hero-section {
-    background: linear-gradient(135deg, rgba(27, 54, 93, 0.95) 0%, rgba(30, 58, 138, 0.92) 100%),
-                url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920') center/cover;
+    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
     padding: 120px 20px 80px 20px;
     text-align: center;
     color: white;
