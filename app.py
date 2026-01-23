@@ -1176,39 +1176,44 @@ st.markdown("""
 st.markdown('<div class="top-nav">', unsafe_allow_html=True)
 st.markdown('<div class="nav-brand">🛡️ ReturnGuard</div>', unsafe_allow_html=True)
 
-nav_cols = st.columns(8)
-with nav_cols[0]:
-    if st.button("🏠 Home", use_container_width=True):
+# MOBILE-OPTIMIERT: 3 Hauptbuttons + Expander für Rest
+nav_primary = st.columns(3)
+with nav_primary[0]:
+    if st.button("🏠 Home", use_container_width=True, key="nav_home"):
         st.session_state.page = 'home'
         st.rerun()
-with nav_cols[1]:
-    if st.button("👥 Über uns", use_container_width=True):
-        st.session_state.page = 'about'
-        st.rerun()
-with nav_cols[2]:
-    if st.button("📦 Leistungen", use_container_width=True):
-        st.session_state.page = 'services'
-        st.rerun()
-with nav_cols[3]:
-    if st.button("💰 Rechner", use_container_width=True):
+with nav_primary[1]:
+    if st.button("💰 Rechner", use_container_width=True, key="nav_calc"):
         st.session_state.page = 'calculator'
         st.rerun()
-with nav_cols[4]:
-    if st.button("❓ FAQ", use_container_width=True):
-        st.session_state.page = 'faq'
-        st.rerun()
-with nav_cols[5]:
-    if st.button("📝 Blog", use_container_width=True):
-        st.session_state.page = 'blog'
-        st.rerun()
-with nav_cols[6]:
-    if st.button("📞 Kontakt", use_container_width=True):
+with nav_primary[2]:
+    if st.button("📞 Kontakt", use_container_width=True, key="nav_contact"):
         st.session_state.page = 'contact'
         st.rerun()
-with nav_cols[7]:
-    if st.button("⚖️ Rechtliches", use_container_width=True):
-        st.session_state.page = 'legal'
-        st.rerun()
+
+# Sekundäre Navigation in Expander (Mobile-friendly)
+with st.expander("📋 Weitere Seiten", expanded=False):
+    nav_secondary = st.columns(5)
+    with nav_secondary[0]:
+        if st.button("👥 Über uns", use_container_width=True, key="nav_about"):
+            st.session_state.page = 'about'
+            st.rerun()
+    with nav_secondary[1]:
+        if st.button("📦 Leistungen", use_container_width=True, key="nav_services"):
+            st.session_state.page = 'services'
+            st.rerun()
+    with nav_secondary[2]:
+        if st.button("❓ FAQ", use_container_width=True, key="nav_faq"):
+            st.session_state.page = 'faq'
+            st.rerun()
+    with nav_secondary[3]:
+        if st.button("📝 Blog", use_container_width=True, key="nav_blog"):
+            st.session_state.page = 'blog'
+            st.rerun()
+    with nav_secondary[4]:
+        if st.button("⚖️ Rechtliches", use_container_width=True, key="nav_legal"):
+            st.session_state.page = 'legal'
+            st.rerun()
 
 st.markdown('</div>', unsafe_allow_html=True)
 
