@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 
 # ==================== FEATURE FLAGS ====================
-SHOW_AUTO_DIAGRAM = False  # Streamlit Cloud crashed mit iframe-Lösung - deaktiviert für Stabilität
+SHOW_AUTO_DIAGRAM = True  # Auto-Grafik aktiviert mit sicherer Column-Layout Lösung
 
 # ==================== KONFIGURATION ====================
 st.set_page_config(
@@ -2229,19 +2229,30 @@ elif st.session_state.page == 'contact':
     st.markdown("---")
     st.markdown('<div id="rg-contact-form">', unsafe_allow_html=True)
 
-    # CSS-Scoping für Auto-Grafik (falls st.markdown Fallback genutzt wird)
+    # CSS für Mobile/Desktop Split - SICHERER ANSATZ (Page-Level, nicht im iframe)
     st.markdown("""
     <style>
-    /* Scoped nur für Contact-Form */
-    #rg-contact-form .auto-diagram {
+    /* Desktop: Beide Columns sichtbar */
+    [data-testid="column"] {
         display: block;
-        margin: 20px 0;
-        text-align: center;
     }
 
-    #rg-contact-form .auto-diagram svg {
-        width: 100%;
-        height: auto;
+    /* Mobile: Auto-Diagram Column verstecken */
+    @media (max-width: 768px) {
+        /* Verstecke die zweite Column (Auto-Diagram) auf Mobile */
+        [data-testid="stHorizontalBlock"] > div:nth-child(2) {
+            display: none !important;
+        }
+    }
+
+    /* Auto-Diagram Styling */
+    #rg-contact-form .auto-diagram-container {
+        position: sticky;
+        top: 20px;
+        padding: 15px;
+        background: #f9fafb;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -2274,99 +2285,69 @@ elif st.session_state.page == 'contact':
                     index=1
                 )
 
-            # Schäden erfassen (optional)
+            # Schäden erfassen (optional) - NEUES LAYOUT: Form + Diagram Side-by-Side
             st.markdown("---")
             st.markdown("**Welche Schäden sind vorhanden? (optional)**")
 
-            col_damage1, col_damage2 = st.columns(2)
+            # Zwei Columns: Links = Checkboxen, Rechts = Auto-Diagram (versteckt auf Mobile)
+            col_form_main, col_diagram = st.columns([1, 1])
 
-            with col_damage1:
-                damage_kratzer = st.checkbox("Kratzer / Lackschäden")
-                damage_dellen = st.checkbox("Dellen / Beulen")
-                damage_felgen = st.checkbox("Felgen")
+            with col_form_main:
+                # Checkboxen in 2 Sub-Columns
+                col_damage1, col_damage2 = st.columns(2)
 
-            with col_damage2:
-                damage_scheibe = st.checkbox("Scheibe")
-                damage_innenraum = st.checkbox("Innenraum")
-                damage_unsure = st.checkbox("Nicht sicher")
+                with col_damage1:
+                    damage_kratzer = st.checkbox("Kratzer / Lackschäden")
+                    damage_dellen = st.checkbox("Dellen / Beulen")
+                    damage_felgen = st.checkbox("Felgen")
 
-            # Auto-Grafik mit Markern (wenn Feature aktiv)
-            if SHOW_AUTO_DIAGRAM:
-                # Sammle selected damages (nur vordefinierte Keys!)
-                selected_damages = []
-                if damage_kratzer:
-                    selected_damages.append('kratzer')
-                if damage_dellen:
-                    selected_damages.append('dellen')
-                if damage_felgen:
-                    selected_damages.append('felgen')
-                if damage_scheibe:
-                    selected_damages.append('scheibe')
-                if damage_innenraum:
-                    selected_damages.append('innenraum')
-                if damage_unsure:
-                    selected_damages.append('unsure')
+                with col_damage2:
+                    damage_scheibe = st.checkbox("Scheibe")
+                    damage_innenraum = st.checkbox("Innenraum")
+                    damage_unsure = st.checkbox("Nicht sicher")
 
-                # SVG generieren und rendern (Mobile-First Fallback)
-                try:
-                    svg_code = generate_auto_svg(selected_damages)
+            # Auto-Grafik in rechter Column (nur Desktop, Mobile versteckt via CSS)
+            with col_diagram:
+                if SHOW_AUTO_DIAGRAM:
+                    # Sammle selected damages (nur vordefinierte Keys!)
+                    selected_damages = []
+                    if damage_kratzer:
+                        selected_damages.append('kratzer')
+                    if damage_dellen:
+                        selected_damages.append('dellen')
+                    if damage_felgen:
+                        selected_damages.append('felgen')
+                    if damage_scheibe:
+                        selected_damages.append('scheibe')
+                    if damage_innenraum:
+                        selected_damages.append('innenraum')
+                    if damage_unsure:
+                        selected_damages.append('unsure')
 
-                    # Fallback 1: st.components.v1.html (bessere Mobile/Safari-Unterstützung)
-                    import streamlit.components.v1 as components
-
-                    # Vollständiges HTML mit inline SVG + Mobile-Fallback
-                    html_content = f"""
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <style>
-                            body {{
-                                margin: 0;
-                                padding: 10px;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                background: transparent;
-                                min-height: 260px;
-                            }}
-
-                            /* Desktop: Grafik zeigen */
-                            svg {{
-                                display: block;
-                            }}
-
-                            /* Mobile: Grafik + Container verstecken */
-                            @media (max-width: 768px) {{
-                                body {{
-                                    display: none !important;
-                                    min-height: 0 !important;
-                                    padding: 0 !important;
-                                }}
-                                svg {{
-                                    display: none !important;
-                                }}
-                            }}
-                        </style>
-                    </head>
-                    <body>
-                        {svg_code}
-                    </body>
-                    </html>
-                    """
-
-                    components.html(html_content, height=280, scrolling=False)
-
-                except Exception as e:
-                    # Fallback 2: st.markdown (Desktop-Browser)
+                    # SVG generieren und rendern - OHNE CSS im iframe (sicherer!)
                     try:
-                        st.markdown(
-                            f'<div class="auto-diagram">{svg_code}</div>',
-                            unsafe_allow_html=True
-                        )
-                    except:
-                        # Fallback 3: Silent fail, Checkboxen funktionieren weiter
+                        svg_code = generate_auto_svg(selected_damages)
+
+                        # Nur iframe mit SVG - KEINE CSS Media Queries im iframe!
+                        import streamlit.components.v1 as components
+
+                        html_content = f"""
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        </head>
+                        <body style="margin:0; padding:10px; display:flex; justify-content:center; align-items:center; background:#f9fafb;">
+                            {svg_code}
+                        </body>
+                        </html>
+                        """
+
+                        components.html(html_content, height=280, scrolling=False)
+
+                    except Exception as e:
+                        # Fallback: Silent fail, Checkboxen funktionieren weiter
                         pass
 
             # Freitext für Schaden-Details
