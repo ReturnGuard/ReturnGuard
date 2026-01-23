@@ -277,39 +277,16 @@ damage_levels = [
     '4 - Sehr starke Beschädigungen/Austausch'
 ]
 
-# ==================== CSS STYLES ====================
+# ==================== CSS STYLES - MINIMAL (Performance-optimiert) ====================
 st.markdown("""
 <style>
-/* PERFORMANCE: System Fonts statt Google Fonts (keine externe Request) */
-* {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-    box-sizing: border-box;
-}
-
-/* PROFESSIONELLE SERIOESE OPTIK */
-.stApp {
-    background: #F9FAFB;
-}
-
-/* EMOTIONALER HERO - OPTIMIERT (kein Background-Image) */
-.hero-section {
-    background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%);
-    padding: 120px 20px 80px 20px;
-    text-align: center;
-    color: white;
-    position: relative;
-    overflow: hidden;
-}
-
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(26, 35, 50, 0.3) 100%);
-}
+/* MINIMAL CSS - Nur Essentials für schnelles Laden */
+* { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; box-sizing: border-box; }
+.stApp { background: #F9FAFB; }
+.hero-section { background: linear-gradient(135deg, #1B365D, #1E3A8A); padding: 80px 20px 50px; text-align: center; color: white; }
+.hero-title { font-size: 2.2rem; font-weight: 700; margin-bottom: 15px; }
+.hero-subtitle { font-size: 1.1rem; margin: 15px auto 30px; opacity: 0.95; }
+.hero-cta { display: inline-block; background: #059669; color: white; padding: 15px 40px; border-radius: 8px; font-weight: 600; text-decoration: none; }
 
 .hero-content {
     position: relative;
