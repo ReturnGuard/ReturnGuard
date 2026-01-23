@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 
 # ==================== FEATURE FLAGS ====================
-SHOW_AUTO_DIAGRAM = True  # Auto-Grafik aktiviert mit sicherer Column-Layout Lösung
+SHOW_AUTO_DIAGRAM = False  # Safari Mobile zeigt Raw HTML - Fallback für stabile V1
 
 # ==================== KONFIGURATION ====================
 st.set_page_config(
