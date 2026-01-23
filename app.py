@@ -31,6 +31,8 @@ if 'show_cookie_banner' not in st.session_state:
     st.session_state.show_cookie_banner = True
 if 'form_submitted' not in st.session_state:
     st.session_state.form_submitted = False
+if 'is_mobile' not in st.session_state:
+    st.session_state.is_mobile = False  # Default: Desktop
 
 # ==================== GUTACHTERTABELLE ====================
 # Preise nach Fahrzeugklasse: [Kompakt, Mittel, Ober, Luxus]
@@ -2339,7 +2341,17 @@ elif st.session_state.page == 'contact':
                             <meta name="viewport" content="width=device-width, initial-scale=1.0">
                         </head>
                         <body style="margin:0; padding:10px; display:flex; justify-content:center; align-items:center; background:#f9fafb;">
-                            {svg_code}
+                            <div id="svg-container">
+                                {svg_code}
+                            </div>
+                            <script>
+                                // Mobile Detection: Verstecke SVG auf Mobile (Viewport < 768px)
+                                if (window.innerWidth <= 768) {{
+                                    document.body.style.display = 'none';
+                                    document.body.style.height = '0';
+                                    document.body.style.overflow = 'hidden';
+                                }}
+                            </script>
                         </body>
                         </html>
                         """
