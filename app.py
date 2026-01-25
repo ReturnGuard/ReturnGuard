@@ -1213,18 +1213,6 @@ with nav_cols[7]:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Auto-Scroll zum Content nach Navigation
-st.markdown('''
-    <script>
-        setTimeout(function() {
-            var element = document.getElementById('content-start');
-            if (element) {
-                element.scrollIntoView({behavior: 'smooth', block: 'start'});
-            }
-        }, 100);
-    </script>
-''', unsafe_allow_html=True)
-
 # ==================== STARTSEITE ====================
 if st.session_state.page == 'home':
     st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
@@ -2483,6 +2471,24 @@ elif st.session_state.page == 'legal':
         """)
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+# ==================== AUTO-SCROLL NACH NAVIGATION ====================
+st.markdown('''
+    <script>
+        setTimeout(function() {
+            var element = document.getElementById('content-start');
+            if (element) {
+                var headerOffset = 100;
+                var elementPosition = element.getBoundingClientRect().top;
+                var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }, 150);
+    </script>
+''', unsafe_allow_html=True)
 
 # ==================== FOOTER ====================
 st.markdown("---")
