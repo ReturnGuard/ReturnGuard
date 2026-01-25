@@ -1220,12 +1220,12 @@ if st.session_state.page == 'home':
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">Leasingrückgabe ohne böse Überraschungen</h1>
+                <h1 class="hero-title">Leasingrückgabe transparent und fair gestalten</h1>
                 <p class="hero-subtitle">
-                    Schützen Sie sich vor unfairen Nachzahlungen. Unsere Experten
-                    stehen Ihnen von der Prüfung bis zur Verhandlung zur Seite.
+                    Verschaffen Sie sich Klarheit über mögliche Rückgabekosten.
+                    Unsere Gutachter und Juristen unterstützen Sie von der Prüfung bis zur Verhandlung.
                 </p>
-                <a href="#calculator" class="hero-cta">Jetzt kostenlos berechnen →</a>
+                <a href="#calculator" class="hero-cta">Kostenrechner starten →</a>
             </div>
         </div>
     ''', unsafe_allow_html=True)
@@ -1236,15 +1236,15 @@ if st.session_state.page == 'home':
             <div class="social-stats">
                 <div class="stat-item">
                     <div class="stat-number">1.200+</div>
-                    <div class="stat-label">Zufriedene Kunden</div>
+                    <div class="stat-label">Betreute Fälle</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">2.500€</div>
-                    <div class="stat-label">Ø Ersparnis pro Kunde</div>
+                    <div class="stat-label">Durchschn. Einsparung</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">98%</div>
-                    <div class="stat-label">Erfolgsquote</div>
+                    <div class="stat-label">Erfolgreiche Einigungen</div>
                 </div>
             </div>
         </div>
@@ -1252,8 +1252,8 @@ if st.session_state.page == 'home':
 
     # 3-SCHRITTE PROZESS
     st.markdown('<div class="process-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="process-title">So einfach funktioniert\'s</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="process-subtitle">In nur 3 Schritten zu Ihrer fairen Leasingrückgabe</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="process-title">So läuft die Zusammenarbeit ab</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="process-subtitle">In 3 Schritten zu Ihrer Leasingrückgabe</p>', unsafe_allow_html=True)
 
     step1, step2, step3 = st.columns(3)
 
@@ -1262,10 +1262,10 @@ if st.session_state.page == 'home':
             <div class="process-step">
                 <div class="step-number">1</div>
                 <div class="step-icon">📋</div>
-                <h3 class="step-title">Schäden bewerten</h3>
+                <h3 class="step-title">Schäden einschätzen</h3>
                 <p class="step-description">
-                    Nutzen Sie unseren interaktiven Schadensrechner mit 20 Fahrzeugbereichen
-                    für eine präzise Kostenschätzung.
+                    Nutzen Sie unseren Schadensrechner mit 20 Fahrzeugbereichen
+                    für eine erste Kosteneinschätzung.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
@@ -1275,10 +1275,10 @@ if st.session_state.page == 'home':
             <div class="process-step">
                 <div class="step-number">2</div>
                 <div class="step-icon">🔍</div>
-                <h3 class="step-title">Kostenlose Prüfung</h3>
+                <h3 class="step-title">Fahrzeug prüfen lassen</h3>
                 <p class="step-description">
-                    Unsere TÜV-zertifizierten Gutachter prüfen Ihr Fahrzeug und erstellen
-                    eine professionelle Bewertung.
+                    TÜV-zertifizierte Gutachter erstellen eine professionelle Bewertung
+                    Ihres Fahrzeugs.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
@@ -1288,10 +1288,10 @@ if st.session_state.page == 'home':
             <div class="process-step">
                 <div class="step-number">3</div>
                 <div class="step-icon">💰</div>
-                <h3 class="step-title">Geld sparen</h3>
+                <h3 class="step-title">Kosten verhandeln</h3>
                 <p class="step-description">
-                    Unsere Anwälte verhandeln für Sie und sparen durchschnittlich
-                    60% der Rückgabekosten ein.
+                    Fachanwälte verhandeln für Sie. Durchschnittliche Reduzierung:
+                    60% der ursprünglichen Forderungen.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
@@ -1300,8 +1300,8 @@ if st.session_state.page == 'home':
 
     # KUNDENBEWERTUNGEN
     st.markdown('<div class="testimonial-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">Was unsere Kunden sagen</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Echte Erfahrungen von echten Menschen</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Erfahrungen unserer Mandanten</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Dokumentierte Fälle aus der Praxis</p>', unsafe_allow_html=True)
 
     st.markdown('<div class="testimonial-grid">', unsafe_allow_html=True)
 
@@ -1374,8 +1374,8 @@ if st.session_state.page == 'home':
 
     # PARTNER LOGOS
     st.markdown('<div class="partner-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">Unsere Partner & Zertifizierungen</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Vertrauen Sie auf geprüfte Qualität</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Kooperationspartner & Qualifikationen</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Zertifizierte Gutachter und Fachanwälte</p>', unsafe_allow_html=True)
 
     st.markdown('''
         <div class="partner-grid">
@@ -1404,19 +1404,19 @@ if st.session_state.page == 'home':
             <div class="trust-badges">
                 <div class="trust-badge">
                     <div class="trust-icon">⚖️</div>
-                    <div class="trust-title">Rechtsanwälte<br/>Verkehrsrecht</div>
+                    <div class="trust-title">Fachanwälte<br/>Verkehrsrecht</div>
                 </div>
                 <div class="trust-badge">
                     <div class="trust-icon">🔍</div>
-                    <div class="trust-title">TÜV-zertifizierte<br/>KFZ-Gutachter</div>
+                    <div class="trust-title">TÜV-zertifizierte<br/>Sachverständige</div>
                 </div>
                 <div class="trust-badge">
                     <div class="trust-icon">🏆</div>
-                    <div class="trust-title">15+ Jahre<br/>Erfahrung</div>
+                    <div class="trust-title">Seit 2009<br/>aktiv</div>
                 </div>
                 <div class="trust-badge">
                     <div class="trust-icon">✅</div>
-                    <div class="trust-title">100%<br/>Transparenz</div>
+                    <div class="trust-title">Transparente<br/>Preisgestaltung</div>
                 </div>
             </div>
         </div>
@@ -1434,7 +1434,7 @@ if st.session_state.page == 'home':
             <div class="package-card">
                 <div class="package-icon">📋</div>
                 <h3 class="package-title">Basis</h3>
-                <p class="package-subtitle">Für einfache Prüfungen</p>
+                <p class="package-subtitle">Grundprüfung</p>
                 <div class="package-price">99<span class="package-price-unit">€</span></div>
                 <ul class="package-features">
                     <li>✓ Grundcheck Fahrzeug</li>
@@ -1444,14 +1444,14 @@ if st.session_state.page == 'home':
                 </ul>
             </div>
         ''', unsafe_allow_html=True)
-        st.button("Jetzt buchen", key="b1", use_container_width=True)
+        st.button("Paket anfragen", key="b1", use_container_width=True)
 
     with pkg2:
         st.markdown('''
             <div class="package-card">
                 <div class="package-icon">📊</div>
                 <h3 class="package-title">Standard</h3>
-                <p class="package-subtitle">Umfassende Beratung</p>
+                <p class="package-subtitle">Erweiterte Prüfung</p>
                 <div class="package-price">199<span class="package-price-unit">€</span></div>
                 <ul class="package-features">
                     <li>✓ Umfassende Prüfung</li>
@@ -1461,15 +1461,15 @@ if st.session_state.page == 'home':
                 </ul>
             </div>
         ''', unsafe_allow_html=True)
-        st.button("Jetzt buchen", key="b2", use_container_width=True)
+        st.button("Paket anfragen", key="b2", use_container_width=True)
 
     with pkg3:
         st.markdown('''
             <div class="package-card package-popular" style="position: relative;">
-                <div class="popular-badge">⭐ BELIEBT</div>
+                <div class="popular-badge">⭐ MEISTGEWÄHLT</div>
                 <div class="package-icon">🥇</div>
                 <h3 class="package-title">Premium</h3>
-                <p class="package-subtitle">Mit Rechtsschutz</p>
+                <p class="package-subtitle">Mit Rechtsberatung</p>
                 <div class="package-price">299<span class="package-price-unit">€</span></div>
                 <ul class="package-features">
                     <li>✓ Rechtliche Prüfung</li>
@@ -1479,14 +1479,14 @@ if st.session_state.page == 'home':
                 </ul>
             </div>
         ''', unsafe_allow_html=True)
-        st.button("Jetzt buchen", key="b3", use_container_width=True)
+        st.button("Paket anfragen", key="b3", use_container_width=True)
 
     with pkg4:
         st.markdown('''
             <div class="package-card">
                 <div class="package-icon">💎</div>
                 <h3 class="package-title">VIP</h3>
-                <p class="package-subtitle">Rundum-Sorglos</p>
+                <p class="package-subtitle">Full-Service</p>
                 <div class="package-price">999<span class="package-price-unit">€</span></div>
                 <ul class="package-features">
                     <li>✓ Full-Service Paket</li>
@@ -1496,7 +1496,7 @@ if st.session_state.page == 'home':
                 </ul>
             </div>
         ''', unsafe_allow_html=True)
-        st.button("Jetzt buchen", key="b4", use_container_width=True)
+        st.button("Paket anfragen", key="b4", use_container_width=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1506,9 +1506,10 @@ elif st.session_state.page == 'calculator':
 
     st.markdown('''
         <div class="calculator-box">
-            <h1 class="calculator-title">🔧 Interaktiver Schadensrechner</h1>
+            <h1 class="calculator-title">🔧 Schadensrechner</h1>
             <p class="calculator-subtitle">
-                Bewerten Sie die Beschädigungen an Ihrem Fahrzeug basierend auf einem professionellen Leasingrücknahmegutachten
+                Schätzen Sie Rückgabekosten anhand von 20 Fahrzeugbereichen ein.
+                Basis: Referenzwerte aus Gutachterpraxis.
             </p>
         </div>
     ''', unsafe_allow_html=True)
@@ -1782,7 +1783,7 @@ elif st.session_state.page == 'calculator':
             st.markdown("---")
 
             # KONTAKTFORMULAR
-            st.markdown("### 📝 Jetzt kostenlose Beratung anfordern")
+            st.markdown("### 📝 Erstberatung anfordern")
             st.markdown("Lassen Sie sich von unseren Experten beraten und sparen Sie bares Geld!")
 
             with st.form("contact_form"):
@@ -1862,8 +1863,8 @@ elif st.session_state.page == 'calculator':
 # ==================== FAQ ====================
 elif st.session_state.page == 'faq':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h1 class="section-title">❓ Häufig gestellte Fragen</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Alles was Sie über Leasingrückgaben wissen müssen</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="section-title">Häufige Fragen</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Wichtiges zu Leasingrückgaben im Überblick</p>', unsafe_allow_html=True)
 
     faqs = [
         {
@@ -1876,15 +1877,15 @@ elif st.session_state.page == 'faq':
         },
         {
             "question": "Was kostet eine Beratung?",
-            "answer": "Die Erstberatung und Kostenschätzung ist komplett kostenlos. Erst wenn Sie sich für eines unserer Pakete entscheiden, fallen Kosten an. Diese liegen je nach Umfang zwischen 99€ und 999€ - und sparen Ihnen durchschnittlich 2.500€ an Rückgabekosten!"
+            "answer": "Die Erstberatung und Kostenschätzung ist kostenfrei. Kostenpflichtig sind unsere Pakete (99€ bis 999€), die Gutachten, Dokumentation und ggf. Verhandlung umfassen."
         },
         {
             "question": "Welche Schäden sind bei Leasingrückgabe normal?",
             "answer": "Normale Gebrauchsspuren wie leichte Kratzer im Lack (kleiner als eine Kreditkarte), leichte Steinschläge auf der Windschutzscheibe (nicht im Sichtfeld) und leichte Abnutzung im Innenraum sind in der Regel akzeptabel. Alles darüber hinaus kann zu Nachzahlungen führen."
         },
         {
-            "question": "Wie viel kann ich wirklich sparen?",
-            "answer": "Unsere Kunden sparen durchschnittlich 60% der ursprünglich geforderten Rückgabekosten. Bei einem Durchschnitt von 4.200€ Forderung bedeutet das eine Ersparnis von etwa 2.500€ - abzüglich unserer Servicegebühr bleibt ein Plus von über 2.000€!"
+            "question": "Welche Einsparungen sind möglich?",
+            "answer": "In unseren Fällen konnten durchschnittlich 60% der ursprünglichen Forderungen reduziert werden. Bei einer Beispielforderung von 4.200€ entspricht das etwa 2.500€."
         },
         {
             "question": "Was passiert, wenn die Leasinggesellschaft nicht verhandelt?",
@@ -1933,16 +1934,16 @@ elif st.session_state.page == 'faq':
 # ==================== BLOG ====================
 elif st.session_state.page == 'blog':
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h1 class="section-title">📝 Ratgeber & Blog</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Expertenwissen rund um Leasingrückgaben</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="section-title">Ratgeber</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Fachwissen zu Leasingrückgaben</p>', unsafe_allow_html=True)
 
     # CHECKLISTE als Featured Article
     st.markdown('''
         <div style="background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%); padding: 40px; border-radius: 12px; color: white; margin-bottom: 40px;">
-            <h2 style="font-size: 2rem; margin-bottom: 15px;">✅ Die ultimative Leasingrückgabe-Checkliste</h2>
+            <h2 style="font-size: 2rem; margin-bottom: 15px;">✅ Checkliste: Leasingrückgabe vorbereiten</h2>
             <p style="font-size: 1.1rem; opacity: 0.9;">
-                Bereiten Sie Ihre Leasingrückgabe perfekt vor! Folgen Sie unserer Schritt-für-Schritt-Anleitung
-                und vermeiden Sie teure Fehler.
+                Schritt-für-Schritt-Anleitung zur Vorbereitung Ihrer Leasingrückgabe.
+                Von Vertragsprüfung bis Rückgabeprotokoll.
             </p>
         </div>
     ''', unsafe_allow_html=True)
@@ -2092,11 +2093,11 @@ elif st.session_state.page == 'about':
     st.write("""
     ### Unsere Mission
 
-    ReturnGuard wurde 2008 mit einer klaren Mission gegründet: Leasingnehmern zu helfen,
-    unfaire Nachzahlungen zu vermeiden und faire Leasingrückgaben sicherzustellen.
+    ReturnGuard unterstützt Leasingnehmer durch gutachterliche und
+    juristische Beratung bei der Fahrzeugrückgabe.
 
     **Was uns auszeichnet:**
-    - **Erfahrenes Team:** Rechtsanwälte im Verkehrsrecht & TÜV-zertifizierte KFZ-Gutachter
+    - **Erfahrenes Team:** Fachanwälte im Verkehrsrecht & TÜV-zertifizierte Sachverständige
     - **Über 1.200 zufriedene Kunden** mit durchschnittlich 2.500€ Ersparnis
     - **98% Erfolgsquote** bei Verhandlungen mit Leasinggesellschaften
     - **Transparente Preise** ohne versteckte Kosten
@@ -2110,8 +2111,8 @@ elif st.session_state.page == 'about':
     """)
 
     st.markdown("---")
-    st.markdown("### 🏆 Erfolgsgeschichten")
-    st.markdown("Echte Fälle, echte Ergebnisse")
+    st.markdown("### 🏆 Referenzfälle")
+    st.markdown("Dokumentierte Verhandlungsergebnisse")
 
     success_stories = [
         {
@@ -2166,10 +2167,10 @@ elif st.session_state.page == 'services':
     with col1:
         st.markdown("""
         ### 🔍 Technische Prüfung
-        - Professionelle Fahrzeuginspektion
-        - Detaillierte Schadensdokumentation
-        - Fotodokumentation nach Standards
-        - Gutachten nach Leasingkriterien
+        - Fahrzeuginspektion durch Sachverständige
+        - Schadensdokumentation nach DAT/Schwacke
+        - Fotodokumentation (50-100 Aufnahmen)
+        - Gutachten gemäß Leasingvertrag
 
         ### ⚖️ Rechtliche Beratung
         - Vertragsprüfung durch Anwälte
