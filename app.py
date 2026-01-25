@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import re
 from datetime import datetime
 import json
@@ -15,8 +16,10 @@ st.set_page_config(
 )
 
 # ==================== SESSION STATE ====================
+# Page wird jetzt aus query_params gelesen für echte Browser-Navigation
 if 'page' not in st.session_state:
-    st.session_state.page = 'home'
+    # Initialisiere aus query_params oder default zu 'home'
+    st.session_state.page = st.query_params.get('page', 'home')
 if 'damages' not in st.session_state:
     st.session_state.damages = {}
 if 'vehicle_class' not in st.session_state:
@@ -1110,6 +1113,30 @@ div.stButton > button:hover {
     margin-bottom: 15px;
 }
 
+/* Navigation Links als Buttons */
+.nav-link {
+    display: inline-block;
+    width: 100%;
+    background: transparent;
+    color: #6B7280;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    box-shadow: none;
+    font-weight: 500;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.nav-link:hover {
+    background: #F3F4F6;
+    color: #1F2937;
+    border-color: #1B365D;
+    text-decoration: none;
+}
+
 div[data-testid="column"] > div.stButton > button {
     background: transparent;
     color: #6B7280;
@@ -1167,7 +1194,7 @@ st.markdown("""
        target="_blank" class="floating-btn floating-whatsapp" title="WhatsApp">
         💬
     </a>
-    <a href="#calculator" class="floating-btn floating-main" title="Jetzt berechnen">
+    <a href="?page=calculator#content-start-calculator" target="_self" class="floating-btn floating-main" title="Jetzt berechnen">
         🧮
     </a>
 </div>
@@ -1179,42 +1206,27 @@ st.markdown('<div class="nav-brand">🛡️ ReturnGuard</div>', unsafe_allow_htm
 
 nav_cols = st.columns(8)
 with nav_cols[0]:
-    if st.button("🏠 Home", use_container_width=True):
-        st.session_state.page = 'home'
-        st.rerun()
+    st.markdown('<a href="?page=home#content-start-home" target="_self" class="nav-link">🏠 Home</a>', unsafe_allow_html=True)
 with nav_cols[1]:
-    if st.button("👥 Über uns", use_container_width=True):
-        st.session_state.page = 'about'
-        st.rerun()
+    st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
 with nav_cols[2]:
-    if st.button("📦 Leistungen", use_container_width=True):
-        st.session_state.page = 'services'
-        st.rerun()
+    st.markdown('<a href="?page=services#content-start-services" target="_self" class="nav-link">📦 Leistungen</a>', unsafe_allow_html=True)
 with nav_cols[3]:
-    if st.button("💰 Rechner", use_container_width=True):
-        st.session_state.page = 'calculator'
-        st.rerun()
+    st.markdown('<a href="?page=calculator#content-start-calculator" target="_self" class="nav-link">💰 Rechner</a>', unsafe_allow_html=True)
 with nav_cols[4]:
-    if st.button("❓ FAQ", use_container_width=True):
-        st.session_state.page = 'faq'
-        st.rerun()
+    st.markdown('<a href="?page=faq#content-start-faq" target="_self" class="nav-link">❓ FAQ</a>', unsafe_allow_html=True)
 with nav_cols[5]:
-    if st.button("📝 Blog", use_container_width=True):
-        st.session_state.page = 'blog'
-        st.rerun()
+    st.markdown('<a href="?page=blog#content-start-blog" target="_self" class="nav-link">📝 Blog</a>', unsafe_allow_html=True)
 with nav_cols[6]:
-    if st.button("📞 Kontakt", use_container_width=True):
-        st.session_state.page = 'contact'
-        st.rerun()
+    st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
 with nav_cols[7]:
-    if st.button("⚖️ Rechtliches", use_container_width=True):
-        st.session_state.page = 'legal'
-        st.rerun()
+    st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== STARTSEITE ====================
 if st.session_state.page == 'home':
+    st.markdown('<div id="content-start-home"></div>', unsafe_allow_html=True)
 
     # HERO SECTION
     st.markdown('''
@@ -1225,7 +1237,7 @@ if st.session_state.page == 'home':
                     Verschaffen Sie sich Klarheit über mögliche Rückgabekosten.
                     Unsere Gutachter und Juristen unterstützen Sie von der Prüfung bis zur Verhandlung.
                 </p>
-                <a href="#calculator" class="hero-cta">Kostenrechner starten →</a>
+                <a href="?page=calculator#content-start-calculator" target="_self" class="hero-cta">Kostenrechner starten →</a>
             </div>
         </div>
     ''', unsafe_allow_html=True)
@@ -1502,6 +1514,7 @@ if st.session_state.page == 'home':
 
 # ==================== SCHADENSRECHNER ====================
 elif st.session_state.page == 'calculator':
+    st.markdown('<div id="content-start-calculator"></div>', unsafe_allow_html=True)
     st.markdown('<div class="calculator-section">', unsafe_allow_html=True)
 
     st.markdown('''
@@ -1862,6 +1875,7 @@ elif st.session_state.page == 'calculator':
 
 # ==================== FAQ ====================
 elif st.session_state.page == 'faq':
+    st.markdown('<div id="content-start-faq"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">Häufige Fragen</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Wichtiges zu Leasingrückgaben im Überblick</p>', unsafe_allow_html=True)
@@ -1933,6 +1947,7 @@ elif st.session_state.page == 'faq':
 
 # ==================== BLOG ====================
 elif st.session_state.page == 'blog':
+    st.markdown('<div id="content-start-blog"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">Ratgeber</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Fachwissen zu Leasingrückgaben</p>', unsafe_allow_html=True)
@@ -2086,6 +2101,7 @@ elif st.session_state.page == 'blog':
 
 # ==================== ERFOLGSGESCHICHTEN ====================
 elif st.session_state.page == 'about':
+    st.markdown('<div id="content-start-about"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">👥 Über ReturnGuard</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Ihr Partner für faire Leasingrückgaben seit 2008</p>', unsafe_allow_html=True)
@@ -2159,6 +2175,7 @@ elif st.session_state.page == 'about':
 
 # ==================== WEITERE SEITEN ====================
 elif st.session_state.page == 'services':
+    st.markdown('<div id="content-start-services"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">📦 Unsere Leistungen</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Umfassender Service für Ihre Leasingrückgabe</p>', unsafe_allow_html=True)
@@ -2197,6 +2214,7 @@ elif st.session_state.page == 'services':
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.page == 'contact':
+    st.markdown('<div id="content-start-contact"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">📞 Kontakt</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Wir sind für Sie da</p>', unsafe_allow_html=True)
@@ -2418,6 +2436,7 @@ elif st.session_state.page == 'contact':
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.page == 'legal':
+    st.markdown('<div id="content-start-legal"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">⚖️ Rechtliches</h1>', unsafe_allow_html=True)
 
@@ -2479,3 +2498,8 @@ st.markdown('''
         </div>
     </div>
 ''', unsafe_allow_html=True)
+
+# ==================== NAVIGATION VIA QUERY PARAMS UND FRAGMENTS ====================
+# Navigation erfolgt jetzt über echte HTML-Links mit Query-Params und URL-Fragments
+# Dies löst einen echten Page-Reload aus → Browser scrollt nativ zum Fragment
+# Stabiles Verhalten auf iOS Safari ohne JavaScript
