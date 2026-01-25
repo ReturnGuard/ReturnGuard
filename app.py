@@ -15,6 +15,51 @@ st.set_page_config(
     page_icon="🛡️"
 )
 
+# ==================== SCROLL LISTENER (PostMessage Bridge für iOS Safari) ====================
+st.markdown("""
+<script>
+(function() {
+  if (window.__RG_SCROLL_LISTENER__) return;
+  window.__RG_SCROLL_LISTENER__ = true;
+
+  window.addEventListener("message", function(ev) {
+    const msg = ev.data;
+    if (!msg || msg.type !== "RG_SCROLL") return;
+
+    const id = msg.id;
+    const offset = Number(msg.offset || 100);
+
+    // Warten bis Element existiert (max 20 Versuche)
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries++;
+      const el = document.getElementById(id);
+      if (!el && tries < 20) return;
+      clearInterval(timer);
+      if (!el) return;
+
+      // Streamlit scrollt oft in einem Container, nicht window
+      const scroller =
+        document.querySelector('section.main') ||
+        document.querySelector('[data-testid="stAppViewContainer"]') ||
+        document.scrollingElement ||
+        document.documentElement;
+
+      const elTop = el.getBoundingClientRect().top;
+
+      if (scroller === document.scrollingElement || scroller === document.documentElement || scroller === document.body) {
+        const top = window.pageYOffset + elTop - offset;
+        window.scrollTo({ top, behavior: "smooth" });
+      } else {
+        const top = scroller.scrollTop + elTop - offset;
+        scroller.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 50);
+  });
+})();
+</script>
+""", unsafe_allow_html=True)
+
 # ==================== SESSION STATE ====================
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
@@ -2505,44 +2550,12 @@ if st.session_state.scroll_target:
     components.html(f'''
         <script>
         (function(){{
-          const targetId = "{scroll_target_id}";
-          if(!targetId) return;
-
-          function getScroller(){{
-            return document.querySelector('section.main')
-              || document.querySelector('[data-testid="stAppViewContainer"]')
-              || document.scrollingElement
-              || document.documentElement;
-          }}
-
-          function getHeaderOffset(){{
-            const nav = document.querySelector('.top-nav') || document.querySelector('header');
-            return nav ? nav.getBoundingClientRect().height : 100;
-          }}
-
-          let tries = 0;
-          const timer = setInterval(() => {{
-            tries++;
-            const el = document.getElementById(targetId);
-            if(!el && tries < 20) return;
-            clearInterval(timer);
-            if(!el) return;
-
-            const scroller = getScroller();
-            const offset = getHeaderOffset();
-
-            // Position relativ zum jeweiligen Scroll-Container berechnen
-            const elTop = el.getBoundingClientRect().top;
-            let top;
-
-            if (scroller === document.scrollingElement || scroller === document.documentElement || scroller === document.body) {{
-              top = window.pageYOffset + elTop - offset;
-              window.scrollTo({{ top, behavior: "smooth" }});
-            }} else {{
-              top = scroller.scrollTop + elTop - offset;
-              scroller.scrollTo({{ top, behavior: "smooth" }});
-            }}
-          }}, 50);
+          // iFrame sendet PostMessage an Parent
+          parent.postMessage({{
+            type: "RG_SCROLL",
+            id: "{scroll_target_id}",
+            offset: 100
+          }}, "*");
         }})();
         </script>
     ''', height=0)
