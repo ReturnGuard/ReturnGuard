@@ -1213,6 +1213,16 @@ with nav_cols[7]:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
+# Auto-Scroll zum Seitenanfang nach Navigation
+st.markdown('''
+    <script>
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        setTimeout(function() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }, 100);
+    </script>
+''', unsafe_allow_html=True)
+
 # ==================== STARTSEITE ====================
 if st.session_state.page == 'home':
 
