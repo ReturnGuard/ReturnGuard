@@ -1213,18 +1213,21 @@ with nav_cols[7]:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Auto-Scroll zum Seitenanfang nach Navigation
+# Auto-Scroll zum Content nach Navigation
 st.markdown('''
     <script>
-        window.scrollTo({top: 0, behavior: 'smooth'});
         setTimeout(function() {
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            var element = document.getElementById('content-start');
+            if (element) {
+                element.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
         }, 100);
     </script>
 ''', unsafe_allow_html=True)
 
 # ==================== STARTSEITE ====================
 if st.session_state.page == 'home':
+    st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
 
     # HERO SECTION
     st.markdown('''
@@ -1512,6 +1515,7 @@ if st.session_state.page == 'home':
 
 # ==================== SCHADENSRECHNER ====================
 elif st.session_state.page == 'calculator':
+    st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
     st.markdown('<div class="calculator-section">', unsafe_allow_html=True)
 
     st.markdown('''
@@ -1872,6 +1876,7 @@ elif st.session_state.page == 'calculator':
 
 # ==================== FAQ ====================
 elif st.session_state.page == 'faq':
+    st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">Häufige Fragen</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Wichtiges zu Leasingrückgaben im Überblick</p>', unsafe_allow_html=True)
@@ -1943,6 +1948,7 @@ elif st.session_state.page == 'faq':
 
 # ==================== BLOG ====================
 elif st.session_state.page == 'blog':
+    st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">Ratgeber</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Fachwissen zu Leasingrückgaben</p>', unsafe_allow_html=True)
@@ -2096,6 +2102,7 @@ elif st.session_state.page == 'blog':
 
 # ==================== ERFOLGSGESCHICHTEN ====================
 elif st.session_state.page == 'about':
+    st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">👥 Über ReturnGuard</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Ihr Partner für faire Leasingrückgaben seit 2008</p>', unsafe_allow_html=True)
@@ -2169,6 +2176,7 @@ elif st.session_state.page == 'about':
 
 # ==================== WEITERE SEITEN ====================
 elif st.session_state.page == 'services':
+    st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">📦 Unsere Leistungen</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Umfassender Service für Ihre Leasingrückgabe</p>', unsafe_allow_html=True)
@@ -2207,6 +2215,7 @@ elif st.session_state.page == 'services':
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.page == 'contact':
+    st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">📞 Kontakt</h1>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Wir sind für Sie da</p>', unsafe_allow_html=True)
@@ -2428,6 +2437,7 @@ elif st.session_state.page == 'contact':
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.page == 'legal':
+    st.markdown('<div id="content-start"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">⚖️ Rechtliches</h1>', unsafe_allow_html=True)
 
