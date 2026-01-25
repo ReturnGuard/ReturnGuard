@@ -17,6 +17,8 @@ st.set_page_config(
 # ==================== SESSION STATE ====================
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
+if 'scroll_target' not in st.session_state:
+    st.session_state.scroll_target = None
 if 'damages' not in st.session_state:
     st.session_state.damages = {}
 if 'vehicle_class' not in st.session_state:
@@ -1181,34 +1183,42 @@ nav_cols = st.columns(8)
 with nav_cols[0]:
     if st.button("🏠 Home", use_container_width=True):
         st.session_state.page = 'home'
+        st.session_state.scroll_target = 'content-start'
         st.rerun()
 with nav_cols[1]:
     if st.button("👥 Über uns", use_container_width=True):
         st.session_state.page = 'about'
+        st.session_state.scroll_target = 'content-start'
         st.rerun()
 with nav_cols[2]:
     if st.button("📦 Leistungen", use_container_width=True):
         st.session_state.page = 'services'
+        st.session_state.scroll_target = 'content-start'
         st.rerun()
 with nav_cols[3]:
     if st.button("💰 Rechner", use_container_width=True):
         st.session_state.page = 'calculator'
+        st.session_state.scroll_target = 'content-start'
         st.rerun()
 with nav_cols[4]:
     if st.button("❓ FAQ", use_container_width=True):
         st.session_state.page = 'faq'
+        st.session_state.scroll_target = 'content-start'
         st.rerun()
 with nav_cols[5]:
     if st.button("📝 Blog", use_container_width=True):
         st.session_state.page = 'blog'
+        st.session_state.scroll_target = 'content-start'
         st.rerun()
 with nav_cols[6]:
     if st.button("📞 Kontakt", use_container_width=True):
         st.session_state.page = 'contact'
+        st.session_state.scroll_target = 'content-start'
         st.rerun()
 with nav_cols[7]:
     if st.button("⚖️ Rechtliches", use_container_width=True):
         st.session_state.page = 'legal'
+        st.session_state.scroll_target = 'content-start'
         st.rerun()
 
 st.markdown('</div>', unsafe_allow_html=True)
@@ -2472,23 +2482,55 @@ elif st.session_state.page == 'legal':
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== AUTO-SCROLL NACH NAVIGATION ====================
-st.markdown('''
-    <script>
-        setTimeout(function() {
-            var element = document.getElementById('content-start');
-            if (element) {
-                var headerOffset = 100;
-                var elementPosition = element.getBoundingClientRect().top;
-                var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        }, 150);
-    </script>
-''', unsafe_allow_html=True)
+# ==================== AUTO-SCROLL NACH NAVIGATION (iOS Safari kompatibel) ====================
+if st.session_state.scroll_target:
+    scroll_target_id = st.session_state.scroll_target
+    st.markdown(f'''
+        <script>
+        (function(){{
+          const targetId = "{scroll_target_id}";
+          if(!targetId) return;
+
+          function getScroller(){{
+            return document.querySelector('section.main')
+              || document.querySelector('[data-testid="stAppViewContainer"]')
+              || document.scrollingElement
+              || document.documentElement;
+          }}
+
+          function getHeaderOffset(){{
+            const nav = document.querySelector('.top-nav') || document.querySelector('header');
+            return nav ? nav.getBoundingClientRect().height : 100;
+          }}
+
+          let tries = 0;
+          const timer = setInterval(() => {{
+            tries++;
+            const el = document.getElementById(targetId);
+            if(!el && tries < 20) return;
+            clearInterval(timer);
+            if(!el) return;
+
+            const scroller = getScroller();
+            const offset = getHeaderOffset();
+
+            // Position relativ zum jeweiligen Scroll-Container berechnen
+            const elTop = el.getBoundingClientRect().top;
+            let top;
+
+            if (scroller === document.scrollingElement || scroller === document.documentElement || scroller === document.body) {{
+              top = window.pageYOffset + elTop - offset;
+              window.scrollTo({{ top, behavior: "smooth" }});
+            }} else {{
+              top = scroller.scrollTop + elTop - offset;
+              scroller.scrollTo({{ top, behavior: "smooth" }});
+            }}
+          }}, 50);
+        }})();
+        </script>
+    ''', unsafe_allow_html=True)
+    # Reset scroll_target nach Injection
+    st.session_state.scroll_target = None
 
 # ==================== FOOTER ====================
 st.markdown("---")
