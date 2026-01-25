@@ -30,7 +30,7 @@ SCREENING_KATALOG = [
 st.set_page_config(
     page_title="ReturnGuard - Leasingrückgabe ohne Sorgen",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
     page_icon="🛡️"
 )
 
@@ -1214,6 +1214,62 @@ with st.sidebar:
 
     st.markdown("---")
 
+    # Seiten-Navigation je nach View
+    st.markdown("**📄 Seiten**")
+
+    if st.session_state.view == "Investor":
+        # Investor-Seiten
+        if st.button("👁️ Vision", key="nav_about", use_container_width=True):
+            st.session_state.page = "about"
+            st.query_params["page"] = "about"
+            st.rerun()
+        if st.button("📦 Leistungen", key="nav_services", use_container_width=True):
+            st.session_state.page = "services"
+            st.query_params["page"] = "services"
+            st.rerun()
+        if st.button("⚖️ Rechtliches", key="nav_legal", use_container_width=True):
+            st.session_state.page = "legal"
+            st.query_params["page"] = "legal"
+            st.rerun()
+    elif st.session_state.view == "B2C":
+        # B2C-Seiten
+        if st.button("🏠 Home", key="nav_home", use_container_width=True):
+            st.session_state.page = "home"
+            st.query_params["page"] = "home"
+            st.rerun()
+        if st.button("💰 Rechner", key="nav_calculator", use_container_width=True):
+            st.session_state.page = "calculator"
+            st.query_params["page"] = "calculator"
+            st.rerun()
+        if st.button("❓ FAQ", key="nav_faq", use_container_width=True):
+            st.session_state.page = "faq"
+            st.query_params["page"] = "faq"
+            st.rerun()
+        if st.button("📝 Blog", key="nav_blog", use_container_width=True):
+            st.session_state.page = "blog"
+            st.query_params["page"] = "blog"
+            st.rerun()
+        if st.button("📞 Kontakt", key="nav_contact", use_container_width=True):
+            st.session_state.page = "contact"
+            st.query_params["page"] = "contact"
+            st.rerun()
+    else:  # B2B
+        # B2B-Seiten
+        if st.button("📦 Leistungen", key="nav_services_b2b", use_container_width=True):
+            st.session_state.page = "services"
+            st.query_params["page"] = "services"
+            st.rerun()
+        if st.button("📞 Kontakt", key="nav_contact_b2b", use_container_width=True):
+            st.session_state.page = "contact"
+            st.query_params["page"] = "contact"
+            st.rerun()
+        if st.button("⚖️ Rechtliches", key="nav_legal_b2b", use_container_width=True):
+            st.session_state.page = "legal"
+            st.query_params["page"] = "legal"
+            st.rerun()
+
+    st.markdown("---")
+
     # View-spezifische Sidebar-Inhalte
     if st.session_state.view == "Investor":
         st.markdown("**📊 Kennzahlen-Dashboard**")
@@ -1224,6 +1280,9 @@ with st.sidebar:
     else:  # B2B
         st.markdown("**🏢 Enterprise**")
         st.caption("Flottenmanagement • Verträge")
+
+    st.markdown("---")
+    st.caption("ReturnGuard 2026 | Vertrauliche Investor-Vorschau")
 
 # ==================== SCROLL TO TOP ====================
 # Hinweis: Scroll-to-Top funktioniert in Streamlit nur begrenzt wegen iFrame
@@ -1424,21 +1483,23 @@ def render_b2c():
 
 def render_b2b():
     """B2B View: Services, Contact (B2B-Fokus), Legal"""
-    # Navigation für B2B
-    st.markdown('<div class="top-nav">', unsafe_allow_html=True)
-    st.markdown('<div class="nav-brand">🛡️ ReturnGuard Business</div>', unsafe_allow_html=True)
-
-    nav_cols = st.columns(4)
-    with nav_cols[0]:
-        st.markdown('<a href="?page=services#content-start-services" target="_self" class="nav-link">📦 Leistungen</a>', unsafe_allow_html=True)
-    with nav_cols[1]:
-        st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
-    with nav_cols[2]:
-        st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
-    with nav_cols[3]:
-        st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Top-Navigation deaktiviert (nur für B2C aktiv)
+    # Navigation erfolgt über Sidebar
+    # # Navigation für B2B
+    # st.markdown('<div class="top-nav">', unsafe_allow_html=True)
+    # st.markdown('<div class="nav-brand">🛡️ ReturnGuard Business</div>', unsafe_allow_html=True)
+    #
+    # nav_cols = st.columns(4)
+    # with nav_cols[0]:
+    #     st.markdown('<a href="?page=services#content-start-services" target="_self" class="nav-link">📦 Leistungen</a>', unsafe_allow_html=True)
+    # with nav_cols[1]:
+    #     st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
+    # with nav_cols[2]:
+    #     st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
+    # with nav_cols[3]:
+    #     st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
+    #
+    # st.markdown('</div>', unsafe_allow_html=True)
 
     # B2B-spezifischer Hero
     st.markdown('''
