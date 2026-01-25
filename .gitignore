@@ -20,10 +20,13 @@ wheels/
 .installed.cfg
 *.egg
 
+# Streamlit
+.streamlit/
+
 # Virtual Environment
 venv/
-ENV/
 env/
+ENV/
 
 # IDE
 .vscode/
@@ -35,6 +38,9 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
 
 # Project specific
 agents/__pycache__/
