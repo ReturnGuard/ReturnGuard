@@ -58,6 +58,25 @@ if 'is_mobile' not in st.session_state:
 if 'view' not in st.session_state:
     st.session_state.view = 'B2C'  # Default: B2C für Endkunden
 
+# ==================== VIEW-DEFAULT-PAGES ====================
+# Mapping: Welche Seiten gehören zu welcher View?
+VIEW_PAGES = {
+    'Investor': ['about', 'services', 'legal'],
+    'B2C': ['home', 'calculator', 'faq', 'blog', 'contact'],
+    'B2B': ['services', 'contact', 'legal']
+}
+# Default-Seite je View
+VIEW_DEFAULTS = {
+    'Investor': 'about',
+    'B2C': 'home',
+    'B2B': 'services'
+}
+
+# Bei Initialisierung: Prüfe ob aktuelle Seite zur View passt
+if st.session_state.page not in VIEW_PAGES.get(st.session_state.view, []):
+    st.session_state.page = VIEW_DEFAULTS.get(st.session_state.view, 'home')
+    st.query_params["page"] = st.session_state.page
+
 # ==================== GUTACHTERTABELLE ====================
 # Preise nach Fahrzeugklasse: [Kompakt, Mittel, Ober, Luxus]
 def get_damage_costs(vehicle_class):
@@ -1211,6 +1230,12 @@ with st.sidebar:
         st.session_state.view = "B2C"
     else:
         st.session_state.view = "B2B"
+
+    # Nach View-Wechsel: Prüfe ob aktuelle Seite zur neuen View passt
+    if st.session_state.page not in VIEW_PAGES.get(st.session_state.view, []):
+        st.session_state.page = VIEW_DEFAULTS.get(st.session_state.view, 'home')
+        st.query_params["page"] = st.session_state.page
+        st.rerun()
 
     st.markdown("---")
 
