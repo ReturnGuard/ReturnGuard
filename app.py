@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import re
 from datetime import datetime
 import json
@@ -2482,10 +2483,26 @@ elif st.session_state.page == 'legal':
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+# ==================== FOOTER ====================
+st.markdown("---")
+st.markdown('''
+    <div style="text-align: center; color: #6B7280; padding: 40px 20px; font-size: 0.95rem;">
+        <div style="margin-bottom: 20px;">
+            <strong style="color: #1B365D; font-size: 1.1rem;">🛡️ ReturnGuard GmbH</strong>
+        </div>
+        <div style="margin-bottom: 15px;">
+            📞 +49 89 123 456 78 | 💬 +49 176 987 654 32 | 📧 info@returnguard.de
+        </div>
+        <div>
+            © 2024 ReturnGuard - Ihr Partner für faire Leasingrückgaben
+        </div>
+    </div>
+''', unsafe_allow_html=True)
+
 # ==================== AUTO-SCROLL NACH NAVIGATION (iOS Safari kompatibel) ====================
 if st.session_state.scroll_target:
     scroll_target_id = st.session_state.scroll_target
-    st.markdown(f'''
+    components.html(f'''
         <script>
         (function(){{
           const targetId = "{scroll_target_id}";
@@ -2528,22 +2545,6 @@ if st.session_state.scroll_target:
           }}, 50);
         }})();
         </script>
-    ''', unsafe_allow_html=True)
-    # Reset scroll_target nach Injection
+    ''', height=0)
+    # Reset scroll_target NACH html() Injection
     st.session_state.scroll_target = None
-
-# ==================== FOOTER ====================
-st.markdown("---")
-st.markdown('''
-    <div style="text-align: center; color: #6B7280; padding: 40px 20px; font-size: 0.95rem;">
-        <div style="margin-bottom: 20px;">
-            <strong style="color: #1B365D; font-size: 1.1rem;">🛡️ ReturnGuard GmbH</strong>
-        </div>
-        <div style="margin-bottom: 15px;">
-            📞 +49 89 123 456 78 | 💬 +49 176 987 654 32 | 📧 info@returnguard.de
-        </div>
-        <div>
-            © 2024 ReturnGuard - Ihr Partner für faire Leasingrückgaben
-        </div>
-    </div>
-''', unsafe_allow_html=True)
