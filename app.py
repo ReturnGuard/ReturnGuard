@@ -7,6 +7,25 @@ import json
 # ==================== FEATURE FLAGS ====================
 SHOW_AUTO_DIAGRAM = False  # Safari Mobile zeigt Raw HTML - Fallback für stabile V1
 
+# ==================== SCREENING KATALOG ====================
+# 14-Punkte Checkliste für Investor-Präsentation
+SCREENING_KATALOG = [
+    "✓ Vertragsprüfung: Leasingbedingungen analysiert",
+    "✓ Schadenserfassung: 20 Fahrzeugbereiche dokumentiert",
+    "✓ Kostenermittlung: Marktpreise vs. Leasingforderung",
+    "✓ Rechtliche Bewertung: Zulässigkeit der Nachforderungen",
+    "✓ Fotodokumentation: Professionelle Beweissicherung",
+    "✓ Gutachten: TÜV-zertifizierte Sachverständige",
+    "✓ Vergleichsangebot: Alternative Reparaturoptionen",
+    "✓ Verhandlungsstrategie: Optimale Argumentation",
+    "✓ Kommunikation: Schriftverkehr mit Leasinggeber",
+    "✓ Nachverhandlung: Reduzierung der Forderungen",
+    "✓ Rechtliche Vertretung: Fachanwälte bei Bedarf",
+    "✓ Dokumentation: Vollständige Fallakte",
+    "✓ Erfolgsabrechnung: Ersparnis dokumentiert",
+    "✓ Nachbetreuung: Follow-up nach Rückgabe"
+]
+
 # ==================== KONFIGURATION ====================
 st.set_page_config(
     page_title="ReturnGuard - Leasingrückgabe ohne Sorgen",
@@ -36,6 +55,8 @@ if 'form_submitted' not in st.session_state:
     st.session_state.form_submitted = False
 if 'is_mobile' not in st.session_state:
     st.session_state.is_mobile = False  # Default: Desktop
+if 'view' not in st.session_state:
+    st.session_state.view = 'B2C'  # Default: B2C für Endkunden
 
 # ==================== GUTACHTERTABELLE ====================
 # Preise nach Fahrzeugklasse: [Kompakt, Mittel, Ober, Luxus]
@@ -1168,10 +1189,275 @@ div[data-testid="column"] > div.stButton > button:hover {
 </style>
 """, unsafe_allow_html=True)
 
+# ==================== SIDEBAR VIEW SELECTOR ====================
+with st.sidebar:
+    st.markdown("### 🛡️ ReturnGuard")
+    st.markdown("**View auswählen:**")
+
+    selected_view = st.radio(
+        "Navigation",
+        ["Investor", "B2C (Endkunden)", "B2B (Firmenkunden)"],
+        index=["Investor", "B2C (Endkunden)", "B2B (Firmenkunden)"].index(
+            st.session_state.view if st.session_state.view in ["Investor", "B2C (Endkunden)", "B2B (Firmenkunden)"]
+            else "B2C (Endkunden)"
+        ),
+        label_visibility="collapsed"
+    )
+
+    # Update Session State
+    if selected_view == "Investor":
+        st.session_state.view = "Investor"
+    elif selected_view == "B2C (Endkunden)":
+        st.session_state.view = "B2C"
+    else:
+        st.session_state.view = "B2B"
+
+    st.markdown("---")
+
+    # View-spezifische Sidebar-Inhalte
+    if st.session_state.view == "Investor":
+        st.markdown("**📊 Kennzahlen-Dashboard**")
+        st.caption("Geschäftsmetriken und Erfolgsnachweise")
+    elif st.session_state.view == "B2C":
+        st.markdown("**💡 Schnellzugriff**")
+        st.caption("Kostenrechner • FAQ • Kontakt")
+    else:  # B2B
+        st.markdown("**🏢 Enterprise**")
+        st.caption("Flottenmanagement • Verträge")
+
 # ==================== SCROLL TO TOP ====================
 # Hinweis: Scroll-to-Top funktioniert in Streamlit nur begrenzt wegen iFrame
 # Für bessere UX: Nutzer können mit Tastatur (Pos1) oder Browser-Scroll nach oben
 # Alternative: Streamlit's st.rerun() nutzt automatisch Scroll-to-Top
+
+# ==================== RENDER FUNCTIONS ====================
+def render_investor():
+    """Investor View: Kennzahlen, Screening-Katalog, Erfolgsgeschichten"""
+    st.markdown('<div id="content-start-investor"></div>', unsafe_allow_html=True)
+
+    # Hero Section für Investor
+    st.markdown('''
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">ReturnGuard – Investoren-Übersicht</h1>
+                <p class="hero-subtitle">
+                    Transparente Geschäftsmetriken und dokumentierte Erfolgsnachweise
+                    im Bereich Leasingrückgabe-Beratung.
+                </p>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Kennzahlen
+    st.markdown('''
+        <div class="social-proof-banner">
+            <div class="social-stats">
+                <div class="stat-item">
+                    <div class="stat-number">1.200+</div>
+                    <div class="stat-label">Betreute Fälle</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2.500€</div>
+                    <div class="stat-label">Durchschn. Einsparung</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Erfolgreiche Einigungen</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">14</div>
+                    <div class="stat-label">Screening-Punkte</div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Screening-Katalog
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📋 Screening-Katalog</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">14-Punkte-Prozess für jeden Fall</p>', unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+    for idx, item in enumerate(SCREENING_KATALOG):
+        with col1 if idx % 2 == 0 else col2:
+            st.markdown(f'''
+                <div class="checklist-item">
+                    <div class="checklist-icon">{idx + 1}</div>
+                    <div class="checklist-content">
+                        <div class="checklist-title">{item}</div>
+                    </div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Erfolgsgeschichten (About-Seite integrieren)
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">🏆 Referenzfälle</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Dokumentierte Verhandlungsergebnisse</p>', unsafe_allow_html=True)
+
+    success_stories = [
+        {
+            "title": "Fall 1: BMW 3er - Von 5.200€ auf 1.400€",
+            "description": """
+            **Ausgangssituation:** Kunde sollte 5.200€ für Lackschäden und Felgenkratzer zahlen.
+
+            **Unsere Lösung:** Professionelle Gutachten zeigten: 60% der Schäden waren normale Gebrauchsspuren.
+
+            **Ergebnis:** Verhandlung auf 1.400€ - **Ersparnis: 3.800€**
+            """
+        },
+        {
+            "title": "Fall 2: Audi Q5 - Von 4.800€ auf 1.200€",
+            "description": """
+            **Ausgangssituation:** Leasinggesellschaft forderte 4.800€ für Innenraumschäden und Steinschläge.
+
+            **Unsere Lösung:** Rechtliche Prüfung ergab: Viele Forderungen waren überhöht.
+
+            **Ergebnis:** Reduktion auf 1.200€ - **Ersparnis: 3.600€**
+            """
+        },
+        {
+            "title": "Fall 3: Mercedes C-Klasse - Von 6.100€ auf 0€",
+            "description": """
+            **Ausgangssituation:** Kundin sollte 6.100€ für angebliche Unfallschäden zahlen.
+
+            **Unsere Lösung:** Detailprüfung zeigte: Schäden waren bereits vor Leasingbeginn vorhanden!
+
+            **Ergebnis:** Vollständiger Erlass - **Ersparnis: 6.100€**
+            """
+        }
+    ]
+
+    for story in success_stories:
+        st.markdown(f'''
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 10px; border-left: 4px solid #059669; margin: 20px 0;">
+                <h3 style="color: #1F2937; margin-bottom: 15px;">{story["title"]}</h3>
+                <div style="color: #6B7280; line-height: 1.8; white-space: pre-line;">{story["description"]}</div>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Services-Übersicht
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📦 Leistungsübersicht</h2>', unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("""
+        ### 🔍 Technische Prüfung
+        - Fahrzeuginspektion durch Sachverständige
+        - Schadensdokumentation nach DAT/Schwacke
+        - Fotodokumentation (50-100 Aufnahmen)
+        - Gutachten gemäß Leasingvertrag
+
+        ### ⚖️ Rechtliche Beratung
+        - Vertragsprüfung durch Anwälte
+        - Bewertung von Nachforderungen
+        - Verhandlung mit Leasinggebern
+        - Rechtliche Vertretung
+        """)
+
+    with col2:
+        st.markdown("""
+        ### 📊 Kostenermittlung
+        - Marktgerechte Schadenseinschätzung
+        - Vergleich mit Leasingvertrag
+        - Kostentransparenz
+        - Einsparpotenzial-Analyse
+
+        ### 💼 Zusatzservices
+        - Vor-Ort Service bundesweit
+        - Express-Bearbeitung möglich
+        - 24/7 Hotline (Premium/VIP)
+        - Persönlicher Ansprechpartner
+        """)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+def render_b2c():
+    """B2C View: Home, Calculator, FAQ, Blog, Contact"""
+    # Floating CTAs nur für B2C
+    st.markdown("""
+    <div class="floating-cta">
+        <a href="tel:+498912345678" class="floating-btn floating-phone" title="Jetzt anrufen">
+            📞
+        </a>
+        <a href="https://wa.me/4917698765432?text=Hallo%20ReturnGuard%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Leasingr%C3%BCckgabe-Beratung."
+           target="_blank" class="floating-btn floating-whatsapp" title="WhatsApp">
+            💬
+        </a>
+        <a href="?page=calculator#content-start-calculator" target="_self" class="floating-btn floating-main" title="Jetzt berechnen">
+            🧮
+        </a>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Navigation für B2C
+    st.markdown('<div class="top-nav">', unsafe_allow_html=True)
+    st.markdown('<div class="nav-brand">🛡️ ReturnGuard</div>', unsafe_allow_html=True)
+
+    nav_cols = st.columns(7)
+    with nav_cols[0]:
+        st.markdown('<a href="?page=home#content-start-home" target="_self" class="nav-link">🏠 Home</a>', unsafe_allow_html=True)
+    with nav_cols[1]:
+        st.markdown('<a href="?page=calculator#content-start-calculator" target="_self" class="nav-link">💰 Rechner</a>', unsafe_allow_html=True)
+    with nav_cols[2]:
+        st.markdown('<a href="?page=faq#content-start-faq" target="_self" class="nav-link">❓ FAQ</a>', unsafe_allow_html=True)
+    with nav_cols[3]:
+        st.markdown('<a href="?page=blog#content-start-blog" target="_self" class="nav-link">📝 Blog</a>', unsafe_allow_html=True)
+    with nav_cols[4]:
+        st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
+    with nav_cols[5]:
+        st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
+    with nav_cols[6]:
+        st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ==================== B2C PAGES ====================
+    # Die Page-spezifischen Inhalte werden nach diesem Block gerendert
+    # durch den globalen Page-Router (mit View-Checks)
+
+
+def render_b2b():
+    """B2B View: Services, Contact (B2B-Fokus), Legal"""
+    # Navigation für B2B
+    st.markdown('<div class="top-nav">', unsafe_allow_html=True)
+    st.markdown('<div class="nav-brand">🛡️ ReturnGuard Business</div>', unsafe_allow_html=True)
+
+    nav_cols = st.columns(4)
+    with nav_cols[0]:
+        st.markdown('<a href="?page=services#content-start-services" target="_self" class="nav-link">📦 Leistungen</a>', unsafe_allow_html=True)
+    with nav_cols[1]:
+        st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
+    with nav_cols[2]:
+        st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
+    with nav_cols[3]:
+        st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # B2B-spezifischer Hero
+    st.markdown('''
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">ReturnGuard Business</h1>
+                <p class="hero-subtitle">
+                    Flottenmanagement und Leasingrückgaben für Unternehmen.
+                    Volumenrabatte ab 10 Fahrzeugen.
+                </p>
+                <a href="?page=contact#content-start-contact" target="_self" class="hero-cta">Angebot anfordern →</a>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # ==================== B2B PAGES ====================
+    # Die Page-spezifischen Inhalte werden nach diesem Block gerendert
+    # durch den globalen Page-Router (mit View-Checks)
+
 
 # ==================== COOKIE BANNER ====================
 # Deaktiviert für bessere Performance - für Produktion mit echtem Cookie-Management-Tool ersetzen
@@ -1184,48 +1470,19 @@ div[data-testid="column"] > div.stButton > button:hover {
 #             st.session_state.show_cookie_banner = False
 #             st.rerun()
 
-# ==================== FLOATING ACTION BUTTONS ====================
-st.markdown("""
-<div class="floating-cta">
-    <a href="tel:+498912345678" class="floating-btn floating-phone" title="Jetzt anrufen">
-        📞
-    </a>
-    <a href="https://wa.me/4917698765432?text=Hallo%20ReturnGuard%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Leasingr%C3%BCckgabe-Beratung."
-       target="_blank" class="floating-btn floating-whatsapp" title="WhatsApp">
-        💬
-    </a>
-    <a href="?page=calculator#content-start-calculator" target="_self" class="floating-btn floating-main" title="Jetzt berechnen">
-        🧮
-    </a>
-</div>
-""", unsafe_allow_html=True)
+# ==================== VIEW ROUTER ====================
+# Router entscheidet basierend auf Session State View, welche Render-Funktion aufgerufen wird
+if st.session_state.view == "Investor":
+    render_investor()
+elif st.session_state.view == "B2C":
+    render_b2c()
+elif st.session_state.view == "B2B":
+    render_b2b()
 
-# ==================== NAVIGATION ====================
-st.markdown('<div class="top-nav">', unsafe_allow_html=True)
-st.markdown('<div class="nav-brand">🛡️ ReturnGuard</div>', unsafe_allow_html=True)
-
-nav_cols = st.columns(8)
-with nav_cols[0]:
-    st.markdown('<a href="?page=home#content-start-home" target="_self" class="nav-link">🏠 Home</a>', unsafe_allow_html=True)
-with nav_cols[1]:
-    st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
-with nav_cols[2]:
-    st.markdown('<a href="?page=services#content-start-services" target="_self" class="nav-link">📦 Leistungen</a>', unsafe_allow_html=True)
-with nav_cols[3]:
-    st.markdown('<a href="?page=calculator#content-start-calculator" target="_self" class="nav-link">💰 Rechner</a>', unsafe_allow_html=True)
-with nav_cols[4]:
-    st.markdown('<a href="?page=faq#content-start-faq" target="_self" class="nav-link">❓ FAQ</a>', unsafe_allow_html=True)
-with nav_cols[5]:
-    st.markdown('<a href="?page=blog#content-start-blog" target="_self" class="nav-link">📝 Blog</a>', unsafe_allow_html=True)
-with nav_cols[6]:
-    st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
-with nav_cols[7]:
-    st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
-
+# Bestehende Page-basierte Navigation wird hier integriert (nach Router-Logik)
+# Seiten werden nur angezeigt, wenn die passende View aktiv ist
 # ==================== STARTSEITE ====================
-if st.session_state.page == 'home':
+if st.session_state.view == "B2C" and st.session_state.page == 'home':
     st.markdown('<div id="content-start-home"></div>', unsafe_allow_html=True)
 
     # HERO SECTION
@@ -1513,7 +1770,7 @@ if st.session_state.page == 'home':
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== SCHADENSRECHNER ====================
-elif st.session_state.page == 'calculator':
+elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
     st.markdown('<div id="content-start-calculator"></div>', unsafe_allow_html=True)
     st.markdown('<div class="calculator-section">', unsafe_allow_html=True)
 
@@ -1874,7 +2131,7 @@ elif st.session_state.page == 'calculator':
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== FAQ ====================
-elif st.session_state.page == 'faq':
+elif st.session_state.view == "B2C" and st.session_state.page == 'faq':
     st.markdown('<div id="content-start-faq"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">Häufige Fragen</h1>', unsafe_allow_html=True)
@@ -1946,7 +2203,7 @@ elif st.session_state.page == 'faq':
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== BLOG ====================
-elif st.session_state.page == 'blog':
+elif st.session_state.view == "B2C" and st.session_state.page == 'blog':
     st.markdown('<div id="content-start-blog"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">Ratgeber</h1>', unsafe_allow_html=True)
@@ -2100,7 +2357,7 @@ elif st.session_state.page == 'blog':
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== ERFOLGSGESCHICHTEN ====================
-elif st.session_state.page == 'about':
+elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'about':
     st.markdown('<div id="content-start-about"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">👥 Über ReturnGuard</h1>', unsafe_allow_html=True)
@@ -2174,7 +2431,7 @@ elif st.session_state.page == 'about':
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== WEITERE SEITEN ====================
-elif st.session_state.page == 'services':
+elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'services':
     st.markdown('<div id="content-start-services"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">📦 Unsere Leistungen</h1>', unsafe_allow_html=True)
@@ -2213,7 +2470,7 @@ elif st.session_state.page == 'services':
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-elif st.session_state.page == 'contact':
+elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'contact':
     st.markdown('<div id="content-start-contact"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">📞 Kontakt</h1>', unsafe_allow_html=True)
@@ -2435,7 +2692,7 @@ elif st.session_state.page == 'contact':
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-elif st.session_state.page == 'legal':
+elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'legal':
     st.markdown('<div id="content-start-legal"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">⚖️ Rechtliches</h1>', unsafe_allow_html=True)
