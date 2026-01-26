@@ -26,6 +26,93 @@ SCREENING_KATALOG = [
     "✓ Nachbetreuung: Follow-up nach Rückgabe"
 ]
 
+# ==================== REVENUE STREAMS ====================
+# Einnahmequellen für Investor-Dashboard
+REVENUE_STREAMS = [
+    {
+        "icon": "🔧",
+        "title": "Werkstatt-Leads",
+        "description": "Vermittlung von Reparaturaufträgen an Partner-Werkstätten",
+        "provision": "50-150€ pro Lead",
+        "volume": "~40% der Kunden",
+        "potential": "480.000€/Jahr bei 1.000 Leads"
+    },
+    {
+        "icon": "✨",
+        "title": "Aufbereiter-Leads",
+        "description": "Vermittlung von Fahrzeugaufbereitungen (Innen/Außen)",
+        "provision": "30-80€ pro Lead",
+        "volume": "~60% der Kunden",
+        "potential": "360.000€/Jahr bei 1.000 Leads"
+    },
+    {
+        "icon": "📋",
+        "title": "Gutachter-Provision",
+        "description": "Anteil an Gutachter-Honoraren aus unserem Netzwerk",
+        "provision": "15-25% vom Honorar",
+        "volume": "~80% der Kunden",
+        "potential": "200.000€/Jahr bei 1.000 Gutachten"
+    },
+    {
+        "icon": "⚖️",
+        "title": "Anwalts-Vermittlung",
+        "description": "Streitfälle an Fachanwälte für Verkehrsrecht vermitteln",
+        "provision": "150-300€ pro Fall",
+        "volume": "~15% der Kunden (Streitfälle)",
+        "potential": "225.000€/Jahr bei 1.000 Kunden"
+    }
+]
+
+# ==================== ZUSÄTZLICHE USE CASES ====================
+ADDITIONAL_USE_CASES = [
+    {
+        "icon": "🔮",
+        "title": "Vorsorge-Check",
+        "description": "Kunden 6 Monate vor Rückgabe prüfen lassen",
+        "benefit": "Frühzeitige Lead-Generierung, höhere Conversion",
+        "revenue": "Zusatz-Leads + Planungssicherheit"
+    },
+    {
+        "icon": "🚗",
+        "title": "Gebrauchtwagen-Vermittlung",
+        "description": "Wenn Rückkauf günstiger als Reparatur ist",
+        "benefit": "Alternative zum Leasing-Ende, neue Einnahmequelle",
+        "revenue": "Vermittlungsprovision 1-3% vom Verkaufspreis"
+    },
+    {
+        "icon": "🛡️",
+        "title": "Versicherungs-Affiliate",
+        "description": "GAP-Versicherung, Leasingschutzbrief vermitteln",
+        "benefit": "Passives Einkommen, Cross-Selling",
+        "revenue": "Affiliate-Provision pro Abschluss"
+    },
+    {
+        "icon": "📊",
+        "title": "B2B Flotten-Flatrate",
+        "description": "Monatliche Aufbereitungspauschale für Firmenkunden",
+        "benefit": "Recurring Revenue, langfristige Kundenbindung",
+        "revenue": "50-200€/Fahrzeug/Monat"
+    },
+    {
+        "icon": "📍",
+        "title": "Mehrkilometer-Optimierung",
+        "description": "Beratung zur km-Reduzierung vor Rückgabe",
+        "benefit": "Zusätzlicher Touchpoint, Expertise zeigen",
+        "revenue": "Service-Fee 49-99€"
+    }
+]
+
+# ==================== UNIT ECONOMICS ====================
+UNIT_ECONOMICS = {
+    "cac": "25-40€",  # Customer Acquisition Cost
+    "ltv": "180-350€",  # Lifetime Value (alle Revenue Streams)
+    "ltv_cac_ratio": "4.5-8.8x",
+    "avg_provision_per_customer": "~220€",
+    "market_size_germany": "3.5 Mio. Leasingrückgaben/Jahr",
+    "target_market_share_y1": "0.1%",
+    "target_market_share_y3": "1.0%"
+}
+
 # ==================== KONFIGURATION ====================
 st.set_page_config(
     page_title="ReturnGuard - Leasingrückgabe ohne Sorgen",
@@ -1291,47 +1378,314 @@ with st.sidebar:
 
 # ==================== RENDER FUNCTIONS ====================
 def render_investor():
-    """Investor View: Kennzahlen, Screening-Katalog, Erfolgsgeschichten"""
+    """Investor View: Revenue Dashboard, Plattform-Flow, Unit Economics"""
     st.markdown('<div id="content-start-investor"></div>', unsafe_allow_html=True)
 
-    # Hero Section für Investor
+    # Hero Section für Investor - NEUE POSITIONIERUNG ALS VERMITTLUNGSPLATTFORM
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">ReturnGuard – Investoren-Übersicht</h1>
-                <p class="hero-subtitle">
-                    Transparente Geschäftsmetriken und dokumentierte Erfolgsnachweise
-                    im Bereich Leasingrückgabe-Beratung.
+                <h1 class="hero-title">ReturnGuard – Die Vermittlungsplattform für Leasingrückgaben</h1>
+                <p class="hero-subtitle" style="text-align: left; max-width: 800px; margin: 0 auto;">
+                    <strong>Unser Geschäftsmodell:</strong><br>
+                    • Wir verbinden Leasingnehmer mit zertifizierten Werkstätten, Aufbereitern und Fachanwälten<br>
+                    • Provision bei jedem vermittelten Lead – vier Umsatzquellen, eine Plattform<br>
+                    • Lead-Generierung für Werkstätten • Aufbereiter-Vermittlung • Gutachter-Netzwerk • Anwalts-Provision<br>
+                    • 3,5 Mio. Leasingrückgaben jährlich in Deutschland – wir monetarisieren jeden Touchpoint<br>
+                    • Skalierbare Lead-Vermittlung mit minimalem Kapitaleinsatz
                 </p>
             </div>
         </div>
     ''', unsafe_allow_html=True)
 
-    # Kennzahlen
+    # Kennzahlen - ERWEITERT
     st.markdown('''
         <div class="social-proof-banner">
             <div class="social-stats">
                 <div class="stat-item">
-                    <div class="stat-number">1.200+</div>
-                    <div class="stat-label">Betreute Fälle</div>
+                    <div class="stat-number">3,5 Mio.</div>
+                    <div class="stat-label">Leasingrückgaben/Jahr DE</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">2.500€</div>
-                    <div class="stat-label">Durchschn. Einsparung</div>
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Revenue Streams</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">Erfolgreiche Einigungen</div>
+                    <div class="stat-number">~220€</div>
+                    <div class="stat-label">Ø Provision/Kunde</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">14</div>
-                    <div class="stat-label">Screening-Punkte</div>
+                    <div class="stat-number">4.5-8.8x</div>
+                    <div class="stat-label">LTV/CAC Ratio</div>
                 </div>
             </div>
         </div>
     ''', unsafe_allow_html=True)
 
-    # Screening-Katalog
+    # ==================== REVENUE DASHBOARD ====================
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">💰 Revenue Streams</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Vier Einnahmequellen – Provision bei jedem Touchpoint</p>', unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+    for idx, stream in enumerate(REVENUE_STREAMS):
+        with col1 if idx % 2 == 0 else col2:
+            st.markdown(f'''
+                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+                            padding: 25px; border-radius: 12px; margin: 15px 0;
+                            border-left: 4px solid #059669;">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">{stream["icon"]}</div>
+                    <h3 style="color: #1F2937; margin: 0 0 10px 0; font-size: 1.2rem;">{stream["title"]}</h3>
+                    <p style="color: #6B7280; margin: 0 0 15px 0; font-size: 0.95rem;">{stream["description"]}</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <span style="background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">
+                            {stream["provision"]}
+                        </span>
+                        <span style="background: #1B365D; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">
+                            {stream["volume"]}
+                        </span>
+                    </div>
+                    <p style="color: #059669; margin: 15px 0 0 0; font-weight: 600; font-size: 0.9rem;">
+                        📈 {stream["potential"]}
+                    </p>
+                </div>
+            ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ==================== PLATTFORM-FLOW ====================
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">🔄 Plattform-Flow</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">So funktioniert die Lead-Vermittlung</p>', unsafe_allow_html=True)
+
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 30px; border-radius: 12px; margin: 20px 0;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;">
+
+                <!-- Step 1: Kunde -->
+                <div style="flex: 1; min-width: 150px; text-align: center;">
+                    <div style="background: #1B365D; color: white; width: 60px; height: 60px;
+                                border-radius: 50%; display: flex; align-items: center;
+                                justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
+                        👤
+                    </div>
+                    <strong style="color: #1F2937;">1. Kunde</strong>
+                    <p style="color: #6B7280; font-size: 0.85rem; margin: 5px 0 0 0;">
+                        Gibt Schäden ein<br>→ Lead entsteht
+                    </p>
+                </div>
+
+                <div style="color: #059669; font-size: 2rem;">→</div>
+
+                <!-- Step 2: Gutachter -->
+                <div style="flex: 1; min-width: 150px; text-align: center;">
+                    <div style="background: #059669; color: white; width: 60px; height: 60px;
+                                border-radius: 50%; display: flex; align-items: center;
+                                justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
+                        📋
+                    </div>
+                    <strong style="color: #1F2937;">2. Gutachter</strong>
+                    <p style="color: #6B7280; font-size: 0.85rem; margin: 5px 0 0 0;">
+                        Bewertet Schäden<br>💰 15-25% Provision
+                    </p>
+                </div>
+
+                <div style="color: #059669; font-size: 2rem;">→</div>
+
+                <!-- Step 3: Verteilung -->
+                <div style="flex: 1; min-width: 150px; text-align: center;">
+                    <div style="background: #f59e0b; color: white; width: 60px; height: 60px;
+                                border-radius: 50%; display: flex; align-items: center;
+                                justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
+                        🔀
+                    </div>
+                    <strong style="color: #1F2937;">3. ReturnGuard</strong>
+                    <p style="color: #6B7280; font-size: 0.85rem; margin: 5px 0 0 0;">
+                        Verteilt Leads an<br>Partner-Netzwerk
+                    </p>
+                </div>
+
+                <div style="color: #059669; font-size: 2rem;">→</div>
+
+                <!-- Step 4: Partner -->
+                <div style="flex: 1; min-width: 150px; text-align: center;">
+                    <div style="background: #1B365D; color: white; width: 60px; height: 60px;
+                                border-radius: 50%; display: flex; align-items: center;
+                                justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
+                        🔧
+                    </div>
+                    <strong style="color: #1F2937;">4. Werkstatt/Aufbereiter</strong>
+                    <p style="color: #6B7280; font-size: 0.85rem; margin: 5px 0 0 0;">
+                        Nimmt Lead an<br>💰 50-150€ Provision
+                    </p>
+                </div>
+            </div>
+
+            <!-- Streitfall-Branch -->
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px dashed #E5E7EB;">
+                <p style="text-align: center; color: #6B7280; margin-bottom: 15px;">
+                    <strong>Bei Streitfällen (~15% der Kunden):</strong>
+                </p>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="background: #dc2626; color: white; width: 50px; height: 50px;
+                                    border-radius: 50%; display: flex; align-items: center;
+                                    justify-content: center; margin: 0 auto 10px; font-size: 1.2rem;">
+                            ⚠️
+                        </div>
+                        <span style="color: #6B7280; font-size: 0.85rem;">Streitfall</span>
+                    </div>
+                    <div style="color: #dc2626; font-size: 1.5rem;">→</div>
+                    <div style="text-align: center;">
+                        <div style="background: #7c3aed; color: white; width: 50px; height: 50px;
+                                    border-radius: 50%; display: flex; align-items: center;
+                                    justify-content: center; margin: 0 auto 10px; font-size: 1.2rem;">
+                            ⚖️
+                        </div>
+                        <span style="color: #6B7280; font-size: 0.85rem;">Fachanwalt<br>💰 150-300€</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Haftungshinweis
+    st.markdown('''
+        <div style="background: #fef3c7; padding: 15px 20px; border-radius: 8px; margin: 20px 0;
+                    border-left: 4px solid #f59e0b;">
+            <strong style="color: #92400e;">⚠️ Haftungsmodell:</strong>
+            <span style="color: #78350f;">
+                ReturnGuard agiert als reine Vermittlungsplattform. Keine Haftung für Werkstatt-/Anwaltsleistungen.
+                Verträge entstehen direkt zwischen Kunde und Dienstleister.
+            </span>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ==================== UNIT ECONOMICS ====================
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📊 Unit Economics</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Kennzahlen pro Kunde</p>', unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown(f'''
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; color: #059669; font-weight: bold;">
+                    {UNIT_ECONOMICS["cac"]}
+                </div>
+                <div style="color: #6B7280; margin-top: 5px;">Customer Acquisition Cost</div>
+                <div style="color: #9CA3AF; font-size: 0.85rem; margin-top: 10px;">
+                    Online Marketing + SEO
+                </div>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    with col2:
+        st.markdown(f'''
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; color: #1B365D; font-weight: bold;">
+                    {UNIT_ECONOMICS["ltv"]}
+                </div>
+                <div style="color: #6B7280; margin-top: 5px;">Lifetime Value</div>
+                <div style="color: #9CA3AF; font-size: 0.85rem; margin-top: 10px;">
+                    Alle Revenue Streams kombiniert
+                </div>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    with col3:
+        st.markdown(f'''
+            <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+                        padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; color: #059669; font-weight: bold;">
+                    {UNIT_ECONOMICS["ltv_cac_ratio"]}
+                </div>
+                <div style="color: #166534; margin-top: 5px;">LTV/CAC Ratio</div>
+                <div style="color: #15803d; font-size: 0.85rem; margin-top: 10px;">
+                    ✓ Sehr profitabel (Ziel: >3x)
+                </div>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ==================== MARKTPOTENZIAL ====================
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📈 Marktpotenzial Deutschland</h2>', unsafe_allow_html=True)
+
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 30px; border-radius: 12px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-around;">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #1B365D; font-weight: bold;">3,5 Mio.</div>
+                    <div style="color: #6B7280;">Leasingrückgaben/Jahr</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #059669; font-weight: bold;">~2.800€</div>
+                    <div style="color: #6B7280;">Ø Reparaturkosten/Fahrzeug</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #f59e0b; font-weight: bold;">9,8 Mrd.€</div>
+                    <div style="color: #6B7280;">Marktvolumen Reparaturen</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB;">
+                <h4 style="color: #1F2937; margin-bottom: 15px;">Skalierungspfad:</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                    <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px;">
+                        <strong style="color: #1B365D;">Jahr 1:</strong> 0.1% Marktanteil
+                        <div style="color: #059669; font-weight: bold;">= 3.500 Kunden → ~770.000€ Revenue</div>
+                    </div>
+                    <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px;">
+                        <strong style="color: #1B365D;">Jahr 3:</strong> 1.0% Marktanteil
+                        <div style="color: #059669; font-weight: bold;">= 35.000 Kunden → ~7.7 Mio.€ Revenue</div>
+                    </div>
+                    <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px;">
+                        <strong style="color: #1B365D;">Jahr 5:</strong> 3.0% Marktanteil
+                        <div style="color: #059669; font-weight: bold;">= 105.000 Kunden → ~23 Mio.€ Revenue</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ==================== ZUSÄTZLICHE USE CASES ====================
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">🚀 Zusätzliche Revenue-Potenziale</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Ausbaustufen für weiteres Wachstum</p>', unsafe_allow_html=True)
+
+    for uc in ADDITIONAL_USE_CASES:
+        st.markdown(f'''
+            <div style="background: white; padding: 20px; border-radius: 10px;
+                        border: 1px solid #E5E7EB; margin: 15px 0;
+                        display: flex; align-items: flex-start; gap: 20px;">
+                <div style="font-size: 2.5rem; min-width: 60px; text-align: center;">{uc["icon"]}</div>
+                <div style="flex: 1;">
+                    <h3 style="color: #1F2937; margin: 0 0 8px 0;">{uc["title"]}</h3>
+                    <p style="color: #6B7280; margin: 0 0 10px 0;">{uc["description"]}</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <span style="background: #dbeafe; color: #1e40af; padding: 4px 12px;
+                                     border-radius: 20px; font-size: 0.85rem;">
+                            💡 {uc["benefit"]}
+                        </span>
+                        <span style="background: #dcfce7; color: #166534; padding: 4px 12px;
+                                     border-radius: 20px; font-size: 0.85rem;">
+                            💰 {uc["revenue"]}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ==================== SCREENING-KATALOG (KOMPAKT) ====================
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h2 class="section-title">📋 Screening-Katalog</h2>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">14-Punkte-Prozess für jeden Fall</p>', unsafe_allow_html=True)
@@ -1505,10 +1859,14 @@ def render_b2b():
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">ReturnGuard Business</h1>
-                <p class="hero-subtitle">
-                    Flottenmanagement und Leasingrückgaben für Unternehmen.
-                    Volumenrabatte ab 10 Fahrzeugen.
+                <h1 class="hero-title">ReturnGuard Business – Flottenmanagement</h1>
+                <p class="hero-subtitle" style="text-align: left; max-width: 700px; margin: 0 auto 20px auto;">
+                    <strong>Für Unternehmen mit Fahrzeugflotten:</strong><br>
+                    • Zentrales Dashboard für alle Leasingrückgaben Ihrer Flotte<br>
+                    • Aufbereiter-Flatrate: Monatliche Pauschale pro Fahrzeug<br>
+                    • Volumenrabatte ab 10 Fahrzeugen – individuelle Konditionen ab 50 Fahrzeugen<br>
+                    • Direkte Anbindung an unser Werkstatt- und Gutachter-Netzwerk<br>
+                    • Persönlicher Account Manager für Ihre Flotte
                 </p>
                 <a href="?page=contact#content-start-contact" target="_self" class="hero-cta">Angebot anfordern →</a>
             </div>
@@ -1550,10 +1908,13 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">Leasingrückgabe transparent und fair gestalten</h1>
-                <p class="hero-subtitle">
-                    Verschaffen Sie sich Klarheit über mögliche Rückgabekosten.
-                    Unsere Gutachter und Juristen unterstützen Sie von der Prüfung bis zur Verhandlung.
+                <h1 class="hero-title">Leasingrückgabe leicht gemacht</h1>
+                <p class="hero-subtitle" style="text-align: left; max-width: 700px; margin: 0 auto 20px auto;">
+                    <strong>Ihr unabhängiger Vermittler:</strong><br>
+                    • Wir vermitteln Ihnen geprüfte Werkstätten, Aufbereiter und bei Bedarf Fachanwälte<br>
+                    • Angebote vergleichen – Gutachter beauftragen – bei Streit: Anwalt vermittelt<br>
+                    • Wir sind keine Werkstatt, kein Anwalt, kein Gutachter – wir vermitteln die Besten<br>
+                    • Alles aus einer Hand, ohne Risiko für Sie – Sie zahlen nur bei Erfolg
                 </p>
                 <a href="?page=calculator#content-start-calculator" target="_self" class="hero-cta">Kostenrechner starten →</a>
             </div>
@@ -2422,26 +2783,36 @@ elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'abo
     st.markdown('<div id="content-start-about"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">👥 Über ReturnGuard</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Ihr Partner für faire Leasingrückgaben seit 2008</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Die unabhängige Vermittlungsplattform für Leasingrückgaben</p>', unsafe_allow_html=True)
 
     st.write("""
     ### Unsere Mission
 
-    ReturnGuard unterstützt Leasingnehmer durch gutachterliche und
-    juristische Beratung bei der Fahrzeugrückgabe.
+    ReturnGuard ist die zentrale Vermittlungsplattform für alle Dienstleistungen
+    rund um die Leasingrückgabe. Wir verbinden Leasingnehmer mit den besten
+    Werkstätten, Aufbereitern, Gutachtern und Fachanwälten.
 
     **Was uns auszeichnet:**
-    - **Erfahrenes Team:** Fachanwälte im Verkehrsrecht & TÜV-zertifizierte Sachverständige
-    - **Über 1.200 zufriedene Kunden** mit durchschnittlich 2.500€ Ersparnis
-    - **98% Erfolgsquote** bei Verhandlungen mit Leasinggesellschaften
-    - **Transparente Preise** ohne versteckte Kosten
+    - **Unabhängige Vermittlung:** Wir sind neutral und vermitteln die besten Partner
+    - **Geprüftes Netzwerk:** Über 200 Partner-Werkstätten und 50 Aufbereiter bundesweit
+    - **Fachanwälte bei Streit:** Vermittlung an spezialisierte Verkehrsrechtsanwälte
+    - **TÜV-zertifizierte Gutachter:** Professionelle Schadensbewertung durch unser Netzwerk
+    - **Über 1.200 vermittelte Fälle** mit durchschnittlich 2.500€ Ersparnis für Kunden
+
+    ### Unser Vermittlungsmodell
+
+    - 🔗 **Plattform:** Wir verbinden Angebot und Nachfrage
+    - 🔧 **Werkstatt-Netzwerk:** Geprüfte Betriebe für Smart Repair und Vollreparatur
+    - ✨ **Aufbereiter-Netzwerk:** Professionelle Fahrzeugaufbereitung
+    - ⚖️ **Anwalts-Netzwerk:** Fachanwälte für Verkehrsrecht bei Streitfällen
+    - 📋 **Gutachter-Netzwerk:** Unabhängige Schadensbewertung
 
     ### Unsere Werte
 
-    - ✅ **Transparenz:** Keine versteckten Kosten, klare Kommunikation
-    - ⚖️ **Fairness:** Wir kämpfen für Ihre Rechte
-    - 🎯 **Professionalität:** Höchste Qualitätsstandards
-    - 💙 **Persönliche Betreuung:** Jeder Kunde ist einzigartig
+    - ✅ **Neutralität:** Wir sind keine Werkstatt und kein Gutachter – wir vermitteln nur
+    - ⚖️ **Transparenz:** Klare Provisionsmodelle, keine versteckten Kosten
+    - 🎯 **Qualität:** Nur geprüfte Partner in unserem Netzwerk
+    - 💙 **Kundenfokus:** Das beste Angebot für jeden Kunden
     """)
 
     st.markdown("---")
