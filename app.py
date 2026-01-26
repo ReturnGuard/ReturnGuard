@@ -2029,20 +2029,29 @@ elif st.session_state.view == "B2B":
 if st.session_state.view == "B2C" and st.session_state.page == 'home':
     st.markdown('<div id="content-start-home"></div>', unsafe_allow_html=True)
 
-    # HERO SECTION
+    # HERO SECTION - Fokus auf Sicherheit & Orientierung
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">Leasingrückgabe leicht gemacht</h1>
-                <p class="hero-subtitle" style="text-align: left; max-width: 700px; margin: 0 auto 20px auto;">
-                    <strong>Ihr unabhängiger Vermittler:</strong><br>
-                    • Wir vermitteln Ihnen geprüfte Werkstätten, Aufbereiter und bei Bedarf Fachanwälte<br>
-                    • Angebote vergleichen – Gutachter beauftragen – bei Streit: Anwalt vermittelt<br>
-                    • Wir sind keine Werkstatt, kein Anwalt, kein Gutachter – wir vermitteln die Besten<br>
-                    • Alles aus einer Hand, ohne Risiko für Sie – Sie zahlen nur bei Erfolg
+                <h1 class="hero-title">Leasingrückgabe ohne böse Überraschungen</h1>
+                <p class="hero-subtitle" style="text-align: center; max-width: 650px; margin: 0 auto 25px auto; font-size: 1.2rem;">
+                    Kein Stress. Keine versteckten Kosten. Keine Unsicherheit.<br>
+                    <strong style="color: #059669;">Wir begleiten Sie Schritt für Schritt – von der Vorbereitung bis zur Rückgabe.</strong>
                 </p>
-                <a href="?page=calculator#content-start-calculator" target="_self" class="hero-cta">Kostenrechner starten →</a>
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <a href="?page=calculator#content-start-calculator" target="_self" class="hero-cta">Jetzt Kosten einschätzen →</a>
+                    <a href="?page=contact#content-start-contact" target="_self" class="hero-cta" style="background: white; color: #059669; border: 2px solid #059669;">Kostenlos beraten lassen</a>
+                </div>
             </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Vertrauens-Banner direkt nach Hero
+    st.markdown('''
+        <div style="background: #ecfdf5; padding: 20px; border-radius: 12px; margin: -30px auto 30px auto; max-width: 800px; text-align: center; border: 1px solid #a7f3d0;">
+            <span style="color: #059669; font-size: 1.1rem;">
+                ✓ Unverbindlich &nbsp;&nbsp; ✓ Kostenlose Erstberatung &nbsp;&nbsp; ✓ Keine versteckten Gebühren
+            </span>
         </div>
     ''', unsafe_allow_html=True)
 
@@ -2066,10 +2075,10 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         </div>
     ''', unsafe_allow_html=True)
 
-    # 3-SCHRITTE PROZESS
+    # 3-SCHRITTE PROZESS - Kundenorientiert
     st.markdown('<div class="process-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="process-title">So läuft die Zusammenarbeit ab</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="process-subtitle">In 3 Schritten zu Ihrer Leasingrückgabe</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="process-title">In 3 Schritten sicher zurückgeben</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="process-subtitle">Keine Vorkenntnisse nötig – wir führen Sie durch</p>', unsafe_allow_html=True)
 
     step1, step2, step3 = st.columns(3)
 
@@ -2077,11 +2086,11 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         st.markdown('''
             <div class="process-step">
                 <div class="step-number">1</div>
-                <div class="step-icon">📋</div>
-                <h3 class="step-title">Schäden einschätzen</h3>
+                <div class="step-icon">📱</div>
+                <h3 class="step-title">Situation erfassen</h3>
                 <p class="step-description">
-                    Nutzen Sie unseren Schadensrechner mit 20 Fahrzeugbereichen
-                    für eine erste Kosteneinschätzung.
+                    Unser kostenloser Schnellcheck zeigt Ihnen in 2 Minuten,
+                    wo Sie stehen und was zu erwarten ist.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
@@ -2090,11 +2099,11 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         st.markdown('''
             <div class="process-step">
                 <div class="step-number">2</div>
-                <div class="step-icon">🔍</div>
-                <h3 class="step-title">Fahrzeug prüfen lassen</h3>
+                <div class="step-icon">🛡️</div>
+                <h3 class="step-title">Vorbereitung</h3>
                 <p class="step-description">
-                    TÜV-zertifizierte Gutachter erstellen eine professionelle Bewertung
-                    Ihres Fahrzeugs.
+                    Wir zeigen Ihnen, was vor der Rückgabe noch zu tun ist –
+                    und was sich lohnt, reparieren zu lassen.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
@@ -2103,21 +2112,53 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         st.markdown('''
             <div class="process-step">
                 <div class="step-number">3</div>
-                <div class="step-icon">💰</div>
-                <h3 class="step-title">Kosten verhandeln</h3>
+                <div class="step-icon">✅</div>
+                <h3 class="step-title">Entspannt zurückgeben</h3>
                 <p class="step-description">
-                    Fachanwälte verhandeln für Sie. Durchschnittliche Reduzierung:
-                    60% der ursprünglichen Forderungen.
+                    Gut vorbereitet, fair bewertet, ohne Nachzahlungs-Stress.
+                    Im Schnitt sparen unsere Kunden 2.500€.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # HÄUFIGE SORGEN - Direkte Ansprache der Pain Points
+    st.markdown('''
+        <div style="background: white; padding: 40px 20px; margin: 30px 0;">
+            <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">Kennen Sie das?</h2>
+            <p style="text-align: center; color: #6B7280; margin-bottom: 30px;">Diese Sorgen haben die meisten Leasingnehmer vor der Rückgabe</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto;">
+                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">😰</div>
+                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Was wird mir die Leasingfirma berechnen?"</h4>
+                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Unser Rechner zeigt Ihnen vorab eine realistische Einschätzung</p>
+                </div>
+                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">🤔</div>
+                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Lohnt sich eine Reparatur noch?"</h4>
+                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Wir sagen Ihnen, was sich lohnt – und was nicht</p>
+                </div>
+                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">⚖️</div>
+                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Die Abrechnung war unfair – was tun?"</h4>
+                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Wir verbinden Sie mit spezialisierten Fachanwälten</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="color: #059669; font-size: 1.1rem; font-weight: 600; margin: 0;">
+                    ✓ Sie sind nicht allein. Über 1.200 Kunden hatten dieselben Fragen.
+                </p>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
     # KUNDENBEWERTUNGEN
     st.markdown('<div class="testimonial-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">Erfahrungen unserer Mandanten</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Dokumentierte Fälle aus der Praxis</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Das sagen unsere Kunden</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Echte Erfahrungen, echte Ersparnisse</p>', unsafe_allow_html=True)
 
     st.markdown('<div class="testimonial-grid">', unsafe_allow_html=True)
 
@@ -2316,6 +2357,23 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # ABSCHLUSS-CTA - Klare Orientierung
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 50px 30px; border-radius: 16px; margin: 40px 0; text-align: center;">
+            <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.8rem;">Nicht sicher, wo Sie anfangen sollen?</h2>
+            <p style="color: rgba(255,255,255,0.9); margin: 0 0 25px 0; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Starten Sie mit unserem kostenlosen Schnellcheck – dauert nur 2 Minuten und zeigt Ihnen sofort, wie Sie vorbereitet sind.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="?page=calculator#content-start-calculator" target="_self" style="background: white; color: #059669; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem;">Schnellcheck starten →</a>
+                <a href="tel:+498912345678" style="background: transparent; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; border: 2px solid white;">📞 Lieber anrufen?</a>
+            </div>
+            <p style="color: rgba(255,255,255,0.7); margin: 20px 0 0 0; font-size: 0.9rem;">
+                Mo-Fr 9-18 Uhr · Keine Warteschleifen · Echte Experten
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
 # ==================== SCHADENSRECHNER ====================
 elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
     st.markdown('<div id="content-start-calculator"></div>', unsafe_allow_html=True)
@@ -2323,10 +2381,10 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
 
     st.markdown('''
         <div class="calculator-box">
-            <h1 class="calculator-title">🔧 Schadensrechner</h1>
+            <h1 class="calculator-title">🔧 Wie viel könnte mich die Rückgabe kosten?</h1>
             <p class="calculator-subtitle">
-                Schätzen Sie Rückgabekosten anhand von 20 Fahrzeugbereichen ein.
-                Basis: Referenzwerte aus Gutachterpraxis.
+                Finden Sie es in 2 Minuten heraus – unverbindlich und kostenlos.<br>
+                <span style="color: #059669; font-weight: 500;">Keine Anmeldung nötig.</span>
             </p>
         </div>
     ''', unsafe_allow_html=True)
