@@ -26,6 +26,93 @@ SCREENING_KATALOG = [
     "✓ Nachbetreuung: Follow-up nach Rückgabe"
 ]
 
+# ==================== REVENUE STREAMS ====================
+# Einnahmequellen für Investor-Dashboard
+REVENUE_STREAMS = [
+    {
+        "icon": "🔧",
+        "title": "Werkstatt-Leads",
+        "description": "Vermittlung von Reparaturaufträgen an Partner-Werkstätten",
+        "provision": "50-150€ pro Lead",
+        "volume": "~40% der Kunden",
+        "potential": "480.000€/Jahr bei 1.000 Leads"
+    },
+    {
+        "icon": "✨",
+        "title": "Aufbereiter-Leads",
+        "description": "Vermittlung von Fahrzeugaufbereitungen (Innen/Außen)",
+        "provision": "30-80€ pro Lead",
+        "volume": "~60% der Kunden",
+        "potential": "360.000€/Jahr bei 1.000 Leads"
+    },
+    {
+        "icon": "📋",
+        "title": "Gutachter-Provision",
+        "description": "Anteil an Gutachter-Honoraren aus unserem Netzwerk",
+        "provision": "15-25% vom Honorar",
+        "volume": "~80% der Kunden",
+        "potential": "200.000€/Jahr bei 1.000 Gutachten"
+    },
+    {
+        "icon": "⚖️",
+        "title": "Anwalts-Vermittlung",
+        "description": "Streitfälle an Fachanwälte für Verkehrsrecht vermitteln",
+        "provision": "150-300€ pro Fall",
+        "volume": "~15% der Kunden (Streitfälle)",
+        "potential": "225.000€/Jahr bei 1.000 Kunden"
+    }
+]
+
+# ==================== ZUSÄTZLICHE USE CASES ====================
+ADDITIONAL_USE_CASES = [
+    {
+        "icon": "🔮",
+        "title": "Vorsorge-Check",
+        "description": "Kunden 6 Monate vor Rückgabe prüfen lassen",
+        "benefit": "Frühzeitige Lead-Generierung, höhere Conversion",
+        "revenue": "Zusatz-Leads + Planungssicherheit"
+    },
+    {
+        "icon": "🚗",
+        "title": "Gebrauchtwagen-Vermittlung",
+        "description": "Wenn Rückkauf günstiger als Reparatur ist",
+        "benefit": "Alternative zum Leasing-Ende, neue Einnahmequelle",
+        "revenue": "Vermittlungsprovision 1-3% vom Verkaufspreis"
+    },
+    {
+        "icon": "🛡️",
+        "title": "Versicherungs-Affiliate",
+        "description": "GAP-Versicherung, Leasingschutzbrief vermitteln",
+        "benefit": "Passives Einkommen, Cross-Selling",
+        "revenue": "Affiliate-Provision pro Abschluss"
+    },
+    {
+        "icon": "📊",
+        "title": "B2B Flotten-Flatrate",
+        "description": "Monatliche Aufbereitungspauschale für Firmenkunden",
+        "benefit": "Recurring Revenue, langfristige Kundenbindung",
+        "revenue": "50-200€/Fahrzeug/Monat"
+    },
+    {
+        "icon": "📍",
+        "title": "Mehrkilometer-Optimierung",
+        "description": "Beratung zur km-Reduzierung vor Rückgabe",
+        "benefit": "Zusätzlicher Touchpoint, Expertise zeigen",
+        "revenue": "Service-Fee 49-99€"
+    }
+]
+
+# ==================== UNIT ECONOMICS ====================
+UNIT_ECONOMICS = {
+    "cac": "25-40€",  # Customer Acquisition Cost
+    "ltv": "180-350€",  # Lifetime Value (alle Revenue Streams)
+    "ltv_cac_ratio": "4.5-8.8x",
+    "avg_provision_per_customer": "~220€",
+    "market_size_germany": "3.5 Mio. Leasingrückgaben/Jahr",
+    "target_market_share_y1": "0.1%",
+    "target_market_share_y3": "1.0%"
+}
+
 # ==================== KONFIGURATION ====================
 st.set_page_config(
     page_title="ReturnGuard - Leasingrückgabe ohne Sorgen",
@@ -1291,147 +1378,539 @@ with st.sidebar:
 
 # ==================== RENDER FUNCTIONS ====================
 def render_investor():
-    """Investor View: Kennzahlen, Screening-Katalog, Erfolgsgeschichten"""
+    """
+    Investor View: Scrollbares Pitchdeck
+    Struktur nach Master-Briefing:
+    1. Zentrales Fundament (Problem + Marktplatz)
+    2. Warum jetzt? (Timing)
+    3. Drei Perspektiven (A: Investor, B: B2C, C: B2B)
+    4. Monetarisierung (implizit + explizit)
+    5. Haftung & Compliance
+    6. Warum investierbar
+    """
     st.markdown('<div id="content-start-investor"></div>', unsafe_allow_html=True)
 
-    # Hero Section für Investor
+    # ═══════════════════════════════════════════════════════════════════════════
+    # EBENE 1: ZENTRALES FUNDAMENT (für ALLE sichtbar)
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    # HERO: Das Problem + Markt
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">ReturnGuard – Investoren-Übersicht</h1>
-                <p class="hero-subtitle">
-                    Transparente Geschäftsmetriken und dokumentierte Erfolgsnachweise
-                    im Bereich Leasingrückgabe-Beratung.
+                <h1 class="hero-title">Der wirtschaftliche Marktplatz rund um die Leasingrückgabe</h1>
+                <p class="hero-subtitle" style="max-width: 900px; margin: 0 auto; font-size: 1.15rem;">
+                    Leasingrückgaben sind ein hochvolumiger, schlecht koordinierter Markt.<br>
+                    Es gibt viele Beteiligte – aber keine neutrale Vorinstanz.<br><br>
+                    <strong>ReturnGuard ist diese Vorinstanz.</strong>
                 </p>
             </div>
         </div>
     ''', unsafe_allow_html=True)
 
-    # Kennzahlen
+    # Kernbotschaft-Banner
     st.markdown('''
-        <div class="social-proof-banner">
-            <div class="social-stats">
-                <div class="stat-item">
-                    <div class="stat-number">1.200+</div>
-                    <div class="stat-label">Betreute Fälle</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">2.500€</div>
-                    <div class="stat-label">Durchschn. Einsparung</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">Erfolgreiche Einigungen</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">14</div>
-                    <div class="stat-label">Screening-Punkte</div>
-                </div>
+        <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%);
+                    padding: 30px; border-radius: 12px; margin: 30px 0; text-align: center;">
+            <p style="color: white; font-size: 1.2rem; margin: 0; line-height: 1.6;">
+                ReturnGuard koordiniert <strong>Vorbereitung, Bewertung und Vermittlung</strong>
+                <strong style="color: #fde047;">vor der Leasingrückgabe</strong> –<br>
+                <span style="color: #86efac;">ohne selbst Dienstleister zu sein.</span>
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Das Problem (marktweit)
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Das Kernproblem</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Ein strukturelles Stressereignis – für alle Beteiligten</p>', unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown('''
+            <div style="background: #fef2f2; padding: 25px; border-radius: 12px; border-left: 4px solid #dc2626;">
+                <h3 style="color: #991b1b; margin: 0 0 15px 0;">👤 Für Privatkunden</h3>
+                <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li>Intransparente Bewertung durch Leasinggesellschaft</li>
+                    <li>Informationsasymmetrie – der Kunde ist im Nachteil</li>
+                    <li>Angst vor unkalkulierbaren Kosten</li>
+                    <li>Keine Zeit, keine Vergleichsangebote, kein Überblick</li>
+                </ul>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    with col2:
+        st.markdown('''
+            <div style="background: #fef2f2; padding: 25px; border-radius: 12px; border-left: 4px solid #dc2626;">
+                <h3 style="color: #991b1b; margin: 0 0 15px 0;">🏢 Für Gewerbekunden & Dienstleister</h3>
+                <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li>Werkstätten bekommen unqualifizierte Anfragen</li>
+                    <li>Gutachter werden zu spät eingeschaltet</li>
+                    <li>Anwälte kommen erst, wenn der Schaden entstanden ist</li>
+                    <li>Hoher Akquiseaufwand, niedrige Trefferquote</li>
+                </ul>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    # Marktversagen
+    st.markdown('''
+        <div style="background: #fef3c7; padding: 20px 30px; border-radius: 12px; margin: 25px 0;
+                    border: 2px solid #f59e0b; text-align: center;">
+            <p style="color: #92400e; font-size: 1.15rem; margin: 0; font-weight: 600;">
+                ⚠️ Marktversagen: Alle Beteiligten existieren – aber sie sind nicht orchestriert.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # DIE LÖSUNG: ReturnGuard als Orchestrator
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Die Lösung: ReturnGuard</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Marktplatz & Orchestrator – nicht Dienstleister</p>', unsafe_allow_html=True)
+
+    # Was ReturnGuard NICHT ist
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; margin: 20px 0;">
+            <h4 style="color: #6B7280; margin: 0 0 15px 0;">ReturnGuard ist <span style="color: #dc2626;">keine</span>:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Werkstatt</span>
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Aufbereitung</span>
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Gutachterfirma</span>
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Rechtsberatung</span>
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Leasinggesellschaft</span>
             </div>
         </div>
     ''', unsafe_allow_html=True)
 
-    # Screening-Katalog
-    st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">📋 Screening-Katalog</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">14-Punkte-Prozess für jeden Fall</p>', unsafe_allow_html=True)
+    # Was ReturnGuard IST
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+                    padding: 25px; border-radius: 12px; margin: 20px 0; border: 2px solid #059669;">
+            <h4 style="color: #166534; margin: 0 0 15px 0;">ReturnGuard <span style="color: #059669;">ist</span> eine neutrale Vermittlungs- und Vorqualifizierungsplattform:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Bündelt Informationen</span>
+                <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Zieht Entscheidungen vor</span>
+                <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Macht Angebote vergleichbar</span>
+                <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Belässt Haftung wo sie hingehört</span>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    for idx, item in enumerate(SCREENING_KATALOG):
-        with col1 if idx % 2 == 0 else col2:
-            st.markdown(f'''
-                <div class="checklist-item">
-                    <div class="checklist-icon">{idx + 1}</div>
-                    <div class="checklist-content">
-                        <div class="checklist-title">{item}</div>
-                    </div>
-                </div>
-            ''', unsafe_allow_html=True)
+    # Analogie für Investoren
+    st.markdown('''
+        <div style="background: #eff6ff; padding: 25px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #3b82f6;">
+            <h4 style="color: #1e40af; margin: 0 0 15px 0;">💡 Vergleich für Investoren:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; color: #1e3a8a;">
+                <div><strong>Airbnb</strong> besitzt keine Wohnungen</div>
+                <div><strong>Check24</strong> verkauft keine Versicherungen</div>
+                <div><strong>MyHammer</strong> repariert nichts</div>
+            </div>
+            <p style="color: #1e40af; margin: 15px 0 0 0; font-weight: 600; font-size: 1.1rem;">
+                → ReturnGuard koordiniert.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Erfolgsgeschichten (About-Seite integrieren)
+    # ═══════════════════════════════════════════════════════════════════════════
+    # WARUM JETZT? (Timing & Rückenwind)
+    # ═══════════════════════════════════════════════════════════════════════════
+
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">🏆 Referenzfälle</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Dokumentierte Verhandlungsergebnisse</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Warum jetzt?</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Timing & Markt-Rückenwind</p>', unsafe_allow_html=True)
 
-    success_stories = [
-        {
-            "title": "Fall 1: BMW 3er - Von 5.200€ auf 1.400€",
-            "description": """
-            **Ausgangssituation:** Kunde sollte 5.200€ für Lackschäden und Felgenkratzer zahlen.
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 30px; border-radius: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #059669;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">📈</div>
+                    <strong style="color: #1F2937;">Leasingquoten historisch hoch</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Immer mehr Fahrzeuge werden geleast – der Markt wächst kontinuierlich.
+                    </p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">💹</div>
+                    <strong style="color: #1F2937;">Gebrauchtwagenpreise volatil</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Höhere Bewertungssensibilität bei Leasinggesellschaften.
+                    </p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">🧠</div>
+                    <strong style="color: #1F2937;">Kunden sind informierter, aber überfordert</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Sie wissen, dass es Optionen gibt – aber nicht welche.
+                    </p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">🔧</div>
+                    <strong style="color: #1F2937;">Dienstleister kämpfen mit Akquise & Marge</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Werkstätten und Gutachter suchen qualifizierte Leads.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #059669; font-weight: 600; margin-top: 20px; font-size: 1.1rem;">
+            → Das ist kein nettes Tool, sondern eine Antwort auf Marktveränderungen.
+        </p>
+    ''', unsafe_allow_html=True)
 
-            **Unsere Lösung:** Professionelle Gutachten zeigten: 60% der Schäden waren normale Gebrauchsspuren.
+    st.markdown('</div>', unsafe_allow_html=True)
 
-            **Ergebnis:** Verhandlung auf 1.400€ - **Ersparnis: 3.800€**
-            """
-        },
-        {
-            "title": "Fall 2: Audi Q5 - Von 4.800€ auf 1.200€",
-            "description": """
-            **Ausgangssituation:** Leasinggesellschaft forderte 4.800€ für Innenraumschäden und Steinschläge.
+    # ═══════════════════════════════════════════════════════════════════════════
+    # KLAMMER: Eine Plattform – drei Lesarten
+    # ═══════════════════════════════════════════════════════════════════════════
 
-            **Unsere Lösung:** Rechtliche Prüfung ergab: Viele Forderungen waren überhöht.
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%);
+                    padding: 40px; border-radius: 12px; margin: 40px 0; text-align: center;">
+            <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.8rem;">
+                Eine Plattform – drei Lesarten derselben Wahrheit
+            </h2>
+            <p style="color: #94a3b8; font-size: 1.05rem; margin: 0; max-width: 700px; margin: 0 auto;">
+                Alle drei Perspektiven beschreiben dasselbe Geschäftsmodell.<br>
+                Sie unterscheiden sich nur in Blickwinkel & Tonalität.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
 
-            **Ergebnis:** Reduktion auf 1.200€ - **Ersparnis: 3.600€**
-            """
-        },
-        {
-            "title": "Fall 3: Mercedes C-Klasse - Von 6.100€ auf 0€",
-            "description": """
-            **Ausgangssituation:** Kundin sollte 6.100€ für angebliche Unfallschäden zahlen.
+    # ═══════════════════════════════════════════════════════════════════════════
+    # DIE DREI EBENEN DES MARKTPLATZES
+    # ═══════════════════════════════════════════════════════════════════════════
 
-            **Unsere Lösung:** Detailprüfung zeigte: Schäden waren bereits vor Leasingbeginn vorhanden!
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Die drei Ebenen des Marktplatzes</h2>', unsafe_allow_html=True)
 
-            **Ergebnis:** Vollständiger Erlass - **Ersparnis: 6.100€**
-            """
-        }
+    # Ebene A: B2C = Lead Engine
+    st.markdown('''
+        <div style="background: #eff6ff; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #3b82f6;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #3b82f6; color: white; width: 50px; height: 50px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">A</div>
+                <div>
+                    <h3 style="color: #1e40af; margin: 0;">Privatkunden-Plattform (B2C)</h3>
+                    <span style="color: #3b82f6; font-weight: 600;">= Lead Engine</span>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #1e3a8a;">Funktion:</strong>
+                    <ul style="color: #1e40af; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Wissensaufbau</li>
+                        <li>Erwartungsmanagement</li>
+                        <li>Vertrauensaufbau</li>
+                        <li>Vorqualifizierung</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #1e3a8a;">Kunden kommen, um:</strong>
+                    <ul style="color: #1e40af; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Sich schlau zu machen</li>
+                        <li>Risiken einzuschätzen</li>
+                        <li>Optionen zu verstehen</li>
+                        <li>Nicht über den Tisch gezogen zu werden</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #1e3a8a;">Investorensicht:</strong>
+                    <ul style="color: #1e40af; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Kostengünstiger Acquisition Channel</li>
+                        <li>Datenquelle</li>
+                        <li>Nachfrage-Seite des Marktplatzes</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="color: #1e40af; margin: 20px 0 0 0; font-style: italic;">
+                💡 B2C ist kein Selbstzweck – Monetarisierung hier optional, aber strategisch stark.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Ebene B: Marktplatz-Kern = Revenue Engine
+    st.markdown('''
+        <div style="background: #f0fdf4; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #059669;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">B</div>
+                <div>
+                    <h3 style="color: #166534; margin: 0;">Marktplatz-Kern</h3>
+                    <span style="color: #059669; font-weight: 600;">= Revenue Engine (hier entsteht Marge)</span>
+                </div>
+            </div>
+            <p style="color: #166534; margin: 0 0 20px 0;">Transaktionen zwischen:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                <span style="background: #059669; color: white; padding: 10px 20px; border-radius: 8px;">
+                    Kunden ↔ Werkstätten / Aufbereiter
+                </span>
+                <span style="background: #059669; color: white; padding: 10px 20px; border-radius: 8px;">
+                    Kunden ↔ Gutachter
+                </span>
+                <span style="background: #059669; color: white; padding: 10px 20px; border-radius: 8px;">
+                    Kunden ↔ Anwälte
+                </span>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <strong style="color: #166534;">ReturnGuard:</strong>
+                <span style="color: #15803d;"> strukturiert • verteilt • dokumentiert • vermittelt</span>
+            </div>
+            <div style="background: #dcfce7; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center;">
+                <strong style="color: #166534; font-size: 1.1rem;">
+                    👉 Jeder Kontakt ist potenziell monetarisierbar, aber keiner haftungspflichtig.
+                </strong>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Ebene C: B2B/Flotten = Stabilitäts-Engine
+    st.markdown('''
+        <div style="background: #faf5ff; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #8b5cf6;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #8b5cf6; color: white; width: 50px; height: 50px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">C</div>
+                <div>
+                    <h3 style="color: #6b21a8; margin: 0;">Firmen- & Flottenkunden (B2B)</h3>
+                    <span style="color: #8b5cf6; font-weight: 600;">= Stabilitäts-Engine (Fixkosten-Deckel)</span>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #6b21a8;">Flottenpakete leisten:</strong>
+                    <ul style="color: #7c3aed; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Planbare Einnahmen</li>
+                        <li>Grundauslastung der Plattform</li>
+                        <li>Geringere Abhängigkeit vom Endkundengeschäft</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #6b21a8;">Typische Kunden:</strong>
+                    <ul style="color: #7c3aed; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>KMU-Flotten</li>
+                        <li>Fuhrparkmanager</li>
+                        <li>Autohäuser mit Leasingrückläufern</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #6b21a8;">Warum Flotten bleiben:</strong>
+                    <ul style="color: #7c3aed; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Wiederkehrende Rückgaben</li>
+                        <li>Standardisierte Prozesse</li>
+                        <li>Historischer Vergleich je Flotte</li>
+                        <li>Geringerer interner Aufwand</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="background: #ede9fe; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center;">
+                <strong style="color: #6b21a8; font-size: 1.1rem;">
+                    👉 Investorensicht: Das senkt Risiko, erhöht Runway und macht das Modell robuster.
+                </strong>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # DATEN ALS PLATTFORMKAPITAL
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📊 Daten als strategisches Plattformkapital</h2>', unsafe_allow_html=True)
+
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 30px; border-radius: 12px;">
+            <p style="color: #1F2937; font-size: 1.05rem; margin: 0 0 20px 0;">
+                ReturnGuard aggregiert mit jeder Rückgabe strukturierte Marktintelligenz:
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                <span style="background: #1B365D; color: white; padding: 12px 20px; border-radius: 8px;">📋 Schäden & Häufigkeiten</span>
+                <span style="background: #1B365D; color: white; padding: 12px 20px; border-radius: 8px;">💰 Bewertungen & Differenzen</span>
+                <span style="background: #1B365D; color: white; padding: 12px 20px; border-radius: 8px;">📊 Angebotsbandbreiten</span>
+                <span style="background: #1B365D; color: white; padding: 12px 20px; border-radius: 8px;">✅ Rückgabe-Ergebnisse</span>
+            </div>
+            <div style="background: #dbeafe; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                <strong style="color: #1e40af;">Investoren sehen hier:</strong>
+                <span style="color: #1e3a8a;"> Pricing Power • Benchmarks • Grundlage für Zusatzprodukte</span>
+            </div>
+            <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #f59e0b;">
+                <strong style="color: #92400e;">Wichtig:</strong>
+                <span style="color: #78350f;"> Die aggregierten Daten dienen der Transparenz und Vergleichbarkeit – nicht der individuellen Bewertung einzelner Fahrzeuge. Keine Einzelbewertung, keine Entscheidungshoheit.</span>
+            </div>
+            <p style="color: #059669; margin: 20px 0 0 0; font-weight: 600; text-align: center;">
+                → Wert hoch, Risiko niedrig. Ohne selbst zu bewerten oder zu haften.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # MONETARISIERUNG (implizit + explizit)
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">💰 Erlöslogik</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Transparent, modular, skalierbar</p>', unsafe_allow_html=True)
+
+    # Revenue Layers - strategisch geordnet nach Skalierbarkeit & Stabilität
+    revenue_layers = [
+        {"layer": "1", "title": "Lead-Vermittlung", "desc": "Werkstätten & Aufbereiter zahlen für qualifizierte Leads", "model": "Kernumsatz, skalierbar · Fixpreis oder Erfolgsmodell", "color": "#059669"},
+        {"layer": "2", "title": "B2B / Flotten", "desc": "Flottenmanager buchen feste Kontingente oder Flatrates", "model": "Stabilität & planbare Fixkosten · Monthly Recurring", "color": "#0ea5e9"},
+        {"layer": "3", "title": "Gutachter & Anwälte", "desc": "Provision bei Bewertung oder Streitfall-Vermittlung", "model": "High-Value, episodisch · Hoher Value pro Conversion", "color": "#8b5cf6"},
+        {"layer": "4", "title": "Premium-Kunde", "desc": "Express-Check, Dokumentenprüfung, Sorgenfrei-Pakete", "model": "Upsell, optional · Direkte Kundenmonetarisierung", "color": "#f59e0b"},
     ]
 
-    for story in success_stories:
+    for rv in revenue_layers:
         st.markdown(f'''
-            <div style="background: #F9FAFB; padding: 25px; border-radius: 10px; border-left: 4px solid #059669; margin: 20px 0;">
-                <h3 style="color: #1F2937; margin-bottom: 15px;">{story["title"]}</h3>
-                <div style="color: #6B7280; line-height: 1.8; white-space: pre-line;">{story["description"]}</div>
+            <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;
+                        border-left: 5px solid {rv["color"]}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: {rv["color"]}; color: white; width: 40px; height: 40px; border-radius: 50%;
+                                display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                        {rv["layer"]}
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="color: #1F2937; margin: 0;">{rv["title"]}</h4>
+                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.9rem;">{rv["desc"]}</p>
+                        <span style="color: {rv["color"]}; font-size: 0.85rem; font-weight: 500;">{rv["model"]}</span>
+                    </div>
+                </div>
             </div>
         ''', unsafe_allow_html=True)
 
+    # Ausbaustufen
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 20px; border-radius: 10px; margin-top: 25px;">
+            <h4 style="color: #6B7280; margin: 0 0 15px 0;">🚀 Ausbaustufen (optional):</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">White-Label für Autohäuser</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Versicherungs-Affiliate</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Gebrauchtwagen-Vermittlung</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Vorsorge-Check</span>
+            </div>
+            <p style="color: #9CA3AF; margin: 15px 0 0 0; font-size: 0.9rem; font-style: italic;">
+                Nicht alles gleichzeitig, aber alles denkbar und skalierbar.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Services-Übersicht
+    # ═══════════════════════════════════════════════════════════════════════════
+    # HAFTUNG & COMPLIANCE
+    # ═══════════════════════════════════════════════════════════════════════════
+
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">📦 Leistungsübersicht</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">⚖️ Haftung & Rolle</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Souverän kommuniziert – nicht versteckt</p>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("""
-        ### 🔍 Technische Prüfung
-        - Fahrzeuginspektion durch Sachverständige
-        - Schadensdokumentation nach DAT/Schwacke
-        - Fotodokumentation (50-100 Aufnahmen)
-        - Gutachten gemäß Leasingvertrag
 
-        ### ⚖️ Rechtliche Beratung
-        - Vertragsprüfung durch Anwälte
-        - Bewertung von Nachforderungen
-        - Verhandlung mit Leasinggebern
-        - Rechtliche Vertretung
-        """)
+    with col1:
+        st.markdown('''
+            <div style="background: #fef3c7; padding: 25px; border-radius: 12px; height: 100%;">
+                <h4 style="color: #92400e; margin: 0 0 15px 0;">ReturnGuard macht:</h4>
+                <ul style="color: #78350f; margin: 0; padding-left: 20px; line-height: 2;">
+                    <li>Vermitteln</li>
+                    <li>Koordinieren</li>
+                    <li>Dokumentieren</li>
+                    <li>Vorqualifizieren</li>
+                </ul>
+            </div>
+        ''', unsafe_allow_html=True)
 
     with col2:
-        st.markdown("""
-        ### 📊 Kostenermittlung
-        - Marktgerechte Schadenseinschätzung
-        - Vergleich mit Leasingvertrag
-        - Kostentransparenz
-        - Einsparpotenzial-Analyse
+        st.markdown('''
+            <div style="background: #fee2e2; padding: 25px; border-radius: 12px; height: 100%;">
+                <h4 style="color: #991b1b; margin: 0 0 15px 0;">ReturnGuard macht <u>nicht</u>:</h4>
+                <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 2;">
+                    <li>Gutachten erstellen</li>
+                    <li>Reparaturen durchführen</li>
+                    <li>Rechtsfragen entscheiden</li>
+                    <li>Für Leasinggesellschaften bewerten</li>
+                </ul>
+            </div>
+        ''', unsafe_allow_html=True)
 
-        ### 💼 Zusatzservices
-        - Vor-Ort Service bundesweit
-        - Express-Bearbeitung möglich
-        - 24/7 Hotline (Premium/VIP)
-        - Persönlicher Ansprechpartner
-        """)
+    # Compliance
+    st.markdown('''
+        <div style="background: #f0fdf4; padding: 25px; border-radius: 12px; margin-top: 25px; border: 2px solid #059669;">
+            <h4 style="color: #166534; margin: 0 0 15px 0;">✅ Regulatorische Einfachheit:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px;">Keine Finanzvermittlung</span>
+                <span style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px;">Keine Versicherungsberatung</span>
+                <span style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px;">Keine Rechtsberatung</span>
+                <span style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px;">Keine Sachverständigentätigkeit</span>
+            </div>
+            <p style="color: #15803d; margin: 15px 0 0 0; font-weight: 600;">
+                → Kein regulatorisches Minenfeld. Das reduziert rechtliches Risiko, operative Komplexität und Skalierungshürden.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Investor-Statement
+    st.markdown('''
+        <div style="background: #1B365D; padding: 20px 30px; border-radius: 12px; margin-top: 25px; text-align: center;">
+            <p style="color: white; font-size: 1.1rem; margin: 0;">
+                💼 <strong>Für Investoren:</strong> Das ist kein Nachteil – das ist ein Schutzschild.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # WARUM INVESTIERBAR
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">🎯 Warum ReturnGuard investierbar ist</h2>', unsafe_allow_html=True)
+
+    st.markdown('''
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">🪶</div>
+                <h4 style="color: #1F2937; margin: 0 0 10px 0;">Asset-light</h4>
+                <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Kein CapEx, keine Lager, keine Angestellten pro Stadt</p>
+            </div>
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">📈</div>
+                <h4 style="color: #1F2937; margin: 0 0 10px 0;">Skalierbar</h4>
+                <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Skalierung über Netzwerk & Software, nicht über Personal</p>
+            </div>
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">💰</div>
+                <h4 style="color: #1F2937; margin: 0 0 10px 0;">Mehrere Erlösströme</h4>
+                <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">4+ Revenue Layers, modular erweiterbar</p>
+            </div>
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">🛡️</div>
+                <h4 style="color: #1F2937; margin: 0 0 10px 0;">Geringes Haftungsrisiko</h4>
+                <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Reine Vermittlung, keine operative Ausführung</p>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Abschluss-Statement
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                    padding: 40px; border-radius: 12px; margin-top: 30px; text-align: center;">
+            <p style="color: white; font-size: 1.4rem; margin: 0; font-weight: 600;">
+                „Das ist kein Feature, das ist eine Infrastruktur."
+            </p>
+            <p style="color: #a7f3d0; font-size: 1rem; margin: 15px 0 0 0;">
+                ReturnGuard fühlt sich an wie etwas, das es eigentlich schon längst geben müsste.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1483,34 +1962,226 @@ def render_b2c():
 
 def render_b2b():
     """B2B View: Services, Contact (B2B-Fokus), Legal"""
-    # Top-Navigation deaktiviert (nur für B2C aktiv)
-    # Navigation erfolgt über Sidebar
-    # # Navigation für B2B
-    # st.markdown('<div class="top-nav">', unsafe_allow_html=True)
-    # st.markdown('<div class="nav-brand">🛡️ ReturnGuard Business</div>', unsafe_allow_html=True)
-    #
-    # nav_cols = st.columns(4)
-    # with nav_cols[0]:
-    #     st.markdown('<a href="?page=services#content-start-services" target="_self" class="nav-link">📦 Leistungen</a>', unsafe_allow_html=True)
-    # with nav_cols[1]:
-    #     st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
-    # with nav_cols[2]:
-    #     st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
-    # with nav_cols[3]:
-    #     st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
-    #
-    # st.markdown('</div>', unsafe_allow_html=True)
 
-    # B2B-spezifischer Hero
+    # B2B HERO - Fokus auf Effizienz & Planbarkeit
     st.markdown('''
-        <div class="hero-section">
+        <div class="hero-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);">
             <div class="hero-content">
-                <h1 class="hero-title">ReturnGuard Business</h1>
-                <p class="hero-subtitle">
-                    Flottenmanagement und Leasingrückgaben für Unternehmen.
-                    Volumenrabatte ab 10 Fahrzeugen.
+                <p style="color: #60a5fa; font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; letter-spacing: 1px;">FÜR FLOTTENMANAGER & FUHRPARKLEITER</p>
+                <h1 class="hero-title" style="font-size: 2.5rem;">Weniger Verwaltung.<br>Mehr Planbarkeit.</h1>
+                <p class="hero-subtitle" style="text-align: center; max-width: 650px; margin: 0 auto 25px auto; font-size: 1.15rem;">
+                    Standardisieren Sie Ihre Leasingrückgaben – mit festen Konditionen,<br>
+                    einem Netzwerk und einem Ansprechpartner.
                 </p>
-                <a href="?page=contact#content-start-contact" target="_self" class="hero-cta">Angebot anfordern →</a>
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <a href="?page=contact#content-start-contact" target="_self" class="hero-cta">Angebot anfordern →</a>
+                    <a href="tel:+498912345678" class="hero-cta" style="background: transparent; border: 2px solid white;">📞 Direkt sprechen</a>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # PROBLEM-SECTION - Pain Points für Flottenmanager
+    st.markdown('''
+        <div style="background: #f8fafc; padding: 50px 20px;">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 30px;">Das Problem bei Flotten-Rückgaben</h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-left: 4px solid #ef4444;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🔄</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Jedes Mal neu verhandeln</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Für jedes Fahrzeug einzeln Werkstätten suchen, Angebote einholen, vergleichen – bei 50+ Fahrzeugen pro Jahr.</p>
+                    </div>
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-left: 4px solid #ef4444;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Unplanbare Kosten</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Jede Rückgabe ist eine Blackbox. Budget-Planung für Nachzahlungen? Fast unmöglich.</p>
+                    </div>
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-left: 4px solid #ef4444;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">👥</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Wechselnde Ansprechpartner</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Bei jeder Leasinggesellschaft andere Prozesse, andere Kontakte, andere Maßstäbe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # LÖSUNG - Was ReturnGuard Business bietet
+    st.markdown('''
+        <div style="background: white; padding: 50px 20px;">
+            <div style="max-width: 1000px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">Die ReturnGuard Business Lösung</h2>
+                <p style="text-align: center; color: #6B7280; margin-bottom: 40px;">Ein Partner, ein Preis, ein Prozess – für Ihre gesamte Flotte</p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+                    <div style="text-align: center; padding: 30px;">
+                        <div style="background: #ecfdf5; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 2rem;">📋</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Standardisierter Prozess</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.95rem;">Gleicher Ablauf für jedes Fahrzeug. Dokumentation, Aufbereitung, Rückgabe – immer nach dem gleichen Schema.</p>
+                    </div>
+                    <div style="text-align: center; padding: 30px;">
+                        <div style="background: #ecfdf5; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 2rem;">💶</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Fixe Konditionen</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.95rem;">Flatrate pro Fahrzeug oder Kontingent-Pakete. Sie wissen im Voraus, was Sie zahlen.</p>
+                    </div>
+                    <div style="text-align: center; padding: 30px;">
+                        <div style="background: #ecfdf5; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 2rem;">🤝</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Ihr Account Manager</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.95rem;">Ein Ansprechpartner für alle Ihre Fahrzeuge. Kennt Ihre Flotte, Ihre Prozesse, Ihre Anforderungen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # PAKETE - Fixpreis-Modelle
+    st.markdown('''
+        <div style="background: #f8fafc; padding: 50px 20px;">
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">Unsere B2B-Pakete</h2>
+                <p style="text-align: center; color: #6B7280; margin-bottom: 40px;">Wählen Sie das Modell, das zu Ihrer Flottengröße passt</p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                    <!-- Starter -->
+                    <div style="background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <p style="color: #6B7280; font-size: 0.85rem; margin: 0 0 5px 0; font-weight: 600;">STARTER</p>
+                        <h3 style="color: #1F2937; margin: 0 0 5px 0;">10-25 Fahrzeuge</h3>
+                        <div style="margin: 20px 0;">
+                            <span style="font-size: 2.5rem; font-weight: 700; color: #059669;">79€</span>
+                            <span style="color: #6B7280;">/Fahrzeug/Monat</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 25px 0;">
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Standardisierter Rückgabe-Prozess</li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Aufbereiter aus unserem Netzwerk</li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Dokumentation & Fotobericht</li>
+                            <li style="color: #4B5563; padding: 8px 0;">✓ E-Mail Support</li>
+                        </ul>
+                        <a href="?page=contact#content-start-contact" style="display: block; text-align: center; background: #f3f4f6; color: #1F2937; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600;">Angebot anfordern</a>
+                    </div>
+
+                    <!-- Business -->
+                    <div style="background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 15px rgba(5,150,105,0.15); border: 2px solid #059669; position: relative;">
+                        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #059669; color: white; padding: 5px 20px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">MEISTGEWÄHLT</div>
+                        <p style="color: #059669; font-size: 0.85rem; margin: 0 0 5px 0; font-weight: 600;">BUSINESS</p>
+                        <h3 style="color: #1F2937; margin: 0 0 5px 0;">25-100 Fahrzeuge</h3>
+                        <div style="margin: 20px 0;">
+                            <span style="font-size: 2.5rem; font-weight: 700; color: #059669;">59€</span>
+                            <span style="color: #6B7280;">/Fahrzeug/Monat</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 25px 0;">
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Alles aus Starter, plus:</li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ <strong>Dedizierter Account Manager</strong></li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Quartalsberichte & Analysen</li>
+                            <li style="color: #4B5563; padding: 8px 0;">✓ Prioritäts-Support (Tel. & E-Mail)</li>
+                        </ul>
+                        <a href="?page=contact#content-start-contact" style="display: block; text-align: center; background: #059669; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600;">Angebot anfordern</a>
+                    </div>
+
+                    <!-- Enterprise -->
+                    <div style="background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <p style="color: #6B7280; font-size: 0.85rem; margin: 0 0 5px 0; font-weight: 600;">ENTERPRISE</p>
+                        <h3 style="color: #1F2937; margin: 0 0 5px 0;">100+ Fahrzeuge</h3>
+                        <div style="margin: 20px 0;">
+                            <span style="font-size: 2.5rem; font-weight: 700; color: #059669;">Individuell</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 25px 0;">
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Alles aus Business, plus:</li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ <strong>Individuelle Konditionen</strong></li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ API-Anbindung an Ihre Systeme</li>
+                            <li style="color: #4B5563; padding: 8px 0;">✓ SLA-Vereinbarungen</li>
+                        </ul>
+                        <a href="?page=contact#content-start-contact" style="display: block; text-align: center; background: #f3f4f6; color: #1F2937; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600;">Gespräch vereinbaren</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # VORTEILE - Warum Flottenmanager wechseln
+    st.markdown('''
+        <div style="background: white; padding: 50px 20px;">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 40px;">Warum Flottenmanager zu uns wechseln</h2>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: #ecfdf5; padding: 10px; border-radius: 8px; font-size: 1.5rem;">⏱️</div>
+                        <div>
+                            <h4 style="color: #1F2937; margin: 0 0 5px 0;">70% weniger Verwaltungsaufwand</h4>
+                            <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Keine Einzelverhandlungen mehr. Ein Prozess für alle Fahrzeuge.</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: #ecfdf5; padding: 10px; border-radius: 8px; font-size: 1.5rem;">📈</div>
+                        <div>
+                            <h4 style="color: #1F2937; margin: 0 0 5px 0;">Planbare Budgets</h4>
+                            <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Fixkosten pro Fahrzeug. Keine Überraschungen am Jahresende.</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: #ecfdf5; padding: 10px; border-radius: 8px; font-size: 1.5rem;">🔧</div>
+                        <div>
+                            <h4 style="color: #1F2937; margin: 0 0 5px 0;">Bundesweites Netzwerk</h4>
+                            <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Über 200 Werkstätten und Aufbereiter. Egal wo Ihre Fahrzeuge stehen.</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: #ecfdf5; padding: 10px; border-radius: 8px; font-size: 1.5rem;">📋</div>
+                        <div>
+                            <h4 style="color: #1F2937; margin: 0 0 5px 0;">Revisionssichere Dokumentation</h4>
+                            <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Jede Rückgabe vollständig dokumentiert. Für Ihre Buchhaltung und Revision.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # ONBOARDING - So starten Sie
+    st.markdown('''
+        <div style="background: #f8fafc; padding: 50px 20px;">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">So starten wir zusammen</h2>
+                <p style="text-align: center; color: #6B7280; margin-bottom: 40px;">In 4 Wochen einsatzbereit</p>
+
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                    <div style="flex: 1; min-width: 180px; text-align: center;">
+                        <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-weight: bold; font-size: 1.2rem;">1</div>
+                        <h4 style="color: #1F2937; margin: 0 0 5px 0;">Bedarfsanalyse</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">Wir analysieren Ihre Flotte und Prozesse</p>
+                    </div>
+                    <div style="flex: 1; min-width: 180px; text-align: center;">
+                        <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-weight: bold; font-size: 1.2rem;">2</div>
+                        <h4 style="color: #1F2937; margin: 0 0 5px 0;">Individuelles Angebot</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">Maßgeschneidert auf Ihre Flottengröße</p>
+                    </div>
+                    <div style="flex: 1; min-width: 180px; text-align: center;">
+                        <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-weight: bold; font-size: 1.2rem;">3</div>
+                        <h4 style="color: #1F2937; margin: 0 0 5px 0;">Pilotphase</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">5 Fahrzeuge testen – risikofrei</p>
+                    </div>
+                    <div style="flex: 1; min-width: 180px; text-align: center;">
+                        <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-weight: bold; font-size: 1.2rem;">4</div>
+                        <h4 style="color: #1F2937; margin: 0 0 5px 0;">Rollout</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">Vollständige Integration Ihrer Flotte</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # ABSCHLUSS CTA
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 60px 30px; text-align: center;">
+            <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.8rem;">Bereit für planbare Leasingrückgaben?</h2>
+            <p style="color: rgba(255,255,255,0.8); margin: 0 0 30px 0; font-size: 1.1rem;">
+                Lassen Sie uns in 15 Minuten besprechen, wie ReturnGuard Business zu Ihrer Flotte passt.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="?page=contact#content-start-contact" style="background: #059669; color: white; padding: 15px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem;">Angebot anfordern →</a>
+                <a href="tel:+498912345678" style="background: transparent; color: white; padding: 15px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; border: 2px solid rgba(255,255,255,0.5);">📞 +49 89 123 456 78</a>
             </div>
         </div>
     ''', unsafe_allow_html=True)
@@ -1546,17 +2217,29 @@ elif st.session_state.view == "B2B":
 if st.session_state.view == "B2C" and st.session_state.page == 'home':
     st.markdown('<div id="content-start-home"></div>', unsafe_allow_html=True)
 
-    # HERO SECTION
+    # HERO SECTION - Fokus auf Sicherheit & Orientierung
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">Leasingrückgabe transparent und fair gestalten</h1>
-                <p class="hero-subtitle">
-                    Verschaffen Sie sich Klarheit über mögliche Rückgabekosten.
-                    Unsere Gutachter und Juristen unterstützen Sie von der Prüfung bis zur Verhandlung.
+                <h1 class="hero-title">Leasingrückgabe ohne böse Überraschungen</h1>
+                <p class="hero-subtitle" style="text-align: center; max-width: 650px; margin: 0 auto 25px auto; font-size: 1.2rem;">
+                    Kein Stress. Keine versteckten Kosten. Keine Unsicherheit.<br>
+                    <strong style="color: #059669;">Wir begleiten Sie Schritt für Schritt – von der Vorbereitung bis zur Rückgabe.</strong>
                 </p>
-                <a href="?page=calculator#content-start-calculator" target="_self" class="hero-cta">Kostenrechner starten →</a>
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <a href="?page=calculator#content-start-calculator" target="_self" class="hero-cta">Jetzt Kosten einschätzen →</a>
+                    <a href="?page=contact#content-start-contact" target="_self" class="hero-cta" style="background: white; color: #059669; border: 2px solid #059669;">Kostenlos beraten lassen</a>
+                </div>
             </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Vertrauens-Banner direkt nach Hero
+    st.markdown('''
+        <div style="background: #ecfdf5; padding: 20px; border-radius: 12px; margin: -30px auto 30px auto; max-width: 800px; text-align: center; border: 1px solid #a7f3d0;">
+            <span style="color: #059669; font-size: 1.1rem;">
+                ✓ Unverbindlich &nbsp;&nbsp; ✓ Kostenlose Erstberatung &nbsp;&nbsp; ✓ Keine versteckten Gebühren
+            </span>
         </div>
     ''', unsafe_allow_html=True)
 
@@ -1580,10 +2263,10 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         </div>
     ''', unsafe_allow_html=True)
 
-    # 3-SCHRITTE PROZESS
+    # 3-SCHRITTE PROZESS - Kundenorientiert
     st.markdown('<div class="process-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="process-title">So läuft die Zusammenarbeit ab</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="process-subtitle">In 3 Schritten zu Ihrer Leasingrückgabe</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="process-title">In 3 Schritten sicher zurückgeben</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="process-subtitle">Keine Vorkenntnisse nötig – wir führen Sie durch</p>', unsafe_allow_html=True)
 
     step1, step2, step3 = st.columns(3)
 
@@ -1591,11 +2274,11 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         st.markdown('''
             <div class="process-step">
                 <div class="step-number">1</div>
-                <div class="step-icon">📋</div>
-                <h3 class="step-title">Schäden einschätzen</h3>
+                <div class="step-icon">📱</div>
+                <h3 class="step-title">Situation erfassen</h3>
                 <p class="step-description">
-                    Nutzen Sie unseren Schadensrechner mit 20 Fahrzeugbereichen
-                    für eine erste Kosteneinschätzung.
+                    Unser kostenloser Schnellcheck zeigt Ihnen in 2 Minuten,
+                    wo Sie stehen und was zu erwarten ist.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
@@ -1604,11 +2287,11 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         st.markdown('''
             <div class="process-step">
                 <div class="step-number">2</div>
-                <div class="step-icon">🔍</div>
-                <h3 class="step-title">Fahrzeug prüfen lassen</h3>
+                <div class="step-icon">🛡️</div>
+                <h3 class="step-title">Vorbereitung</h3>
                 <p class="step-description">
-                    TÜV-zertifizierte Gutachter erstellen eine professionelle Bewertung
-                    Ihres Fahrzeugs.
+                    Wir zeigen Ihnen, was vor der Rückgabe noch zu tun ist –
+                    und was sich lohnt, reparieren zu lassen.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
@@ -1617,21 +2300,53 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         st.markdown('''
             <div class="process-step">
                 <div class="step-number">3</div>
-                <div class="step-icon">💰</div>
-                <h3 class="step-title">Kosten verhandeln</h3>
+                <div class="step-icon">✅</div>
+                <h3 class="step-title">Entspannt zurückgeben</h3>
                 <p class="step-description">
-                    Fachanwälte verhandeln für Sie. Durchschnittliche Reduzierung:
-                    60% der ursprünglichen Forderungen.
+                    Gut vorbereitet, fair bewertet, ohne Nachzahlungs-Stress.
+                    Im Schnitt sparen unsere Kunden 2.500€.
                 </p>
             </div>
         ''', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # HÄUFIGE SORGEN - Direkte Ansprache der Pain Points
+    st.markdown('''
+        <div style="background: white; padding: 40px 20px; margin: 30px 0;">
+            <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">Kennen Sie das?</h2>
+            <p style="text-align: center; color: #6B7280; margin-bottom: 30px;">Diese Sorgen haben die meisten Leasingnehmer vor der Rückgabe</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto;">
+                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">😰</div>
+                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Was wird mir die Leasingfirma berechnen?"</h4>
+                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Unser Rechner zeigt Ihnen vorab eine realistische Einschätzung</p>
+                </div>
+                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">🤔</div>
+                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Lohnt sich eine Reparatur noch?"</h4>
+                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Wir sagen Ihnen, was sich lohnt – und was nicht</p>
+                </div>
+                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">⚖️</div>
+                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Die Abrechnung war unfair – was tun?"</h4>
+                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Wir verbinden Sie mit spezialisierten Fachanwälten</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="color: #059669; font-size: 1.1rem; font-weight: 600; margin: 0;">
+                    ✓ Sie sind nicht allein. Über 1.200 Kunden hatten dieselben Fragen.
+                </p>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
     # KUNDENBEWERTUNGEN
     st.markdown('<div class="testimonial-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">Erfahrungen unserer Mandanten</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Dokumentierte Fälle aus der Praxis</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Das sagen unsere Kunden</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Echte Erfahrungen, echte Ersparnisse</p>', unsafe_allow_html=True)
 
     st.markdown('<div class="testimonial-grid">', unsafe_allow_html=True)
 
@@ -1830,6 +2545,23 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # ABSCHLUSS-CTA - Klare Orientierung
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 50px 30px; border-radius: 16px; margin: 40px 0; text-align: center;">
+            <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.8rem;">Nicht sicher, wo Sie anfangen sollen?</h2>
+            <p style="color: rgba(255,255,255,0.9); margin: 0 0 25px 0; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Starten Sie mit unserem kostenlosen Schnellcheck – dauert nur 2 Minuten und zeigt Ihnen sofort, wie Sie vorbereitet sind.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="?page=calculator#content-start-calculator" target="_self" style="background: white; color: #059669; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem;">Schnellcheck starten →</a>
+                <a href="tel:+498912345678" style="background: transparent; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; border: 2px solid white;">📞 Lieber anrufen?</a>
+            </div>
+            <p style="color: rgba(255,255,255,0.7); margin: 20px 0 0 0; font-size: 0.9rem;">
+                Mo-Fr 9-18 Uhr · Keine Warteschleifen · Echte Experten
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
 # ==================== SCHADENSRECHNER ====================
 elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
     st.markdown('<div id="content-start-calculator"></div>', unsafe_allow_html=True)
@@ -1837,10 +2569,10 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
 
     st.markdown('''
         <div class="calculator-box">
-            <h1 class="calculator-title">🔧 Schadensrechner</h1>
+            <h1 class="calculator-title">🔧 Wie viel könnte mich die Rückgabe kosten?</h1>
             <p class="calculator-subtitle">
-                Schätzen Sie Rückgabekosten anhand von 20 Fahrzeugbereichen ein.
-                Basis: Referenzwerte aus Gutachterpraxis.
+                Finden Sie es in 2 Minuten heraus – unverbindlich und kostenlos.<br>
+                <span style="color: #059669; font-weight: 500;">Keine Anmeldung nötig.</span>
             </p>
         </div>
     ''', unsafe_allow_html=True)
@@ -2422,26 +3154,36 @@ elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'abo
     st.markdown('<div id="content-start-about"></div>', unsafe_allow_html=True)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h1 class="section-title">👥 Über ReturnGuard</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Ihr Partner für faire Leasingrückgaben seit 2008</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Die unabhängige Vermittlungsplattform für Leasingrückgaben</p>', unsafe_allow_html=True)
 
     st.write("""
     ### Unsere Mission
 
-    ReturnGuard unterstützt Leasingnehmer durch gutachterliche und
-    juristische Beratung bei der Fahrzeugrückgabe.
+    ReturnGuard ist die zentrale Vermittlungsplattform für alle Dienstleistungen
+    rund um die Leasingrückgabe. Wir verbinden Leasingnehmer mit den besten
+    Werkstätten, Aufbereitern, Gutachtern und Fachanwälten.
 
     **Was uns auszeichnet:**
-    - **Erfahrenes Team:** Fachanwälte im Verkehrsrecht & TÜV-zertifizierte Sachverständige
-    - **Über 1.200 zufriedene Kunden** mit durchschnittlich 2.500€ Ersparnis
-    - **98% Erfolgsquote** bei Verhandlungen mit Leasinggesellschaften
-    - **Transparente Preise** ohne versteckte Kosten
+    - **Unabhängige Vermittlung:** Wir sind neutral und vermitteln die besten Partner
+    - **Geprüftes Netzwerk:** Über 200 Partner-Werkstätten und 50 Aufbereiter bundesweit
+    - **Fachanwälte bei Streit:** Vermittlung an spezialisierte Verkehrsrechtsanwälte
+    - **TÜV-zertifizierte Gutachter:** Professionelle Schadensbewertung durch unser Netzwerk
+    - **Über 1.200 vermittelte Fälle** mit durchschnittlich 2.500€ Ersparnis für Kunden
+
+    ### Unser Vermittlungsmodell
+
+    - 🔗 **Plattform:** Wir verbinden Angebot und Nachfrage
+    - 🔧 **Werkstatt-Netzwerk:** Geprüfte Betriebe für Smart Repair und Vollreparatur
+    - ✨ **Aufbereiter-Netzwerk:** Professionelle Fahrzeugaufbereitung
+    - ⚖️ **Anwalts-Netzwerk:** Fachanwälte für Verkehrsrecht bei Streitfällen
+    - 📋 **Gutachter-Netzwerk:** Unabhängige Schadensbewertung
 
     ### Unsere Werte
 
-    - ✅ **Transparenz:** Keine versteckten Kosten, klare Kommunikation
-    - ⚖️ **Fairness:** Wir kämpfen für Ihre Rechte
-    - 🎯 **Professionalität:** Höchste Qualitätsstandards
-    - 💙 **Persönliche Betreuung:** Jeder Kunde ist einzigartig
+    - ✅ **Neutralität:** Wir sind keine Werkstatt und kein Gutachter – wir vermitteln nur
+    - ⚖️ **Transparenz:** Klare Provisionsmodelle, keine versteckten Kosten
+    - 🎯 **Qualität:** Nur geprüfte Partner in unserem Netzwerk
+    - 💙 **Kundenfokus:** Das beste Angebot für jeden Kunden
     """)
 
     st.markdown("---")
