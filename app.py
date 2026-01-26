@@ -1441,6 +1441,77 @@ def render_investor():
         </div>
     ''', unsafe_allow_html=True)
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    # MARKTGRÖSSE (TAM/SAM/SOM)
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📊 Marktgröße</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Validierte Zahlen für Deutschland (2026)</p>', unsafe_allow_html=True)
+
+    # Market Pain vs. Captureable Revenue
+    st.markdown('''
+        <div style="background: #1B365D; padding: 20px 25px; border-radius: 12px; margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; align-items: center;">
+                <div style="text-align: center; flex: 1;">
+                    <div style="color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Market Pain (Problemvolumen)</div>
+                    <div style="color: #fde047; font-size: 2.5rem; font-weight: 700;">~4 Mrd. €</div>
+                    <div style="color: #94a3b8; font-size: 0.85rem;">Was Kunden potenziell zahlen</div>
+                </div>
+                <div style="color: #4B5563; font-size: 2rem;">→</div>
+                <div style="text-align: center; flex: 1;">
+                    <div style="color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Captureable Revenue</div>
+                    <div style="color: #86efac; font-size: 2.5rem; font-weight: 700;">100-200 Mio. €</div>
+                    <div style="color: #94a3b8; font-size: 0.85rem;">Was wir als Plattform verdienen können</div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # TAM/SAM/SOM Tabelle
+    st.markdown('''
+        <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #059669;">
+                        <th style="padding: 15px; text-align: left; color: white; font-weight: 600; width: 15%;">Ebene</th>
+                        <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Basis & Berechnung</th>
+                        <th style="padding: 15px; text-align: right; color: white; font-weight: 600; width: 20%;">Wert</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #E5E7EB;">
+                        <td style="padding: 18px 15px;"><span style="background: #dbeafe; color: #1e40af; padding: 6px 14px; border-radius: 20px; font-weight: 600;">TAM</span></td>
+                        <td style="padding: 18px 15px; color: #4B5563;">1,2 Mio. Rückgaben/Jahr × 500€ Ø Nachzahlung (Minderwert)</td>
+                        <td style="padding: 18px 15px; text-align: right;"><strong style="color: #1F2937; font-size: 1.3rem;">600 Mio. €</strong></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #E5E7EB; background: #F9FAFB;">
+                        <td style="padding: 18px 15px;"><span style="background: #dcfce7; color: #166534; padding: 6px 14px; border-radius: 20px; font-weight: 600;">SAM</span></td>
+                        <td style="padding: 18px 15px; color: #4B5563;">Fokus auf Privat-Leasing + KMU-Flotten (~65% des Marktes)</td>
+                        <td style="padding: 18px 15px; text-align: right;"><strong style="color: #1F2937; font-size: 1.3rem;">390 Mio. €</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 18px 15px;"><span style="background: #059669; color: white; padding: 6px 14px; border-radius: 20px; font-weight: 600;">SOM</span></td>
+                        <td style="padding: 18px 15px; color: #4B5563;">5% Marktanteil durch Koordination von Reparatur & Recht</td>
+                        <td style="padding: 18px 15px; text-align: right;"><strong style="color: #059669; font-size: 1.3rem;">~20 Mio. € ARR</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Wichtiger Hinweis
+    st.markdown('''
+        <div style="background: #eff6ff; padding: 15px 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #3b82f6;">
+            <p style="color: #1e40af; margin: 0; font-size: 0.95rem;">
+                <strong>Wichtig:</strong> Bei Leasingrückgaben zahlt der Kunde nicht die vollen Reparaturkosten,
+                sondern den <strong>Minderwert</strong>. Die 500€ Ø-Nachzahlung ist konservativ kalkuliert.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
     # Das Problem (marktweit)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h2 class="section-title">Das Kernproblem</h2>', unsafe_allow_html=True)
@@ -1870,7 +1941,7 @@ def render_investor():
         </div>
     ''', unsafe_allow_html=True)
 
-    # Revenue Trigger-Tabelle
+    # Revenue Trigger-Tabelle (validierte Zahlen)
     st.markdown('''
         <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
             <table style="width: 100%; border-collapse: collapse;">
@@ -1879,54 +1950,60 @@ def render_investor():
                         <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Layer</th>
                         <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Trigger (Ereignis)</th>
                         <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Einnahme</th>
-                        <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Typ</th>
+                        <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Modell</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr style="border-bottom: 1px solid #E5E7EB;">
-                        <td style="padding: 15px;"><span style="background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">1</span> Lead-Sales</td>
-                        <td style="padding: 15px; color: #4B5563;">Schaden erkannt (Delle/Kratzer)</td>
-                        <td style="padding: 15px;"><strong style="color: #059669;">20-40€</strong> Fixgebühr/Lead</td>
-                        <td style="padding: 15px;"><span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Kernumsatz, skalierbar</span></td>
+                        <td style="padding: 15px;"><span style="background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">1</span> Lead-Verkauf</td>
+                        <td style="padding: 15px; color: #4B5563;">Schaden erkannt (Delle/Kratzer, per Foto dokumentiert)</td>
+                        <td style="padding: 15px;"><strong style="color: #059669;">25-50€</strong> pro qual. Lead</td>
+                        <td style="padding: 15px;"><span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Fixpreis an Werkstätten</span></td>
                     </tr>
                     <tr style="border-bottom: 1px solid #E5E7EB; background: #F9FAFB;">
-                        <td style="padding: 15px;"><span style="background: #0ea5e9; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">2</span> B2B-SaaS</td>
-                        <td style="padding: 15px; color: #4B5563;">Flottenmanagement</td>
-                        <td style="padding: 15px;"><strong style="color: #0ea5e9;">59-79€</strong> /Fahrzeug/Monat</td>
-                        <td style="padding: 15px;"><span style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Recurring, planbar</span></td>
+                        <td style="padding: 15px;"><span style="background: #8b5cf6; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">2</span> Gutachter-Service</td>
+                        <td style="padding: 15px; color: #4B5563;">Kunde will Sicherheit vor Rückgabe</td>
+                        <td style="padding: 15px;"><strong style="color: #8b5cf6;">~150€</strong> (30€ Marge)</td>
+                        <td style="padding: 15px;"><span style="background: #ede9fe; color: #6b21a8; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Kunde zahlt, wir beauftragen</span></td>
                     </tr>
                     <tr style="border-bottom: 1px solid #E5E7EB;">
-                        <td style="padding: 15px;"><span style="background: #8b5cf6; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">3</span> Expert-Fee</td>
-                        <td style="padding: 15px; color: #4B5563;">Kunde will Sicherheit (Gutachten)</td>
-                        <td style="padding: 15px;"><strong style="color: #8b5cf6;">15-20%</strong> Provision</td>
-                        <td style="padding: 15px;"><span style="background: #ede9fe; color: #6b21a8; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">High-Value, episodisch</span></td>
+                        <td style="padding: 15px;"><span style="background: #f59e0b; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">3</span> Legal-Referral</td>
+                        <td style="padding: 15px; color: #4B5563;">Unberechtigte Forderung (Streitfall)</td>
+                        <td style="padding: 15px;"><strong style="color: #f59e0b;">50-100€</strong> pro Fall</td>
+                        <td style="padding: 15px;"><span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">SaaS/Bearbeitungspauschale*</span></td>
                     </tr>
                     <tr style="background: #F9FAFB;">
-                        <td style="padding: 15px;"><span style="background: #f59e0b; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">4</span> Legal-Kickback</td>
-                        <td style="padding: 15px; color: #4B5563;">Unberechtigte Forderung (Streitfall)</td>
-                        <td style="padding: 15px;"><strong style="color: #f59e0b;">Provision</strong> an Kanzlei</td>
-                        <td style="padding: 15px;"><span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Sehr hoher Value/Case</span></td>
+                        <td style="padding: 15px;"><span style="background: #0ea5e9; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">4</span> B2B-Flotten</td>
+                        <td style="padding: 15px; color: #4B5563;">Wiederkehrendes Flottenmanagement</td>
+                        <td style="padding: 15px;"><strong style="color: #0ea5e9;">59-79€</strong> /Fzg./Monat</td>
+                        <td style="padding: 15px;"><span style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Recurring Revenue</span></td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <p style="color: #6B7280; font-size: 0.8rem; margin-top: 10px; font-style: italic;">
+            * Compliance §49b BRAO: Keine direkte Provision für Anwaltsmandate, stattdessen SaaS-Zugang oder Datenaufbereitungspauschale.
+        </p>
     ''', unsafe_allow_html=True)
 
-    # ARPU Summary
+    # ARPU Summary (angepasst)
     st.markdown('''
         <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 25px; border-radius: 12px; margin-top: 25px;">
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center;">
                 <div>
                     <div style="color: white; font-size: 0.85rem; opacity: 0.9;">Ø Revenue pro B2C-Kunde</div>
-                    <div style="color: white; font-size: 2rem; font-weight: 700;">85-180€</div>
+                    <div style="color: white; font-size: 2rem; font-weight: 700;">55-180€</div>
+                    <div style="color: rgba(255,255,255,0.6); font-size: 0.75rem;">Lead + ggf. Gutachten + ggf. Legal</div>
                 </div>
                 <div style="border-left: 1px solid rgba(255,255,255,0.3); padding-left: 30px;">
                     <div style="color: white; font-size: 0.85rem; opacity: 0.9;">Ø Revenue pro B2B-Fahrzeug/Jahr</div>
                     <div style="color: white; font-size: 2rem; font-weight: 700;">708-948€</div>
+                    <div style="color: rgba(255,255,255,0.6); font-size: 0.75rem;">Flatrate × 12 Monate</div>
                 </div>
                 <div style="border-left: 1px solid rgba(255,255,255,0.3); padding-left: 30px;">
-                    <div style="color: white; font-size: 0.85rem; opacity: 0.9;">Conversion Lead → Expert</div>
-                    <div style="color: white; font-size: 2rem; font-weight: 700;">~30%</div>
+                    <div style="color: white; font-size: 0.85rem; opacity: 0.9;">Target: SOM (5%)</div>
+                    <div style="color: white; font-size: 2rem; font-weight: 700;">~20 Mio. €</div>
+                    <div style="color: rgba(255,255,255,0.6); font-size: 0.75rem;">ARR in 3-5 Jahren</div>
                 </div>
             </div>
         </div>
