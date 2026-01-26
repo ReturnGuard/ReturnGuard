@@ -1414,7 +1414,7 @@ def render_investor():
                     padding: 30px; border-radius: 12px; margin: 30px 0; text-align: center;">
             <p style="color: white; font-size: 1.2rem; margin: 0; line-height: 1.6;">
                 ReturnGuard koordiniert <strong>Vorbereitung, Bewertung und Vermittlung</strong>
-                rund um die Leasingrückgabe –<br>
+                <strong style="color: #fde047;">vor der Leasingrückgabe</strong> –<br>
                 <span style="color: #86efac;">ohne selbst Dienstleister zu sein.</span>
             </p>
         </div>
@@ -1740,8 +1740,12 @@ def render_investor():
                 <strong style="color: #1e40af;">Investoren sehen hier:</strong>
                 <span style="color: #1e3a8a;"> Pricing Power • Benchmarks • Grundlage für Zusatzprodukte</span>
             </div>
+            <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #f59e0b;">
+                <strong style="color: #92400e;">Wichtig:</strong>
+                <span style="color: #78350f;"> Die aggregierten Daten dienen der Transparenz und Vergleichbarkeit – nicht der individuellen Bewertung einzelner Fahrzeuge. Keine Einzelbewertung, keine Entscheidungshoheit.</span>
+            </div>
             <p style="color: #059669; margin: 20px 0 0 0; font-weight: 600; text-align: center;">
-                → Ohne selbst zu bewerten oder zu haften.
+                → Wert hoch, Risiko niedrig. Ohne selbst zu bewerten oder zu haften.
             </p>
         </div>
     ''', unsafe_allow_html=True)
@@ -1756,12 +1760,12 @@ def render_investor():
     st.markdown('<h2 class="section-title">💰 Erlöslogik</h2>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Transparent, modular, skalierbar</p>', unsafe_allow_html=True)
 
-    # Revenue Layers
+    # Revenue Layers - strategisch geordnet nach Skalierbarkeit & Stabilität
     revenue_layers = [
-        {"layer": "1", "title": "Lead-Vermittlung", "desc": "Werkstätten & Aufbereiter zahlen für qualifizierte Leads", "model": "Fixpreis oder Erfolgsmodell", "color": "#059669"},
-        {"layer": "2", "title": "Gutachter-Vermittlung", "desc": "Provision oder fixe Vermittlungsgebühr", "model": "Optional: Premium-Gutachten für Kunden", "color": "#3b82f6"},
-        {"layer": "3", "title": "Anwalts-Vermittlung", "desc": "Erfolgsbasierte Vermittlungsprovision bei Streitfällen", "model": "Sehr hoher Value pro Conversion", "color": "#8b5cf6"},
-        {"layer": "4", "title": "Premium-Kunde", "desc": "Express-Check, Dokumentenprüfung, Sorgenfrei-Pakete", "model": "Direkte Kundenmonetarisierung", "color": "#f59e0b"},
+        {"layer": "1", "title": "Lead-Vermittlung", "desc": "Werkstätten & Aufbereiter zahlen für qualifizierte Leads", "model": "Kernumsatz, skalierbar · Fixpreis oder Erfolgsmodell", "color": "#059669"},
+        {"layer": "2", "title": "B2B / Flotten", "desc": "Flottenmanager buchen feste Kontingente oder Flatrates", "model": "Stabilität & planbare Fixkosten · Monthly Recurring", "color": "#0ea5e9"},
+        {"layer": "3", "title": "Gutachter & Anwälte", "desc": "Provision bei Bewertung oder Streitfall-Vermittlung", "model": "High-Value, episodisch · Hoher Value pro Conversion", "color": "#8b5cf6"},
+        {"layer": "4", "title": "Premium-Kunde", "desc": "Express-Check, Dokumentenprüfung, Sorgenfrei-Pakete", "model": "Upsell, optional · Direkte Kundenmonetarisierung", "color": "#f59e0b"},
     ]
 
     for rv in revenue_layers:
@@ -1785,12 +1789,12 @@ def render_investor():
     # Ausbaustufen
     st.markdown('''
         <div style="background: #F9FAFB; padding: 20px; border-radius: 10px; margin-top: 25px;">
-            <h4 style="color: #6B7280; margin: 0 0 15px 0;">🚀 Optional später:</h4>
+            <h4 style="color: #6B7280; margin: 0 0 15px 0;">🚀 Ausbaustufen (optional):</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">B2B-Abos</span>
                 <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">White-Label für Autohäuser</span>
-                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Flottenlösungen</span>
                 <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Versicherungs-Affiliate</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Gebrauchtwagen-Vermittlung</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Vorsorge-Check</span>
             </div>
             <p style="color: #9CA3AF; margin: 15px 0 0 0; font-size: 0.9rem; font-style: italic;">
                 Nicht alles gleichzeitig, aber alles denkbar und skalierbar.
