@@ -1324,7 +1324,7 @@ with st.sidebar:
             st.session_state.page = "home"
             st.query_params["page"] = "home"
             st.rerun()
-        if st.button("💰 Rechner", key="nav_calculator", use_container_width=True):
+        if st.button("📱 Quick-Check", key="nav_calculator", use_container_width=True):
             st.session_state.page = "calculator"
             st.query_params["page"] = "calculator"
             st.rerun()
@@ -1394,29 +1394,50 @@ def render_investor():
     # EBENE 1: ZENTRALES FUNDAMENT (für ALLE sichtbar)
     # ═══════════════════════════════════════════════════════════════════════════
 
-    # HERO: Das Problem + Markt
+    # HERO: Markt-Zahl + Positionierung
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">Der wirtschaftliche Marktplatz rund um die Leasingrückgabe</h1>
-                <p class="hero-subtitle" style="max-width: 900px; margin: 0 auto; font-size: 1.15rem;">
-                    Leasingrückgaben sind ein hochvolumiger, schlecht koordinierter Markt.<br>
-                    Es gibt viele Beteiligte – aber keine neutrale Vorinstanz.<br><br>
-                    <strong>ReturnGuard ist diese Vorinstanz.</strong>
+                <p style="color: #86efac; font-size: 1.1rem; margin: 0 0 15px 0; font-weight: 600; letter-spacing: 1px;">
+                    4,8 MIO. LEASINGRÜCKGABEN PRO JAHR IN DEUTSCHLAND
                 </p>
+                <h1 class="hero-title" style="font-size: 2.4rem; line-height: 1.3;">
+                    Keine neutrale Instanz dazwischen.<br>
+                    <span style="color: #86efac;">Bis jetzt.</span>
+                </h1>
+                <p class="hero-subtitle" style="max-width: 800px; margin: 25px auto; font-size: 1.1rem; line-height: 1.8;">
+                    Wir reparieren nicht. Wir begutachten nicht. Wir klagen nicht.<br>
+                    <strong>Wir orchestrieren.</strong><br><br>
+                    ReturnGuard verbindet Leasingkunden mit zertifizierten Gutachtern,<br>
+                    spezialisierten Werkstätten und Fachanwälten.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 30px; margin-top: 30px; flex-wrap: wrap;">
+                    <span style="color: #86efac; font-weight: 600; font-size: 1.1rem;">✓ Transparent</span>
+                    <span style="color: #86efac; font-weight: 600; font-size: 1.1rem;">✓ Skalierbar</span>
+                    <span style="color: #86efac; font-weight: 600; font-size: 1.1rem;">✓ Haftungsfrei</span>
+                </div>
             </div>
         </div>
     ''', unsafe_allow_html=True)
 
-    # Kernbotschaft-Banner
+    # Kernbotschaft-Banner - kompakter
     st.markdown('''
         <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%);
-                    padding: 30px; border-radius: 12px; margin: 30px 0; text-align: center;">
-            <p style="color: white; font-size: 1.2rem; margin: 0; line-height: 1.6;">
-                ReturnGuard koordiniert <strong>Vorbereitung, Bewertung und Vermittlung</strong>
-                <strong style="color: #fde047;">vor der Leasingrückgabe</strong> –<br>
-                <span style="color: #86efac;">ohne selbst Dienstleister zu sein.</span>
-            </p>
+                    padding: 25px 30px; border-radius: 12px; margin: 30px 0;">
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center;">
+                <div>
+                    <div style="color: #fde047; font-size: 1.8rem; font-weight: 700;">~2.500€</div>
+                    <div style="color: #94a3b8; font-size: 0.85rem;">Ø Nachzahlung bei Rückgabe</div>
+                </div>
+                <div>
+                    <div style="color: #86efac; font-size: 1.8rem; font-weight: 700;">73%</div>
+                    <div style="color: #94a3b8; font-size: 0.85rem;">fühlen sich schlecht informiert</div>
+                </div>
+                <div>
+                    <div style="color: #60a5fa; font-size: 1.8rem; font-weight: 700;">0</div>
+                    <div style="color: #94a3b8; font-size: 0.85rem;">neutrale Plattformen bisher</div>
+                </div>
+            </div>
         </div>
     ''', unsafe_allow_html=True)
 
@@ -1512,6 +1533,72 @@ def render_investor():
             </div>
             <p style="color: #1e40af; margin: 15px 0 0 0; font-weight: 600; font-size: 1.1rem;">
                 → ReturnGuard koordiniert.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # LEAD-GENERIERUNG: Der "Digitale Quick-Check"
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">🎯 Lead-Generierung: Der "Digitale Quick-Check"</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Selbst-qualifizierte Leads ohne Akquisekosten</p>', unsafe_allow_html=True)
+
+    col_flow, col_why = st.columns([3, 2])
+
+    with col_flow:
+        st.markdown('''
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px;">
+                <h4 style="color: #1F2937; margin: 0 0 20px 0;">So funktioniert's:</h4>
+
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="background: #3b82f6; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</div>
+                    <div style="flex: 1; background: white; padding: 12px 15px; border-radius: 8px;">
+                        <strong style="color: #1F2937;">Kunde klickt sich durch</strong>
+                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.85rem;">Karosserie • Glas • Innenraum • Reifen (5 Klicks, 2 Min.)</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="background: #8b5cf6; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</div>
+                    <div style="flex: 1; background: white; padding: 12px 15px; border-radius: 8px;">
+                        <strong style="color: #1F2937;">Output: "Potenzielle Ersparnis"</strong>
+                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.85rem;">Kein Gutachten, keine Haftung – nur eine Orientierung</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #059669; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</div>
+                    <div style="flex: 1; background: #dcfce7; padding: 12px 15px; border-radius: 8px; border: 2px solid #059669;">
+                        <strong style="color: #166534;">CTA: "Angebote von Partnerwerkstätten sichern"</strong>
+                        <p style="color: #15803d; margin: 5px 0 0 0; font-size: 0.85rem;">→ Lead generiert (20-40€)</p>
+                    </div>
+                </div>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    with col_why:
+        st.markdown('''
+            <div style="background: #1B365D; padding: 25px; border-radius: 12px; height: 100%;">
+                <h4 style="color: #86efac; margin: 0 0 20px 0;">💡 Warum das funktioniert:</h4>
+                <ul style="color: white; margin: 0; padding-left: 20px; line-height: 2;">
+                    <li><strong>CAC → ~0€</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">Kunde kommt organisch oder via SEO</span></li>
+                    <li><strong>Selbst-Qualifizierung</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">Klicks zeigen Lead-Potenzial</span></li>
+                    <li><strong>Keine Haftung</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">"Ersparnis-Potenzial" ≠ Gutachten</span></li>
+                    <li><strong>Emotional Hook</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">"1.850€ sparen" triggert Action</span></li>
+                </ul>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    # Investor-Statement
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 20px 30px; border-radius: 12px; margin-top: 25px; text-align: center;">
+            <p style="color: white; font-size: 1.1rem; margin: 0;">
+                📊 <strong>Für Investoren:</strong> Jeder Quick-Check ist ein selbst-qualifizierter, kaufbereiter Lead.
+                Skaliert ohne Personal, konvertiert ohne Haftung.
             </p>
         </div>
     ''', unsafe_allow_html=True)
@@ -1758,47 +1845,103 @@ def render_investor():
 
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h2 class="section-title">💰 Erlöslogik</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Transparent, modular, skalierbar</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Wie aus einem ängstlichen Kunden Umsatz wird</p>', unsafe_allow_html=True)
 
-    # Revenue Layers - strategisch geordnet nach Skalierbarkeit & Stabilität
-    revenue_layers = [
-        {"layer": "1", "title": "Lead-Vermittlung", "desc": "Werkstätten & Aufbereiter zahlen für qualifizierte Leads", "model": "Kernumsatz, skalierbar · Fixpreis oder Erfolgsmodell", "color": "#059669"},
-        {"layer": "2", "title": "B2B / Flotten", "desc": "Flottenmanager buchen feste Kontingente oder Flatrates", "model": "Stabilität & planbare Fixkosten · Monthly Recurring", "color": "#0ea5e9"},
-        {"layer": "3", "title": "Gutachter & Anwälte", "desc": "Provision bei Bewertung oder Streitfall-Vermittlung", "model": "High-Value, episodisch · Hoher Value pro Conversion", "color": "#8b5cf6"},
-        {"layer": "4", "title": "Premium-Kunde", "desc": "Express-Check, Dokumentenprüfung, Sorgenfrei-Pakete", "model": "Upsell, optional · Direkte Kundenmonetarisierung", "color": "#f59e0b"},
-    ]
-
-    for rv in revenue_layers:
-        st.markdown(f'''
-            <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;
-                        border-left: 5px solid {rv["color"]}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div style="background: {rv["color"]}; color: white; width: 40px; height: 40px; border-radius: 50%;
-                                display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                        {rv["layer"]}
-                    </div>
-                    <div style="flex: 1;">
-                        <h4 style="color: #1F2937; margin: 0;">{rv["title"]}</h4>
-                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.9rem;">{rv["desc"]}</p>
-                        <span style="color: {rv["color"]}; font-size: 0.85rem; font-weight: 500;">{rv["model"]}</span>
-                    </div>
+    # Funnel-Visualisierung
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <div style="background: #fee2e2; color: #991b1b; padding: 15px 60px; border-radius: 8px; font-weight: 600; text-align: center;">
+                    😰 Kunde mit Angst vor Rückgabe
+                </div>
+                <div style="color: #9CA3AF; font-size: 1.5rem;">↓</div>
+                <div style="background: #dbeafe; color: #1e40af; padding: 12px 50px; border-radius: 8px; font-weight: 500; text-align: center;">
+                    📱 Digitaler Quick-Check (2 Min.)
+                </div>
+                <div style="color: #9CA3AF; font-size: 1.5rem;">↓</div>
+                <div style="background: #dcfce7; color: #166534; padding: 12px 40px; border-radius: 8px; font-weight: 500; text-align: center;">
+                    💰 "Potenzielle Ersparnis: 1.850€"
+                </div>
+                <div style="color: #9CA3AF; font-size: 1.5rem;">↓</div>
+                <div style="background: #059669; color: white; padding: 15px 30px; border-radius: 8px; font-weight: 600; text-align: center;">
+                    ✅ LEAD GENERIERT
                 </div>
             </div>
-        ''', unsafe_allow_html=True)
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Revenue Trigger-Tabelle
+    st.markdown('''
+        <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #1B365D;">
+                        <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Layer</th>
+                        <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Trigger (Ereignis)</th>
+                        <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Einnahme</th>
+                        <th style="padding: 15px; text-align: left; color: white; font-weight: 600;">Typ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #E5E7EB;">
+                        <td style="padding: 15px;"><span style="background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">1</span> Lead-Sales</td>
+                        <td style="padding: 15px; color: #4B5563;">Schaden erkannt (Delle/Kratzer)</td>
+                        <td style="padding: 15px;"><strong style="color: #059669;">20-40€</strong> Fixgebühr/Lead</td>
+                        <td style="padding: 15px;"><span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Kernumsatz, skalierbar</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #E5E7EB; background: #F9FAFB;">
+                        <td style="padding: 15px;"><span style="background: #0ea5e9; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">2</span> B2B-SaaS</td>
+                        <td style="padding: 15px; color: #4B5563;">Flottenmanagement</td>
+                        <td style="padding: 15px;"><strong style="color: #0ea5e9;">59-79€</strong> /Fahrzeug/Monat</td>
+                        <td style="padding: 15px;"><span style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Recurring, planbar</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #E5E7EB;">
+                        <td style="padding: 15px;"><span style="background: #8b5cf6; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">3</span> Expert-Fee</td>
+                        <td style="padding: 15px; color: #4B5563;">Kunde will Sicherheit (Gutachten)</td>
+                        <td style="padding: 15px;"><strong style="color: #8b5cf6;">15-20%</strong> Provision</td>
+                        <td style="padding: 15px;"><span style="background: #ede9fe; color: #6b21a8; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">High-Value, episodisch</span></td>
+                    </tr>
+                    <tr style="background: #F9FAFB;">
+                        <td style="padding: 15px;"><span style="background: #f59e0b; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">4</span> Legal-Kickback</td>
+                        <td style="padding: 15px; color: #4B5563;">Unberechtigte Forderung (Streitfall)</td>
+                        <td style="padding: 15px;"><strong style="color: #f59e0b;">Provision</strong> an Kanzlei</td>
+                        <td style="padding: 15px;"><span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem;">Sehr hoher Value/Case</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # ARPU Summary
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 25px; border-radius: 12px; margin-top: 25px;">
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center;">
+                <div>
+                    <div style="color: white; font-size: 0.85rem; opacity: 0.9;">Ø Revenue pro B2C-Kunde</div>
+                    <div style="color: white; font-size: 2rem; font-weight: 700;">85-180€</div>
+                </div>
+                <div style="border-left: 1px solid rgba(255,255,255,0.3); padding-left: 30px;">
+                    <div style="color: white; font-size: 0.85rem; opacity: 0.9;">Ø Revenue pro B2B-Fahrzeug/Jahr</div>
+                    <div style="color: white; font-size: 2rem; font-weight: 700;">708-948€</div>
+                </div>
+                <div style="border-left: 1px solid rgba(255,255,255,0.3); padding-left: 30px;">
+                    <div style="color: white; font-size: 0.85rem; opacity: 0.9;">Conversion Lead → Expert</div>
+                    <div style="color: white; font-size: 2rem; font-weight: 700;">~30%</div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
 
     # Ausbaustufen
     st.markdown('''
         <div style="background: #F9FAFB; padding: 20px; border-radius: 10px; margin-top: 25px;">
-            <h4 style="color: #6B7280; margin: 0 0 15px 0;">🚀 Ausbaustufen (optional):</h4>
+            <h4 style="color: #6B7280; margin: 0 0 15px 0;">🚀 Zusätzliche Revenue-Optionen (später):</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 10px;">
                 <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">White-Label für Autohäuser</span>
                 <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Versicherungs-Affiliate</span>
                 <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Gebrauchtwagen-Vermittlung</span>
-                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Vorsorge-Check</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Premium-Pakete (Express, Sorgenfrei)</span>
             </div>
-            <p style="color: #9CA3AF; margin: 15px 0 0 0; font-size: 0.9rem; font-style: italic;">
-                Nicht alles gleichzeitig, aber alles denkbar und skalierbar.
-            </p>
         </div>
     ''', unsafe_allow_html=True)
 
@@ -1927,7 +2070,7 @@ def render_b2c():
            target="_blank" class="floating-btn floating-whatsapp" title="WhatsApp">
             💬
         </a>
-        <a href="?page=calculator#content-start-calculator" target="_self" class="floating-btn floating-main" title="Jetzt berechnen">
+        <a href="?page=calculator#content-start-calculator" target="_self" class="floating-btn floating-main" title="Quick-Check starten">
             🧮
         </a>
     </div>
@@ -1941,7 +2084,7 @@ def render_b2c():
     with nav_cols[0]:
         st.markdown('<a href="?page=home#content-start-home" target="_self" class="nav-link">🏠 Home</a>', unsafe_allow_html=True)
     with nav_cols[1]:
-        st.markdown('<a href="?page=calculator#content-start-calculator" target="_self" class="nav-link">💰 Rechner</a>', unsafe_allow_html=True)
+        st.markdown('<a href="?page=calculator#content-start-calculator" target="_self" class="nav-link">📱 Quick-Check</a>', unsafe_allow_html=True)
     with nav_cols[2]:
         st.markdown('<a href="?page=faq#content-start-faq" target="_self" class="nav-link">❓ FAQ</a>', unsafe_allow_html=True)
     with nav_cols[3]:
@@ -2321,7 +2464,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                 <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
                     <div style="font-size: 1.5rem; margin-bottom: 10px;">😰</div>
                     <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Was wird mir die Leasingfirma berechnen?"</h4>
-                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Unser Rechner zeigt Ihnen vorab eine realistische Einschätzung</p>
+                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Unser Quick-Check zeigt Ihnen vorab eine realistische Einschätzung</p>
                 </div>
                 <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
                     <div style="font-size: 1.5rem; margin-bottom: 10px;">🤔</div>
@@ -2376,7 +2519,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
             "name": "Julia Hoffmann",
             "role": "VW Tiguan Leasing",
             "avatar": "J",
-            "text": "Sehr professionell und transparent. Der Schadensrechner hat mir vorab schon eine gute Einschätzung gegeben. Das Ergebnis war sogar noch besser!",
+            "text": "Sehr professionell und transparent. Der Quick-Check hat mir vorab schon eine gute Einschätzung gegeben. Das Ergebnis war sogar noch besser!",
             "savings": "Ersparnis: 2.100€"
         },
         {
@@ -2562,17 +2705,17 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
         </div>
     ''', unsafe_allow_html=True)
 
-# ==================== SCHADENSRECHNER ====================
+# ==================== DIGITALER QUICK-CHECK ====================
 elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
     st.markdown('<div id="content-start-calculator"></div>', unsafe_allow_html=True)
     st.markdown('<div class="calculator-section">', unsafe_allow_html=True)
 
     st.markdown('''
         <div class="calculator-box">
-            <h1 class="calculator-title">🔧 Wie viel könnte mich die Rückgabe kosten?</h1>
+            <h1 class="calculator-title">📱 Digitaler Quick-Check</h1>
             <p class="calculator-subtitle">
-                Finden Sie es in 2 Minuten heraus – unverbindlich und kostenlos.<br>
-                <span style="color: #059669; font-weight: 500;">Keine Anmeldung nötig.</span>
+                Finden Sie in 2 Minuten heraus, wie viel Sie bei der Rückgabe sparen könnten.<br>
+                <span style="color: #059669; font-weight: 500;">Unverbindlich. Kostenlos. Keine Anmeldung.</span>
             </p>
         </div>
     ''', unsafe_allow_html=True)
@@ -2793,7 +2936,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
 
         if total_cost > 0:
             # WhatsApp Text vorbereiten
-            whatsapp_text = f"Hallo ReturnGuard, ich habe den Schadensrechner genutzt.\n\n"
+            whatsapp_text = f"Hallo ReturnGuard, ich habe den Quick-Check genutzt.\n\n"
             whatsapp_text += f"Fahrzeug: {st.session_state.vehicle_class}, Baujahr {st.session_state.vehicle_year}\n"
             whatsapp_text += f"Geschätzte Kosten: {total_cost:,.0f}€\n"
             whatsapp_text += f"Anzahl Schäden: {len(damage_breakdown)}\n\n"
@@ -2802,52 +2945,68 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
             import urllib.parse
             whatsapp_url = f"https://wa.me/4917698765432?text={urllib.parse.quote(whatsapp_text)}"
 
+            # HAUPTERGEBNIS: Potenzielle Ersparnis (nicht Kosten!)
+            potential_savings = total_cost * 0.60
             st.markdown(f'''
-                <div class="result-box">
-                    <div class="result-label">Geschätzte Gesamtkosten der Beschädigungen</div>
-                    <div class="result-amount">{total_cost:,.0f} €</div>
-                    <p style="margin-top: 15px; opacity: 0.9;">
-                        Fahrzeugklasse: {st.session_state.vehicle_class} | Baujahr: {st.session_state.vehicle_year}
+                <div class="savings-box" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 40px; border-radius: 16px; text-align: center;">
+                    <div style="color: rgba(255,255,255,0.9); font-size: 1rem; margin-bottom: 10px;">💰 IHRE POTENZIELLE ERSPARNIS</div>
+                    <div style="color: white; font-size: 4rem; font-weight: 700; margin: 10px 0;">bis zu {potential_savings:,.0f} €</div>
+                    <p style="color: rgba(255,255,255,0.85); margin: 15px 0 0 0; font-size: 1rem;">
+                        Basierend auf Ihrer Eingabe · Durchschnittliche Reduktion: 60%
+                    </p>
+                    <p style="color: rgba(255,255,255,0.6); margin: 10px 0 0 0; font-size: 0.85rem;">
+                        ⚠️ Dies ist keine Bewertung, sondern eine unverbindliche Orientierung.
                     </p>
                 </div>
             ''', unsafe_allow_html=True)
 
-            # Detaillierte Aufschlüsselung
-            st.markdown("---")
-            st.markdown("### 📋 Detaillierte Aufschlüsselung")
-
-            for item in sorted(damage_breakdown, key=lambda x: x['cost'], reverse=True):
-                st.markdown(f"""
-                <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #1B365D;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+            # Sekundär: Kosten-Übersicht (kleiner)
+            st.markdown(f'''
+                <div style="background: #F9FAFB; padding: 20px; border-radius: 12px; margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                         <div>
-                            <strong style="color: #1F2937;">{item['part']}</strong>
-                            <div style="color: #6B7280; font-size: 0.9rem;">{item['level_desc']}</div>
+                            <span style="color: #6B7280; font-size: 0.9rem;">Mögliche Kosten ohne Vorbereitung:</span>
+                            <span style="color: #1F2937; font-weight: 600; font-size: 1.1rem; margin-left: 10px;">{total_cost:,.0f} €</span>
                         </div>
-                        <div style="font-size: 1.3rem; font-weight: 600; color: #1B365D;">
-                            {item['cost']:,.0f} €
+                        <div style="color: #6B7280; font-size: 0.85rem;">
+                            {st.session_state.vehicle_class} · Baujahr {st.session_state.vehicle_year} · {len(damage_breakdown)} Bereiche
                         </div>
                     </div>
                 </div>
-                """, unsafe_allow_html=True)
+            ''', unsafe_allow_html=True)
 
-            # Ersparnis
-            potential_savings = total_cost * 0.60
+            # Detaillierte Aufschlüsselung (einklappbar)
+            with st.expander("📋 Detaillierte Aufschlüsselung anzeigen"):
+                for item in sorted(damage_breakdown, key=lambda x: x['cost'], reverse=True):
+                    st.markdown(f"""
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #1B365D;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: #1F2937;">{item['part']}</strong>
+                                <div style="color: #6B7280; font-size: 0.9rem;">{item['level_desc']}</div>
+                            </div>
+                            <div style="font-size: 1.3rem; font-weight: 600; color: #1B365D;">
+                                {item['cost']:,.0f} €
+                            </div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+            st.markdown("---")
+
+            # HAUPT-CTA: Angebote sichern
             st.markdown(f'''
-                <div class="savings-box">
-                    <div class="result-label">💰 Mögliche Ersparnis mit ReturnGuard</div>
-                    <div class="result-amount" style="font-size: 3rem;">bis zu {potential_savings:,.0f} €</div>
-                    <p style="margin-top: 15px; font-size: 0.95rem; opacity: 0.9;">
-                        Unsere Experten verhandeln mit der Leasinggesellschaft und können durchschnittlich 60% der Kosten einsparen.
+                <div style="background: #1B365D; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 25px;">
+                    <h3 style="color: white; margin: 0 0 10px 0;">🎯 Jetzt Angebote von Partnerwerkstätten sichern</h3>
+                    <p style="color: #94a3b8; margin: 0 0 20px 0;">
+                        Erhalten Sie unverbindliche Angebote von zertifizierten Werkstätten in Ihrer Nähe.
                     </p>
                 </div>
             ''', unsafe_allow_html=True)
 
-            st.markdown("---")
-
             # KONTAKTFORMULAR
-            st.markdown("### 📝 Erstberatung anfordern")
-            st.markdown("Lassen Sie sich von unseren Experten beraten und sparen Sie bares Geld!")
+            st.markdown("### 📝 Kostenlos Angebote anfordern")
+            st.markdown("Unverbindlich und ohne Risiko – Sie entscheiden, ob Sie ein Angebot annehmen.")
 
             with st.form("contact_form"):
                 form_col1, form_col2 = st.columns(2)
@@ -2932,8 +3091,8 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'faq':
 
     faqs = [
         {
-            "question": "Wie funktioniert der Schadensrechner?",
-            "answer": "Unser interaktiver Schadensrechner basiert auf realen Leasingrücknahmegutachten. Sie bewerten 20 verschiedene Fahrzeugbereiche auf einer Skala von 0-4. Die Preise sind nach Fahrzeugklasse und Baujahr angepasst und geben Ihnen eine realistische Einschätzung der zu erwartenden Kosten."
+            "question": "Wie funktioniert der Quick-Check?",
+            "answer": "Unser digitaler Quick-Check führt Sie in 2 Minuten durch 20 Fahrzeugbereiche. Sie bewerten den Zustand auf einer Skala von 0-4. Am Ende sehen Sie Ihre potenzielle Ersparnis – keine verbindliche Bewertung, aber eine realistische Orientierung. Dann können Sie unverbindlich Angebote von Partnerwerkstätten anfordern."
         },
         {
             "question": "Wann sollte ich ReturnGuard kontaktieren?",
