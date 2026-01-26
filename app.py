@@ -1378,414 +1378,535 @@ with st.sidebar:
 
 # ==================== RENDER FUNCTIONS ====================
 def render_investor():
-    """Investor View: Revenue Dashboard, Plattform-Flow, Unit Economics"""
+    """
+    Investor View: Scrollbares Pitchdeck
+    Struktur nach Master-Briefing:
+    1. Zentrales Fundament (Problem + Marktplatz)
+    2. Warum jetzt? (Timing)
+    3. Drei Perspektiven (A: Investor, B: B2C, C: B2B)
+    4. Monetarisierung (implizit + explizit)
+    5. Haftung & Compliance
+    6. Warum investierbar
+    """
     st.markdown('<div id="content-start-investor"></div>', unsafe_allow_html=True)
 
-    # Hero Section für Investor - NEUE POSITIONIERUNG ALS VERMITTLUNGSPLATTFORM
+    # ═══════════════════════════════════════════════════════════════════════════
+    # EBENE 1: ZENTRALES FUNDAMENT (für ALLE sichtbar)
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    # HERO: Das Problem + Markt
     st.markdown('''
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title">ReturnGuard – Die Vermittlungsplattform für Leasingrückgaben</h1>
-                <p class="hero-subtitle" style="text-align: left; max-width: 800px; margin: 0 auto;">
-                    <strong>Unser Geschäftsmodell:</strong><br>
-                    • Wir verbinden Leasingnehmer mit zertifizierten Werkstätten, Aufbereitern und Fachanwälten<br>
-                    • Provision bei jedem vermittelten Lead – vier Umsatzquellen, eine Plattform<br>
-                    • Lead-Generierung für Werkstätten • Aufbereiter-Vermittlung • Gutachter-Netzwerk • Anwalts-Provision<br>
-                    • 3,5 Mio. Leasingrückgaben jährlich in Deutschland – wir monetarisieren jeden Touchpoint<br>
-                    • Skalierbare Lead-Vermittlung mit minimalem Kapitaleinsatz
+                <h1 class="hero-title">Der wirtschaftliche Marktplatz rund um die Leasingrückgabe</h1>
+                <p class="hero-subtitle" style="max-width: 900px; margin: 0 auto; font-size: 1.15rem;">
+                    Leasingrückgaben sind ein hochvolumiger, schlecht koordinierter Markt.<br>
+                    Es gibt viele Beteiligte – aber keine neutrale Vorinstanz.<br><br>
+                    <strong>ReturnGuard ist diese Vorinstanz.</strong>
                 </p>
             </div>
         </div>
     ''', unsafe_allow_html=True)
 
-    # Kennzahlen - ERWEITERT
+    # Kernbotschaft-Banner
     st.markdown('''
-        <div class="social-proof-banner">
-            <div class="social-stats">
-                <div class="stat-item">
-                    <div class="stat-number">3,5 Mio.</div>
-                    <div class="stat-label">Leasingrückgaben/Jahr DE</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">4</div>
-                    <div class="stat-label">Revenue Streams</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">~220€</div>
-                    <div class="stat-label">Ø Provision/Kunde</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">4.5-8.8x</div>
-                    <div class="stat-label">LTV/CAC Ratio</div>
-                </div>
-            </div>
+        <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%);
+                    padding: 30px; border-radius: 12px; margin: 30px 0; text-align: center;">
+            <p style="color: white; font-size: 1.2rem; margin: 0; line-height: 1.6;">
+                ReturnGuard koordiniert <strong>Vorbereitung, Bewertung und Vermittlung</strong>
+                rund um die Leasingrückgabe –<br>
+                <span style="color: #86efac;">ohne selbst Dienstleister zu sein.</span>
+            </p>
         </div>
     ''', unsafe_allow_html=True)
 
-    # ==================== REVENUE DASHBOARD ====================
+    # Das Problem (marktweit)
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">💰 Revenue Streams</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Vier Einnahmequellen – Provision bei jedem Touchpoint</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Das Kernproblem</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Ein strukturelles Stressereignis – für alle Beteiligten</p>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
-    for idx, stream in enumerate(REVENUE_STREAMS):
-        with col1 if idx % 2 == 0 else col2:
-            st.markdown(f'''
-                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-                            padding: 25px; border-radius: 12px; margin: 15px 0;
-                            border-left: 4px solid #059669;">
-                    <div style="font-size: 2rem; margin-bottom: 10px;">{stream["icon"]}</div>
-                    <h3 style="color: #1F2937; margin: 0 0 10px 0; font-size: 1.2rem;">{stream["title"]}</h3>
-                    <p style="color: #6B7280; margin: 0 0 15px 0; font-size: 0.95rem;">{stream["description"]}</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                        <span style="background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">
-                            {stream["provision"]}
-                        </span>
-                        <span style="background: #1B365D; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">
-                            {stream["volume"]}
-                        </span>
-                    </div>
-                    <p style="color: #059669; margin: 15px 0 0 0; font-weight: 600; font-size: 0.9rem;">
-                        📈 {stream["potential"]}
-                    </p>
-                </div>
-            ''', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # ==================== PLATTFORM-FLOW ====================
-    st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">🔄 Plattform-Flow</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">So funktioniert die Lead-Vermittlung</p>', unsafe_allow_html=True)
-
-    st.markdown('''
-        <div style="background: #F9FAFB; padding: 30px; border-radius: 12px; margin: 20px 0;">
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;">
-
-                <!-- Step 1: Kunde -->
-                <div style="flex: 1; min-width: 150px; text-align: center;">
-                    <div style="background: #1B365D; color: white; width: 60px; height: 60px;
-                                border-radius: 50%; display: flex; align-items: center;
-                                justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
-                        👤
-                    </div>
-                    <strong style="color: #1F2937;">1. Kunde</strong>
-                    <p style="color: #6B7280; font-size: 0.85rem; margin: 5px 0 0 0;">
-                        Gibt Schäden ein<br>→ Lead entsteht
-                    </p>
-                </div>
-
-                <div style="color: #059669; font-size: 2rem;">→</div>
-
-                <!-- Step 2: Gutachter -->
-                <div style="flex: 1; min-width: 150px; text-align: center;">
-                    <div style="background: #059669; color: white; width: 60px; height: 60px;
-                                border-radius: 50%; display: flex; align-items: center;
-                                justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
-                        📋
-                    </div>
-                    <strong style="color: #1F2937;">2. Gutachter</strong>
-                    <p style="color: #6B7280; font-size: 0.85rem; margin: 5px 0 0 0;">
-                        Bewertet Schäden<br>💰 15-25% Provision
-                    </p>
-                </div>
-
-                <div style="color: #059669; font-size: 2rem;">→</div>
-
-                <!-- Step 3: Verteilung -->
-                <div style="flex: 1; min-width: 150px; text-align: center;">
-                    <div style="background: #f59e0b; color: white; width: 60px; height: 60px;
-                                border-radius: 50%; display: flex; align-items: center;
-                                justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
-                        🔀
-                    </div>
-                    <strong style="color: #1F2937;">3. ReturnGuard</strong>
-                    <p style="color: #6B7280; font-size: 0.85rem; margin: 5px 0 0 0;">
-                        Verteilt Leads an<br>Partner-Netzwerk
-                    </p>
-                </div>
-
-                <div style="color: #059669; font-size: 2rem;">→</div>
-
-                <!-- Step 4: Partner -->
-                <div style="flex: 1; min-width: 150px; text-align: center;">
-                    <div style="background: #1B365D; color: white; width: 60px; height: 60px;
-                                border-radius: 50%; display: flex; align-items: center;
-                                justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
-                        🔧
-                    </div>
-                    <strong style="color: #1F2937;">4. Werkstatt/Aufbereiter</strong>
-                    <p style="color: #6B7280; font-size: 0.85rem; margin: 5px 0 0 0;">
-                        Nimmt Lead an<br>💰 50-150€ Provision
-                    </p>
-                </div>
-            </div>
-
-            <!-- Streitfall-Branch -->
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px dashed #E5E7EB;">
-                <p style="text-align: center; color: #6B7280; margin-bottom: 15px;">
-                    <strong>Bei Streitfällen (~15% der Kunden):</strong>
-                </p>
-                <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
-                    <div style="text-align: center;">
-                        <div style="background: #dc2626; color: white; width: 50px; height: 50px;
-                                    border-radius: 50%; display: flex; align-items: center;
-                                    justify-content: center; margin: 0 auto 10px; font-size: 1.2rem;">
-                            ⚠️
-                        </div>
-                        <span style="color: #6B7280; font-size: 0.85rem;">Streitfall</span>
-                    </div>
-                    <div style="color: #dc2626; font-size: 1.5rem;">→</div>
-                    <div style="text-align: center;">
-                        <div style="background: #7c3aed; color: white; width: 50px; height: 50px;
-                                    border-radius: 50%; display: flex; align-items: center;
-                                    justify-content: center; margin: 0 auto 10px; font-size: 1.2rem;">
-                            ⚖️
-                        </div>
-                        <span style="color: #6B7280; font-size: 0.85rem;">Fachanwalt<br>💰 150-300€</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    ''', unsafe_allow_html=True)
-
-    # Haftungshinweis
-    st.markdown('''
-        <div style="background: #fef3c7; padding: 15px 20px; border-radius: 8px; margin: 20px 0;
-                    border-left: 4px solid #f59e0b;">
-            <strong style="color: #92400e;">⚠️ Haftungsmodell:</strong>
-            <span style="color: #78350f;">
-                ReturnGuard agiert als reine Vermittlungsplattform. Keine Haftung für Werkstatt-/Anwaltsleistungen.
-                Verträge entstehen direkt zwischen Kunde und Dienstleister.
-            </span>
-        </div>
-    ''', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # ==================== UNIT ECONOMICS ====================
-    st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">📊 Unit Economics</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Kennzahlen pro Kunde</p>', unsafe_allow_html=True)
-
-    col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown(f'''
-            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
-                <div style="font-size: 2.5rem; color: #059669; font-weight: bold;">
-                    {UNIT_ECONOMICS["cac"]}
-                </div>
-                <div style="color: #6B7280; margin-top: 5px;">Customer Acquisition Cost</div>
-                <div style="color: #9CA3AF; font-size: 0.85rem; margin-top: 10px;">
-                    Online Marketing + SEO
-                </div>
+        st.markdown('''
+            <div style="background: #fef2f2; padding: 25px; border-radius: 12px; border-left: 4px solid #dc2626;">
+                <h3 style="color: #991b1b; margin: 0 0 15px 0;">👤 Für Privatkunden</h3>
+                <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li>Intransparente Bewertung durch Leasinggesellschaft</li>
+                    <li>Informationsasymmetrie – der Kunde ist im Nachteil</li>
+                    <li>Angst vor unkalkulierbaren Kosten</li>
+                    <li>Keine Zeit, keine Vergleichsangebote, kein Überblick</li>
+                </ul>
             </div>
         ''', unsafe_allow_html=True)
 
     with col2:
-        st.markdown(f'''
-            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
-                <div style="font-size: 2.5rem; color: #1B365D; font-weight: bold;">
-                    {UNIT_ECONOMICS["ltv"]}
-                </div>
-                <div style="color: #6B7280; margin-top: 5px;">Lifetime Value</div>
-                <div style="color: #9CA3AF; font-size: 0.85rem; margin-top: 10px;">
-                    Alle Revenue Streams kombiniert
-                </div>
+        st.markdown('''
+            <div style="background: #fef2f2; padding: 25px; border-radius: 12px; border-left: 4px solid #dc2626;">
+                <h3 style="color: #991b1b; margin: 0 0 15px 0;">🏢 Für Gewerbekunden & Dienstleister</h3>
+                <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li>Werkstätten bekommen unqualifizierte Anfragen</li>
+                    <li>Gutachter werden zu spät eingeschaltet</li>
+                    <li>Anwälte kommen erst, wenn der Schaden entstanden ist</li>
+                    <li>Hoher Akquiseaufwand, niedrige Trefferquote</li>
+                </ul>
             </div>
         ''', unsafe_allow_html=True)
 
-    with col3:
-        st.markdown(f'''
-            <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-                        padding: 25px; border-radius: 12px; text-align: center;">
-                <div style="font-size: 2.5rem; color: #059669; font-weight: bold;">
-                    {UNIT_ECONOMICS["ltv_cac_ratio"]}
-                </div>
-                <div style="color: #166534; margin-top: 5px;">LTV/CAC Ratio</div>
-                <div style="color: #15803d; font-size: 0.85rem; margin-top: 10px;">
-                    ✓ Sehr profitabel (Ziel: >3x)
-                </div>
-            </div>
-        ''', unsafe_allow_html=True)
+    # Marktversagen
+    st.markdown('''
+        <div style="background: #fef3c7; padding: 20px 30px; border-radius: 12px; margin: 25px 0;
+                    border: 2px solid #f59e0b; text-align: center;">
+            <p style="color: #92400e; font-size: 1.15rem; margin: 0; font-weight: 600;">
+                ⚠️ Marktversagen: Alle Beteiligten existieren – aber sie sind nicht orchestriert.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ==================== MARKTPOTENZIAL ====================
+    # ═══════════════════════════════════════════════════════════════════════════
+    # DIE LÖSUNG: ReturnGuard als Orchestrator
+    # ═══════════════════════════════════════════════════════════════════════════
+
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">📈 Marktpotenzial Deutschland</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Die Lösung: ReturnGuard</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Marktplatz & Orchestrator – nicht Dienstleister</p>', unsafe_allow_html=True)
+
+    # Was ReturnGuard NICHT ist
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; margin: 20px 0;">
+            <h4 style="color: #6B7280; margin: 0 0 15px 0;">ReturnGuard ist <span style="color: #dc2626;">keine</span>:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Werkstatt</span>
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Aufbereitung</span>
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Gutachterfirma</span>
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Rechtsberatung</span>
+                <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Leasinggesellschaft</span>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Was ReturnGuard IST
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+                    padding: 25px; border-radius: 12px; margin: 20px 0; border: 2px solid #059669;">
+            <h4 style="color: #166534; margin: 0 0 15px 0;">ReturnGuard <span style="color: #059669;">ist</span> eine neutrale Vermittlungs- und Vorqualifizierungsplattform:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Bündelt Informationen</span>
+                <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Zieht Entscheidungen vor</span>
+                <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Macht Angebote vergleichbar</span>
+                <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Belässt Haftung wo sie hingehört</span>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Analogie für Investoren
+    st.markdown('''
+        <div style="background: #eff6ff; padding: 25px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #3b82f6;">
+            <h4 style="color: #1e40af; margin: 0 0 15px 0;">💡 Vergleich für Investoren:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; color: #1e3a8a;">
+                <div><strong>Airbnb</strong> besitzt keine Wohnungen</div>
+                <div><strong>Check24</strong> verkauft keine Versicherungen</div>
+                <div><strong>MyHammer</strong> repariert nichts</div>
+            </div>
+            <p style="color: #1e40af; margin: 15px 0 0 0; font-weight: 600; font-size: 1.1rem;">
+                → ReturnGuard koordiniert.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # WARUM JETZT? (Timing & Rückenwind)
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Warum jetzt?</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Timing & Markt-Rückenwind</p>', unsafe_allow_html=True)
 
     st.markdown('''
         <div style="background: #F9FAFB; padding: 30px; border-radius: 12px;">
-            <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-around;">
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #1B365D; font-weight: bold;">3,5 Mio.</div>
-                    <div style="color: #6B7280;">Leasingrückgaben/Jahr</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #059669;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">📈</div>
+                    <strong style="color: #1F2937;">Leasingquoten historisch hoch</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Immer mehr Fahrzeuge werden geleast – der Markt wächst kontinuierlich.
+                    </p>
                 </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #059669; font-weight: bold;">~2.800€</div>
-                    <div style="color: #6B7280;">Ø Reparaturkosten/Fahrzeug</div>
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">💹</div>
+                    <strong style="color: #1F2937;">Gebrauchtwagenpreise volatil</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Höhere Bewertungssensibilität bei Leasinggesellschaften.
+                    </p>
                 </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #f59e0b; font-weight: bold;">9,8 Mrd.€</div>
-                    <div style="color: #6B7280;">Marktvolumen Reparaturen</div>
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">🧠</div>
+                    <strong style="color: #1F2937;">Kunden sind informierter, aber überfordert</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Sie wissen, dass es Optionen gibt – aber nicht welche.
+                    </p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">🔧</div>
+                    <strong style="color: #1F2937;">Dienstleister kämpfen mit Akquise & Marge</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Werkstätten und Gutachter suchen qualifizierte Leads.
+                    </p>
                 </div>
             </div>
+        </div>
+        <p style="text-align: center; color: #059669; font-weight: 600; margin-top: 20px; font-size: 1.1rem;">
+            → Das ist kein nettes Tool, sondern eine Antwort auf Marktveränderungen.
+        </p>
+    ''', unsafe_allow_html=True)
 
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB;">
-                <h4 style="color: #1F2937; margin-bottom: 15px;">Skalierungspfad:</h4>
-                <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-                    <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px;">
-                        <strong style="color: #1B365D;">Jahr 1:</strong> 0.1% Marktanteil
-                        <div style="color: #059669; font-weight: bold;">= 3.500 Kunden → ~770.000€ Revenue</div>
-                    </div>
-                    <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px;">
-                        <strong style="color: #1B365D;">Jahr 3:</strong> 1.0% Marktanteil
-                        <div style="color: #059669; font-weight: bold;">= 35.000 Kunden → ~7.7 Mio.€ Revenue</div>
-                    </div>
-                    <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px;">
-                        <strong style="color: #1B365D;">Jahr 5:</strong> 3.0% Marktanteil
-                        <div style="color: #059669; font-weight: bold;">= 105.000 Kunden → ~23 Mio.€ Revenue</div>
-                    </div>
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # KLAMMER: Eine Plattform – drei Lesarten
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%);
+                    padding: 40px; border-radius: 12px; margin: 40px 0; text-align: center;">
+            <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.8rem;">
+                Eine Plattform – drei Lesarten derselben Wahrheit
+            </h2>
+            <p style="color: #94a3b8; font-size: 1.05rem; margin: 0; max-width: 700px; margin: 0 auto;">
+                Alle drei Perspektiven beschreiben dasselbe Geschäftsmodell.<br>
+                Sie unterscheiden sich nur in Blickwinkel & Tonalität.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # DIE DREI EBENEN DES MARKTPLATZES
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">Die drei Ebenen des Marktplatzes</h2>', unsafe_allow_html=True)
+
+    # Ebene A: B2C = Lead Engine
+    st.markdown('''
+        <div style="background: #eff6ff; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #3b82f6;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #3b82f6; color: white; width: 50px; height: 50px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">A</div>
+                <div>
+                    <h3 style="color: #1e40af; margin: 0;">Privatkunden-Plattform (B2C)</h3>
+                    <span style="color: #3b82f6; font-weight: 600;">= Lead Engine</span>
                 </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #1e3a8a;">Funktion:</strong>
+                    <ul style="color: #1e40af; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Wissensaufbau</li>
+                        <li>Erwartungsmanagement</li>
+                        <li>Vertrauensaufbau</li>
+                        <li>Vorqualifizierung</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #1e3a8a;">Kunden kommen, um:</strong>
+                    <ul style="color: #1e40af; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Sich schlau zu machen</li>
+                        <li>Risiken einzuschätzen</li>
+                        <li>Optionen zu verstehen</li>
+                        <li>Nicht über den Tisch gezogen zu werden</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #1e3a8a;">Investorensicht:</strong>
+                    <ul style="color: #1e40af; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Kostengünstiger Acquisition Channel</li>
+                        <li>Datenquelle</li>
+                        <li>Nachfrage-Seite des Marktplatzes</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="color: #1e40af; margin: 20px 0 0 0; font-style: italic;">
+                💡 B2C ist kein Selbstzweck – Monetarisierung hier optional, aber strategisch stark.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Ebene B: Marktplatz-Kern = Revenue Engine
+    st.markdown('''
+        <div style="background: #f0fdf4; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #059669;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">B</div>
+                <div>
+                    <h3 style="color: #166534; margin: 0;">Marktplatz-Kern</h3>
+                    <span style="color: #059669; font-weight: 600;">= Revenue Engine (hier entsteht Marge)</span>
+                </div>
+            </div>
+            <p style="color: #166534; margin: 0 0 20px 0;">Transaktionen zwischen:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                <span style="background: #059669; color: white; padding: 10px 20px; border-radius: 8px;">
+                    Kunden ↔ Werkstätten / Aufbereiter
+                </span>
+                <span style="background: #059669; color: white; padding: 10px 20px; border-radius: 8px;">
+                    Kunden ↔ Gutachter
+                </span>
+                <span style="background: #059669; color: white; padding: 10px 20px; border-radius: 8px;">
+                    Kunden ↔ Anwälte
+                </span>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <strong style="color: #166534;">ReturnGuard:</strong>
+                <span style="color: #15803d;"> strukturiert • verteilt • dokumentiert • vermittelt</span>
+            </div>
+            <div style="background: #dcfce7; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center;">
+                <strong style="color: #166534; font-size: 1.1rem;">
+                    👉 Jeder Kontakt ist potenziell monetarisierbar, aber keiner haftungspflichtig.
+                </strong>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Ebene C: B2B/Flotten = Stabilitäts-Engine
+    st.markdown('''
+        <div style="background: #faf5ff; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #8b5cf6;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #8b5cf6; color: white; width: 50px; height: 50px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">C</div>
+                <div>
+                    <h3 style="color: #6b21a8; margin: 0;">Firmen- & Flottenkunden (B2B)</h3>
+                    <span style="color: #8b5cf6; font-weight: 600;">= Stabilitäts-Engine (Fixkosten-Deckel)</span>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #6b21a8;">Flottenpakete leisten:</strong>
+                    <ul style="color: #7c3aed; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Planbare Einnahmen</li>
+                        <li>Grundauslastung der Plattform</li>
+                        <li>Geringere Abhängigkeit vom Endkundengeschäft</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #6b21a8;">Typische Kunden:</strong>
+                    <ul style="color: #7c3aed; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>KMU-Flotten</li>
+                        <li>Fuhrparkmanager</li>
+                        <li>Autohäuser mit Leasingrückläufern</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong style="color: #6b21a8;">Warum Flotten bleiben:</strong>
+                    <ul style="color: #7c3aed; margin: 10px 0 0 0; padding-left: 20px; font-size: 0.9rem;">
+                        <li>Wiederkehrende Rückgaben</li>
+                        <li>Standardisierte Prozesse</li>
+                        <li>Historischer Vergleich je Flotte</li>
+                        <li>Geringerer interner Aufwand</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="background: #ede9fe; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center;">
+                <strong style="color: #6b21a8; font-size: 1.1rem;">
+                    👉 Investorensicht: Das senkt Risiko, erhöht Runway und macht das Modell robuster.
+                </strong>
             </div>
         </div>
     ''', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ==================== ZUSÄTZLICHE USE CASES ====================
-    st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">🚀 Zusätzliche Revenue-Potenziale</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Ausbaustufen für weiteres Wachstum</p>', unsafe_allow_html=True)
+    # ═══════════════════════════════════════════════════════════════════════════
+    # DATEN ALS PLATTFORMKAPITAL
+    # ═══════════════════════════════════════════════════════════════════════════
 
-    for uc in ADDITIONAL_USE_CASES:
-        st.markdown(f'''
-            <div style="background: white; padding: 20px; border-radius: 10px;
-                        border: 1px solid #E5E7EB; margin: 15px 0;
-                        display: flex; align-items: flex-start; gap: 20px;">
-                <div style="font-size: 2.5rem; min-width: 60px; text-align: center;">{uc["icon"]}</div>
-                <div style="flex: 1;">
-                    <h3 style="color: #1F2937; margin: 0 0 8px 0;">{uc["title"]}</h3>
-                    <p style="color: #6B7280; margin: 0 0 10px 0;">{uc["description"]}</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                        <span style="background: #dbeafe; color: #1e40af; padding: 4px 12px;
-                                     border-radius: 20px; font-size: 0.85rem;">
-                            💡 {uc["benefit"]}
-                        </span>
-                        <span style="background: #dcfce7; color: #166534; padding: 4px 12px;
-                                     border-radius: 20px; font-size: 0.85rem;">
-                            💰 {uc["revenue"]}
-                        </span>
-                    </div>
-                </div>
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📊 Daten als strategisches Plattformkapital</h2>', unsafe_allow_html=True)
+
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 30px; border-radius: 12px;">
+            <p style="color: #1F2937; font-size: 1.05rem; margin: 0 0 20px 0;">
+                ReturnGuard aggregiert mit jeder Rückgabe strukturierte Marktintelligenz:
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                <span style="background: #1B365D; color: white; padding: 12px 20px; border-radius: 8px;">📋 Schäden & Häufigkeiten</span>
+                <span style="background: #1B365D; color: white; padding: 12px 20px; border-radius: 8px;">💰 Bewertungen & Differenzen</span>
+                <span style="background: #1B365D; color: white; padding: 12px 20px; border-radius: 8px;">📊 Angebotsbandbreiten</span>
+                <span style="background: #1B365D; color: white; padding: 12px 20px; border-radius: 8px;">✅ Rückgabe-Ergebnisse</span>
             </div>
-        ''', unsafe_allow_html=True)
+            <div style="background: #dbeafe; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                <strong style="color: #1e40af;">Investoren sehen hier:</strong>
+                <span style="color: #1e3a8a;"> Pricing Power • Benchmarks • Grundlage für Zusatzprodukte</span>
+            </div>
+            <p style="color: #059669; margin: 20px 0 0 0; font-weight: 600; text-align: center;">
+                → Ohne selbst zu bewerten oder zu haften.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ==================== SCREENING-KATALOG (KOMPAKT) ====================
+    # ═══════════════════════════════════════════════════════════════════════════
+    # MONETARISIERUNG (implizit + explizit)
+    # ═══════════════════════════════════════════════════════════════════════════
+
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">📋 Screening-Katalog</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">14-Punkte-Prozess für jeden Fall</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">💰 Erlöslogik</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Transparent, modular, skalierbar</p>', unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    for idx, item in enumerate(SCREENING_KATALOG):
-        with col1 if idx % 2 == 0 else col2:
-            st.markdown(f'''
-                <div class="checklist-item">
-                    <div class="checklist-icon">{idx + 1}</div>
-                    <div class="checklist-content">
-                        <div class="checklist-title">{item}</div>
-                    </div>
-                </div>
-            ''', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Erfolgsgeschichten (About-Seite integrieren)
-    st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">🏆 Referenzfälle</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtitle">Dokumentierte Verhandlungsergebnisse</p>', unsafe_allow_html=True)
-
-    success_stories = [
-        {
-            "title": "Fall 1: BMW 3er - Von 5.200€ auf 1.400€",
-            "description": """
-            **Ausgangssituation:** Kunde sollte 5.200€ für Lackschäden und Felgenkratzer zahlen.
-
-            **Unsere Lösung:** Professionelle Gutachten zeigten: 60% der Schäden waren normale Gebrauchsspuren.
-
-            **Ergebnis:** Verhandlung auf 1.400€ - **Ersparnis: 3.800€**
-            """
-        },
-        {
-            "title": "Fall 2: Audi Q5 - Von 4.800€ auf 1.200€",
-            "description": """
-            **Ausgangssituation:** Leasinggesellschaft forderte 4.800€ für Innenraumschäden und Steinschläge.
-
-            **Unsere Lösung:** Rechtliche Prüfung ergab: Viele Forderungen waren überhöht.
-
-            **Ergebnis:** Reduktion auf 1.200€ - **Ersparnis: 3.600€**
-            """
-        },
-        {
-            "title": "Fall 3: Mercedes C-Klasse - Von 6.100€ auf 0€",
-            "description": """
-            **Ausgangssituation:** Kundin sollte 6.100€ für angebliche Unfallschäden zahlen.
-
-            **Unsere Lösung:** Detailprüfung zeigte: Schäden waren bereits vor Leasingbeginn vorhanden!
-
-            **Ergebnis:** Vollständiger Erlass - **Ersparnis: 6.100€**
-            """
-        }
+    # Revenue Layers
+    revenue_layers = [
+        {"layer": "1", "title": "Lead-Vermittlung", "desc": "Werkstätten & Aufbereiter zahlen für qualifizierte Leads", "model": "Fixpreis oder Erfolgsmodell", "color": "#059669"},
+        {"layer": "2", "title": "Gutachter-Vermittlung", "desc": "Provision oder fixe Vermittlungsgebühr", "model": "Optional: Premium-Gutachten für Kunden", "color": "#3b82f6"},
+        {"layer": "3", "title": "Anwalts-Vermittlung", "desc": "Erfolgsbasierte Vermittlungsprovision bei Streitfällen", "model": "Sehr hoher Value pro Conversion", "color": "#8b5cf6"},
+        {"layer": "4", "title": "Premium-Kunde", "desc": "Express-Check, Dokumentenprüfung, Sorgenfrei-Pakete", "model": "Direkte Kundenmonetarisierung", "color": "#f59e0b"},
     ]
 
-    for story in success_stories:
+    for rv in revenue_layers:
         st.markdown(f'''
-            <div style="background: #F9FAFB; padding: 25px; border-radius: 10px; border-left: 4px solid #059669; margin: 20px 0;">
-                <h3 style="color: #1F2937; margin-bottom: 15px;">{story["title"]}</h3>
-                <div style="color: #6B7280; line-height: 1.8; white-space: pre-line;">{story["description"]}</div>
+            <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;
+                        border-left: 5px solid {rv["color"]}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: {rv["color"]}; color: white; width: 40px; height: 40px; border-radius: 50%;
+                                display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                        {rv["layer"]}
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="color: #1F2937; margin: 0;">{rv["title"]}</h4>
+                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.9rem;">{rv["desc"]}</p>
+                        <span style="color: {rv["color"]}; font-size: 0.85rem; font-weight: 500;">{rv["model"]}</span>
+                    </div>
+                </div>
             </div>
         ''', unsafe_allow_html=True)
 
+    # Ausbaustufen
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 20px; border-radius: 10px; margin-top: 25px;">
+            <h4 style="color: #6B7280; margin: 0 0 15px 0;">🚀 Optional später:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">B2B-Abos</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">White-Label für Autohäuser</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Flottenlösungen</span>
+                <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Versicherungs-Affiliate</span>
+            </div>
+            <p style="color: #9CA3AF; margin: 15px 0 0 0; font-size: 0.9rem; font-style: italic;">
+                Nicht alles gleichzeitig, aber alles denkbar und skalierbar.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Services-Übersicht
+    # ═══════════════════════════════════════════════════════════════════════════
+    # HAFTUNG & COMPLIANCE
+    # ═══════════════════════════════════════════════════════════════════════════
+
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">📦 Leistungsübersicht</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">⚖️ Haftung & Rolle</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Souverän kommuniziert – nicht versteckt</p>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("""
-        ### 🔍 Technische Prüfung
-        - Fahrzeuginspektion durch Sachverständige
-        - Schadensdokumentation nach DAT/Schwacke
-        - Fotodokumentation (50-100 Aufnahmen)
-        - Gutachten gemäß Leasingvertrag
 
-        ### ⚖️ Rechtliche Beratung
-        - Vertragsprüfung durch Anwälte
-        - Bewertung von Nachforderungen
-        - Verhandlung mit Leasinggebern
-        - Rechtliche Vertretung
-        """)
+    with col1:
+        st.markdown('''
+            <div style="background: #fef3c7; padding: 25px; border-radius: 12px; height: 100%;">
+                <h4 style="color: #92400e; margin: 0 0 15px 0;">ReturnGuard macht:</h4>
+                <ul style="color: #78350f; margin: 0; padding-left: 20px; line-height: 2;">
+                    <li>Vermitteln</li>
+                    <li>Koordinieren</li>
+                    <li>Dokumentieren</li>
+                    <li>Vorqualifizieren</li>
+                </ul>
+            </div>
+        ''', unsafe_allow_html=True)
 
     with col2:
-        st.markdown("""
-        ### 📊 Kostenermittlung
-        - Marktgerechte Schadenseinschätzung
-        - Vergleich mit Leasingvertrag
-        - Kostentransparenz
-        - Einsparpotenzial-Analyse
+        st.markdown('''
+            <div style="background: #fee2e2; padding: 25px; border-radius: 12px; height: 100%;">
+                <h4 style="color: #991b1b; margin: 0 0 15px 0;">ReturnGuard macht <u>nicht</u>:</h4>
+                <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 2;">
+                    <li>Gutachten erstellen</li>
+                    <li>Reparaturen durchführen</li>
+                    <li>Rechtsfragen entscheiden</li>
+                    <li>Für Leasinggesellschaften bewerten</li>
+                </ul>
+            </div>
+        ''', unsafe_allow_html=True)
 
-        ### 💼 Zusatzservices
-        - Vor-Ort Service bundesweit
-        - Express-Bearbeitung möglich
-        - 24/7 Hotline (Premium/VIP)
-        - Persönlicher Ansprechpartner
-        """)
+    # Compliance
+    st.markdown('''
+        <div style="background: #f0fdf4; padding: 25px; border-radius: 12px; margin-top: 25px; border: 2px solid #059669;">
+            <h4 style="color: #166534; margin: 0 0 15px 0;">✅ Regulatorische Einfachheit:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px;">Keine Finanzvermittlung</span>
+                <span style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px;">Keine Versicherungsberatung</span>
+                <span style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px;">Keine Rechtsberatung</span>
+                <span style="background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px;">Keine Sachverständigentätigkeit</span>
+            </div>
+            <p style="color: #15803d; margin: 15px 0 0 0; font-weight: 600;">
+                → Kein regulatorisches Minenfeld. Das reduziert rechtliches Risiko, operative Komplexität und Skalierungshürden.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Investor-Statement
+    st.markdown('''
+        <div style="background: #1B365D; padding: 20px 30px; border-radius: 12px; margin-top: 25px; text-align: center;">
+            <p style="color: white; font-size: 1.1rem; margin: 0;">
+                💼 <strong>Für Investoren:</strong> Das ist kein Nachteil – das ist ein Schutzschild.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # WARUM INVESTIERBAR
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">🎯 Warum ReturnGuard investierbar ist</h2>', unsafe_allow_html=True)
+
+    st.markdown('''
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">🪶</div>
+                <h4 style="color: #1F2937; margin: 0 0 10px 0;">Asset-light</h4>
+                <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Kein CapEx, keine Lager, keine Angestellten pro Stadt</p>
+            </div>
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">📈</div>
+                <h4 style="color: #1F2937; margin: 0 0 10px 0;">Skalierbar</h4>
+                <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Skalierung über Netzwerk & Software, nicht über Personal</p>
+            </div>
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">💰</div>
+                <h4 style="color: #1F2937; margin: 0 0 10px 0;">Mehrere Erlösströme</h4>
+                <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">4+ Revenue Layers, modular erweiterbar</p>
+            </div>
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">🛡️</div>
+                <h4 style="color: #1F2937; margin: 0 0 10px 0;">Geringes Haftungsrisiko</h4>
+                <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Reine Vermittlung, keine operative Ausführung</p>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Abschluss-Statement
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                    padding: 40px; border-radius: 12px; margin-top: 30px; text-align: center;">
+            <p style="color: white; font-size: 1.4rem; margin: 0; font-weight: 600;">
+                „Das ist kein Feature, das ist eine Infrastruktur."
+            </p>
+            <p style="color: #a7f3d0; font-size: 1rem; margin: 15px 0 0 0;">
+                ReturnGuard fühlt sich an wie etwas, das es eigentlich schon längst geben müsste.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
