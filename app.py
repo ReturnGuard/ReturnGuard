@@ -1962,38 +1962,226 @@ def render_b2c():
 
 def render_b2b():
     """B2B View: Services, Contact (B2B-Fokus), Legal"""
-    # Top-Navigation deaktiviert (nur für B2C aktiv)
-    # Navigation erfolgt über Sidebar
-    # # Navigation für B2B
-    # st.markdown('<div class="top-nav">', unsafe_allow_html=True)
-    # st.markdown('<div class="nav-brand">🛡️ ReturnGuard Business</div>', unsafe_allow_html=True)
-    #
-    # nav_cols = st.columns(4)
-    # with nav_cols[0]:
-    #     st.markdown('<a href="?page=services#content-start-services" target="_self" class="nav-link">📦 Leistungen</a>', unsafe_allow_html=True)
-    # with nav_cols[1]:
-    #     st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
-    # with nav_cols[2]:
-    #     st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
-    # with nav_cols[3]:
-    #     st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
-    #
-    # st.markdown('</div>', unsafe_allow_html=True)
 
-    # B2B-spezifischer Hero
+    # B2B HERO - Fokus auf Effizienz & Planbarkeit
     st.markdown('''
-        <div class="hero-section">
+        <div class="hero-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);">
             <div class="hero-content">
-                <h1 class="hero-title">ReturnGuard Business – Flottenmanagement</h1>
-                <p class="hero-subtitle" style="text-align: left; max-width: 700px; margin: 0 auto 20px auto;">
-                    <strong>Für Unternehmen mit Fahrzeugflotten:</strong><br>
-                    • Zentrales Dashboard für alle Leasingrückgaben Ihrer Flotte<br>
-                    • Aufbereiter-Flatrate: Monatliche Pauschale pro Fahrzeug<br>
-                    • Volumenrabatte ab 10 Fahrzeugen – individuelle Konditionen ab 50 Fahrzeugen<br>
-                    • Direkte Anbindung an unser Werkstatt- und Gutachter-Netzwerk<br>
-                    • Persönlicher Account Manager für Ihre Flotte
+                <p style="color: #60a5fa; font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; letter-spacing: 1px;">FÜR FLOTTENMANAGER & FUHRPARKLEITER</p>
+                <h1 class="hero-title" style="font-size: 2.5rem;">Weniger Verwaltung.<br>Mehr Planbarkeit.</h1>
+                <p class="hero-subtitle" style="text-align: center; max-width: 650px; margin: 0 auto 25px auto; font-size: 1.15rem;">
+                    Standardisieren Sie Ihre Leasingrückgaben – mit festen Konditionen,<br>
+                    einem Netzwerk und einem Ansprechpartner.
                 </p>
-                <a href="?page=contact#content-start-contact" target="_self" class="hero-cta">Angebot anfordern →</a>
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <a href="?page=contact#content-start-contact" target="_self" class="hero-cta">Angebot anfordern →</a>
+                    <a href="tel:+498912345678" class="hero-cta" style="background: transparent; border: 2px solid white;">📞 Direkt sprechen</a>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # PROBLEM-SECTION - Pain Points für Flottenmanager
+    st.markdown('''
+        <div style="background: #f8fafc; padding: 50px 20px;">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 30px;">Das Problem bei Flotten-Rückgaben</h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-left: 4px solid #ef4444;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🔄</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Jedes Mal neu verhandeln</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Für jedes Fahrzeug einzeln Werkstätten suchen, Angebote einholen, vergleichen – bei 50+ Fahrzeugen pro Jahr.</p>
+                    </div>
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-left: 4px solid #ef4444;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Unplanbare Kosten</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Jede Rückgabe ist eine Blackbox. Budget-Planung für Nachzahlungen? Fast unmöglich.</p>
+                    </div>
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-left: 4px solid #ef4444;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">👥</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Wechselnde Ansprechpartner</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Bei jeder Leasinggesellschaft andere Prozesse, andere Kontakte, andere Maßstäbe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # LÖSUNG - Was ReturnGuard Business bietet
+    st.markdown('''
+        <div style="background: white; padding: 50px 20px;">
+            <div style="max-width: 1000px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">Die ReturnGuard Business Lösung</h2>
+                <p style="text-align: center; color: #6B7280; margin-bottom: 40px;">Ein Partner, ein Preis, ein Prozess – für Ihre gesamte Flotte</p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+                    <div style="text-align: center; padding: 30px;">
+                        <div style="background: #ecfdf5; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 2rem;">📋</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Standardisierter Prozess</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.95rem;">Gleicher Ablauf für jedes Fahrzeug. Dokumentation, Aufbereitung, Rückgabe – immer nach dem gleichen Schema.</p>
+                    </div>
+                    <div style="text-align: center; padding: 30px;">
+                        <div style="background: #ecfdf5; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 2rem;">💶</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Fixe Konditionen</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.95rem;">Flatrate pro Fahrzeug oder Kontingent-Pakete. Sie wissen im Voraus, was Sie zahlen.</p>
+                    </div>
+                    <div style="text-align: center; padding: 30px;">
+                        <div style="background: #ecfdf5; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 2rem;">🤝</div>
+                        <h4 style="color: #1F2937; margin: 0 0 10px 0;">Ihr Account Manager</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.95rem;">Ein Ansprechpartner für alle Ihre Fahrzeuge. Kennt Ihre Flotte, Ihre Prozesse, Ihre Anforderungen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # PAKETE - Fixpreis-Modelle
+    st.markdown('''
+        <div style="background: #f8fafc; padding: 50px 20px;">
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">Unsere B2B-Pakete</h2>
+                <p style="text-align: center; color: #6B7280; margin-bottom: 40px;">Wählen Sie das Modell, das zu Ihrer Flottengröße passt</p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                    <!-- Starter -->
+                    <div style="background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <p style="color: #6B7280; font-size: 0.85rem; margin: 0 0 5px 0; font-weight: 600;">STARTER</p>
+                        <h3 style="color: #1F2937; margin: 0 0 5px 0;">10-25 Fahrzeuge</h3>
+                        <div style="margin: 20px 0;">
+                            <span style="font-size: 2.5rem; font-weight: 700; color: #059669;">79€</span>
+                            <span style="color: #6B7280;">/Fahrzeug/Monat</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 25px 0;">
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Standardisierter Rückgabe-Prozess</li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Aufbereiter aus unserem Netzwerk</li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Dokumentation & Fotobericht</li>
+                            <li style="color: #4B5563; padding: 8px 0;">✓ E-Mail Support</li>
+                        </ul>
+                        <a href="?page=contact#content-start-contact" style="display: block; text-align: center; background: #f3f4f6; color: #1F2937; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600;">Angebot anfordern</a>
+                    </div>
+
+                    <!-- Business -->
+                    <div style="background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 15px rgba(5,150,105,0.15); border: 2px solid #059669; position: relative;">
+                        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #059669; color: white; padding: 5px 20px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">MEISTGEWÄHLT</div>
+                        <p style="color: #059669; font-size: 0.85rem; margin: 0 0 5px 0; font-weight: 600;">BUSINESS</p>
+                        <h3 style="color: #1F2937; margin: 0 0 5px 0;">25-100 Fahrzeuge</h3>
+                        <div style="margin: 20px 0;">
+                            <span style="font-size: 2.5rem; font-weight: 700; color: #059669;">59€</span>
+                            <span style="color: #6B7280;">/Fahrzeug/Monat</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 25px 0;">
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Alles aus Starter, plus:</li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ <strong>Dedizierter Account Manager</strong></li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Quartalsberichte & Analysen</li>
+                            <li style="color: #4B5563; padding: 8px 0;">✓ Prioritäts-Support (Tel. & E-Mail)</li>
+                        </ul>
+                        <a href="?page=contact#content-start-contact" style="display: block; text-align: center; background: #059669; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600;">Angebot anfordern</a>
+                    </div>
+
+                    <!-- Enterprise -->
+                    <div style="background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <p style="color: #6B7280; font-size: 0.85rem; margin: 0 0 5px 0; font-weight: 600;">ENTERPRISE</p>
+                        <h3 style="color: #1F2937; margin: 0 0 5px 0;">100+ Fahrzeuge</h3>
+                        <div style="margin: 20px 0;">
+                            <span style="font-size: 2.5rem; font-weight: 700; color: #059669;">Individuell</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 25px 0;">
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ Alles aus Business, plus:</li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ <strong>Individuelle Konditionen</strong></li>
+                            <li style="color: #4B5563; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">✓ API-Anbindung an Ihre Systeme</li>
+                            <li style="color: #4B5563; padding: 8px 0;">✓ SLA-Vereinbarungen</li>
+                        </ul>
+                        <a href="?page=contact#content-start-contact" style="display: block; text-align: center; background: #f3f4f6; color: #1F2937; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600;">Gespräch vereinbaren</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # VORTEILE - Warum Flottenmanager wechseln
+    st.markdown('''
+        <div style="background: white; padding: 50px 20px;">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 40px;">Warum Flottenmanager zu uns wechseln</h2>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: #ecfdf5; padding: 10px; border-radius: 8px; font-size: 1.5rem;">⏱️</div>
+                        <div>
+                            <h4 style="color: #1F2937; margin: 0 0 5px 0;">70% weniger Verwaltungsaufwand</h4>
+                            <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Keine Einzelverhandlungen mehr. Ein Prozess für alle Fahrzeuge.</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: #ecfdf5; padding: 10px; border-radius: 8px; font-size: 1.5rem;">📈</div>
+                        <div>
+                            <h4 style="color: #1F2937; margin: 0 0 5px 0;">Planbare Budgets</h4>
+                            <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Fixkosten pro Fahrzeug. Keine Überraschungen am Jahresende.</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: #ecfdf5; padding: 10px; border-radius: 8px; font-size: 1.5rem;">🔧</div>
+                        <div>
+                            <h4 style="color: #1F2937; margin: 0 0 5px 0;">Bundesweites Netzwerk</h4>
+                            <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Über 200 Werkstätten und Aufbereiter. Egal wo Ihre Fahrzeuge stehen.</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: #ecfdf5; padding: 10px; border-radius: 8px; font-size: 1.5rem;">📋</div>
+                        <div>
+                            <h4 style="color: #1F2937; margin: 0 0 5px 0;">Revisionssichere Dokumentation</h4>
+                            <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Jede Rückgabe vollständig dokumentiert. Für Ihre Buchhaltung und Revision.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # ONBOARDING - So starten Sie
+    st.markdown('''
+        <div style="background: #f8fafc; padding: 50px 20px;">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">So starten wir zusammen</h2>
+                <p style="text-align: center; color: #6B7280; margin-bottom: 40px;">In 4 Wochen einsatzbereit</p>
+
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                    <div style="flex: 1; min-width: 180px; text-align: center;">
+                        <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-weight: bold; font-size: 1.2rem;">1</div>
+                        <h4 style="color: #1F2937; margin: 0 0 5px 0;">Bedarfsanalyse</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">Wir analysieren Ihre Flotte und Prozesse</p>
+                    </div>
+                    <div style="flex: 1; min-width: 180px; text-align: center;">
+                        <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-weight: bold; font-size: 1.2rem;">2</div>
+                        <h4 style="color: #1F2937; margin: 0 0 5px 0;">Individuelles Angebot</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">Maßgeschneidert auf Ihre Flottengröße</p>
+                    </div>
+                    <div style="flex: 1; min-width: 180px; text-align: center;">
+                        <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-weight: bold; font-size: 1.2rem;">3</div>
+                        <h4 style="color: #1F2937; margin: 0 0 5px 0;">Pilotphase</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">5 Fahrzeuge testen – risikofrei</p>
+                    </div>
+                    <div style="flex: 1; min-width: 180px; text-align: center;">
+                        <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-weight: bold; font-size: 1.2rem;">4</div>
+                        <h4 style="color: #1F2937; margin: 0 0 5px 0;">Rollout</h4>
+                        <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">Vollständige Integration Ihrer Flotte</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # ABSCHLUSS CTA
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 60px 30px; text-align: center;">
+            <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.8rem;">Bereit für planbare Leasingrückgaben?</h2>
+            <p style="color: rgba(255,255,255,0.8); margin: 0 0 30px 0; font-size: 1.1rem;">
+                Lassen Sie uns in 15 Minuten besprechen, wie ReturnGuard Business zu Ihrer Flotte passt.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="?page=contact#content-start-contact" style="background: #059669; color: white; padding: 15px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem;">Angebot anfordern →</a>
+                <a href="tel:+498912345678" style="background: transparent; color: white; padding: 15px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; border: 2px solid rgba(255,255,255,0.5);">📞 +49 89 123 456 78</a>
             </div>
         </div>
     ''', unsafe_allow_html=True)
