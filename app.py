@@ -73,15 +73,70 @@ def progress_required_photos(session: dict) -> tuple[int, int]:
     return uploaded, len(required_keys)
 
 
+def _json_safe(obj):
+    """
+    Convert non-JSON-serializable objects (notably bytes) into safe placeholders.
+    For this Showcase we keep exports small: store metadata instead of raw bytes.
+    """
+    if isinstance(obj, (bytes, bytearray)):
+        return {"_type": "bytes", "len": len(obj)}
+    if isinstance(obj, dict):
+        return {k: _json_safe(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_json_safe(v) for v in obj]
+    return obj
+
+
+def _strip_image_bytes(data: dict) -> dict:
+    """
+    Create a copy where all photo byte payloads are replaced with metadata.
+    Keeps the structure intact, but avoids JSON serialization errors & huge exports.
+    """
+    # First pass: replace bytes with placeholders so json can clone safely
+    data = json.loads(json.dumps(_json_safe(data), ensure_ascii=False))
+
+    # Second pass: reduce photo objects to just name + size
+    for sess in data.get("sessions", {}).values():
+        photos = sess.get("photos", {}) or {}
+        for key, items in photos.items():
+            cleaned = []
+            for it in items or []:
+                size = None
+                b = it.get("bytes")
+                if isinstance(b, dict):
+                    size = b.get("len")
+                cleaned.append({
+                    "name": it.get("name"),
+                    "size_bytes": size,
+                })
+            photos[key] = cleaned
+
+        for dmg in sess.get("damages", []) or []:
+            cleaned = []
+            for it in dmg.get("photos", []) or []:
+                size = None
+                b = it.get("bytes")
+                if isinstance(b, dict):
+                    size = b.get("len")
+                cleaned.append({
+                    "name": it.get("name"),
+                    "size_bytes": size,
+                })
+            dmg["photos"] = cleaned
+
+    return data
+
+
 def export_state_as_json() -> str:
-    data = {
+    raw = {
         "vehicles": st.session_state.vehicles,
         "sessions": st.session_state.sessions,
         "exported_at": now_iso(),
         "version": "showcase_v0.1",
+        "export_mode": "metadata_only",
     }
-    return json.dumps(data, indent=2, ensure_ascii=False)
-
+    safe = _strip_image_bytes(raw)
+    return json.dumps(safe, indent=2, ensure_ascii=False)
 
 # -----------------------------
 # UI
