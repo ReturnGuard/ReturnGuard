@@ -174,3 +174,73 @@ if page == "🛡️ Shadow Expert (Veto)":
         if st.button("Widerspruchs-Schreiben generieren (PDF)"):
             st.success("Widerspruch wurde erstellt. Bitte beim Händler vorlegen.")
             st.download_button("Datei herunterladen", "Hier stünde der Text des Schreibens...", file_name="Widerspruch_ReturnGuard.txt")
+# ==================== PAGE 4: FLEET-PORTAL (B2B SaaS) ====================
+if page == "🏢 Fleet-Portal":
+    st.title("ReturnGuard Fleet Cockpit")
+    st.subheader("Zentrales Management für KMU-Fuhrparks")
+    
+    # Metriken für den Fuhrparkleiter
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Aktive Fahrzeuge", "12", "+2 diesen Monat")
+    m2.metric("Schadensrisiko gesamt", "4.250 €", "-15% vs. Vormonat")
+    m3.metric("CO2 Ersparnis (SMR)", "340 kg", "Durch Smart-Repair")
+
+    st.divider()
+    
+    # Flotten-Tabelle
+    st.write("### Aktueller Flotten-Status")
+    fleet_data = pd.DataFrame([
+        {"Kennzeichen": "M-RG 2024", "Modell": "VW Golf VIII", "Status": "🟢 OK", "Rückgabe": "15.03.2026"},
+        {"Kennzeichen": "M-RG 2025", "Modell": "BMW 320d", "Status": "🟡 Check nötig", "Rückgabe": "20.02.2026"},
+        {"Kennzeichen": "M-RG 2026", "Modell": "Audi A4", "Status": "🔴 Schaden gemeldet", "Rückgabe": "01.02.2026"},
+    ])
+    st.table(fleet_data)
+
+    st.info("💡 **Manager-Tipp:** Für das Fahrzeug M-RG 2026 steht die Rückgabe in weniger als 30 Tagen an. Ein Smart-Repair Check jetzt spart ca. 650 € gegenüber der Leasing-Nachzahlung.")
+
+# ==================== PAGE 5: INVESTOR-DASHBOARD ====================
+if page == "📊 Investor-Dashboard":
+    st.title("Investor Relations & Market Opportunity")
+    
+    tab1, tab2, tab3 = st.tabs(["💰 Business Model", "🌍 Market (TAM/SAM/SOM)", "📈 Future Outlook"])
+    
+    with tab1:
+        st.write("### Erlösströme (Unit Economics)")
+        col_rev1, col_rev2 = st.columns(2)
+        with col_rev1:
+            st.write("**B2C Transaktional**")
+            st.success("Lead-Fee: 29€ - 129€ pro Fall")
+            st.success("Express-Check: 49€ Fix")
+        with col_rev2:
+            st.write("**B2B SaaS (Recurring)**")
+            st.info("Starter (bis 10 Pkw): 49€ / Monat")
+            st.info("Business (bis 50 Pkw): 149€ / Monat")
+
+    with tab2:
+        st.write("### Marktpotenzial 2026")
+        # TAM/SAM/SOM Darstellung
+        st.markdown("""
+        * **TAM (Total Addressable Market):** 1,75 Mrd. € (EU-Leasingmarkt)
+        * **SAM (Serviceable Addressable Market):** 200 Mio. € (DACH Leasingrückläufer)
+        * **SOM (Serviceable Obtainable Market):** 5 Mio. € (Ziel Year 3)
+        """)
+        
+        # Interaktiver Hebel für Investoren
+        market_share = st.slider("Marktanteil am SAM (%)", 0.1, 5.0, 1.0)
+        projected_rev = 200 * (market_share / 100)
+        st.metric("Projizierter Jahresumsatz (DACH)", f"{projected_rev:.1f} Mio. €")
+
+    with tab3:
+        st.write("### Future Outlook: The Data Platform")
+        st.write("""
+        ReturnGuard sammelt validierte Zustandsdaten von tausenden Fahrzeugen. 
+        Diese Daten sind hochgradig relevant für:
+        1. **Versicherungen:** Präzise Risikokalkulation.
+        2. **Gebrauchtwagenbörsen:** Verifizierte Zustandsberichte ('Certified by ReturnGuard').
+        3. **Hersteller:** Feedback zur Langlebigkeit von Bauteilen.
+        """)
+        st.warning("Strategisches Ziel: Exit-Option an Mobile.de oder Allianz X bis 2029.")
+
+# ==================== FOOTER ====================
+st.sidebar.divider()
+st.sidebar.caption("© 2026 ReturnGuard - Version 0.2 (Investor Build)")
