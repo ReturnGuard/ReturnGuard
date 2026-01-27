@@ -13,11 +13,6 @@ except Exception:
     PIL_OK = False
 
 
-# -----------------------------
-# ReturnGuard Handover – Streamlit Showcase
-# v0.3b: Wizard + Protokoll (HTML) + Pitch Prefill
-# -----------------------------
-
 st.set_page_config(page_title="ReturnGuard – Übergabe-Check (Showcase)", layout="wide")
 
 REQUIRED_SHOTS = [
@@ -29,7 +24,6 @@ REQUIRED_SHOTS = [
     ("odometer", "Tacho / Kilometerstand"),
     ("wheels", "Felgen (optional)"),
 ]
-
 WIZARD_STEPS = [x for x in REQUIRED_SHOTS if x[0] != "wheels"] + [("wheels", "Felgen (optional)")]
 
 DAMAGE_CATEGORIES = ["Kratzer/Lack", "Delle", "Felge", "Scheibe", "Innenraum", "Sonstiges"]
@@ -59,6 +53,8 @@ def ensure_state():
         st.session_state.selected_vehicle_id = None
     if "active_session_id" not in st.session_state:
         st.session_state.active_session_id = None
+    if "pitch_vehicle_id" not in st.session_state:
+        st.session_state.pitch_vehicle_id = None
 
 
 def new_id(prefix: str) -> str:
@@ -108,7 +104,7 @@ def find_next_missing_required_index(session: dict) -> int:
     return 0
 
 
-# ---------- Export helpers (fix bytes -> metadata) ----------
+# ---------- Export helpers (bytes -> metadata) ----------
 
 def _json_safe(obj):
     if isinstance(obj, (bytes, bytearray)):
@@ -153,14 +149,14 @@ def export_state_as_json() -> str:
         "vehicles": st.session_state.vehicles,
         "sessions": st.session_state.sessions,
         "exported_at": now_iso(),
-        "version": "showcase_v0.3b_wizard_html_protocol_prefill",
+        "version": "showcase_v0.3c_before_after_protocol",
         "export_mode": "metadata_only",
     }
     safe = _strip_image_bytes(raw)
     return json.dumps(safe, indent=2, ensure_ascii=False)
 
 
-# ---------- Pitch / Demo helpers ----------
+# ---------- Demo images ----------
 
 def make_demo_image_bytes(label: str, w=1280, h=720) -> bytes:
     if not PIL_OK:
@@ -179,6 +175,8 @@ def make_demo_image_bytes(label: str, w=1280, h=720) -> bytes:
     return out.getvalue()
 
 
+# ---------- Pitch prefill ----------
+
 def pitch_prefill_fields():
     st.session_state["plate_in"] = "M-RG 2026"
     st.session_state["brand_in"] = "Audi"
@@ -189,7 +187,13 @@ def pitch_prefill_fields():
     st.session_state["s_type_in"] = "handover"
 
 
-def pitch_create_demo_vehicle_and_session():
+def _ensure_pitch_vehicle() -> str:
+    """
+    Ensure there is ONE pitch vehicle that both sessions attach to.
+    """
+    if st.session_state.pitch_vehicle_id and st.session_state.pitch_vehicle_id in st.session_state.vehicles:
+        return st.session_state.pitch_vehicle_id
+
     vid = new_id("veh")
     v = {
         "id": vid,
@@ -201,45 +205,78 @@ def pitch_create_demo_vehicle_and_session():
         "created_at": now_iso(),
     }
     st.session_state.vehicles[vid] = v
-    st.session_state.selected_vehicle_id = vid
+    st.session_state.pitch_vehicle_id = vid
+    return vid
 
+
+def _create_demo_session(vehicle_id: str, session_type: str, label_prefix: str, add_extra_damage: bool) -> str:
     sid = new_id("sess")
     s = {
         "id": sid,
-        "vehicle_id": vid,
-        "type": st.session_state.get("s_type_in", "handover"),
+        "vehicle_id": vehicle_id,
+        "type": session_type,
         "timestamp": now_iso(),
         "counterparty": st.session_state.get("counterparty_in", "Max Mustermann"),
         "photos": {k: [] for k, _ in REQUIRED_SHOTS},
         "damages": [],
-        "closed": False,
+        "closed": True,          # demo sessions are closed
         "wizard_step": 0,
     }
 
+    # Photos
     for k, label in REQUIRED_SHOTS:
         if k == "wheels":
             s["photos"][k] = [
-                {"name": f"demo_{k}_1.png", "bytes": make_demo_image_bytes("Felge links (Demo)")},
-                {"name": f"demo_{k}_2.png", "bytes": make_demo_image_bytes("Felge rechts (Demo)")},
+                {"name": f"{label_prefix}_{k}_1.png", "bytes": make_demo_image_bytes(f"{label_prefix} Felge links")},
+                {"name": f"{label_prefix}_{k}_2.png", "bytes": make_demo_image_bytes(f"{label_prefix} Felge rechts")},
             ]
         else:
-            s["photos"][k] = [{"name": f"demo_{k}.png", "bytes": make_demo_image_bytes(label)}]
+            s["photos"][k] = [{"name": f"{label_prefix}_{k}.png", "bytes": make_demo_image_bytes(f"{label_prefix} {label}")}]
 
-    dmg = {
+    # Base damage (both can have one, so it's realistic)
+    base_dmg = {
         "id": new_id("dmg"),
         "timestamp": now_iso(),
         "category": "Kratzer/Lack",
         "position": "Front",
-        "note": "Demo-Schaden: kleiner Kratzer am Stoßfänger",
-        "photos": [{"name": "demo_damage_front.png", "bytes": make_demo_image_bytes("Schaden Front (Demo)")}],
+        "note": f"{label_prefix}: kleiner Kratzer am Stoßfänger (Demo)",
+        "photos": [{"name": f"{label_prefix}_damage_front.png", "bytes": make_demo_image_bytes(f"{label_prefix} Schaden Front")}],
     }
-    s["damages"].append(dmg)
+    s["damages"].append(base_dmg)
+
+    # Extra damage only on AFTER to show delta
+    if add_extra_damage:
+        extra = {
+            "id": new_id("dmg"),
+            "timestamp": now_iso(),
+            "category": "Felge",
+            "position": "Rechts",
+            "note": "NEU: Felgenschaden (Demo) – sichtbar nach Rückgabe",
+            "photos": [{"name": "after_damage_wheel.png", "bytes": make_demo_image_bytes("NACHHER Schaden Felge")}],
+        }
+        s["damages"].append(extra)
 
     st.session_state.sessions[sid] = s
+    return sid
+
+
+def pitch_create_before():
+    pitch_prefill_fields()
+    vid = _ensure_pitch_vehicle()
+    sid = _create_demo_session(vehicle_id=vid, session_type="handover", label_prefix="VORHER", add_extra_damage=False)
+    st.session_state.selected_vehicle_id = vid
     st.session_state.active_session_id = sid
 
 
-# ---------- Protocol (HTML download, print-to-PDF friendly) ----------
+def pitch_create_after():
+    pitch_prefill_fields()
+    vid = _ensure_pitch_vehicle()
+    sid = _create_demo_session(vehicle_id=vid, session_type="return", label_prefix="NACHHER", add_extra_damage=True)
+    st.session_state.selected_vehicle_id = vid
+    st.session_state.active_session_id = sid
+
+
+# ---------- Protocol (HTML download) ----------
 
 def _b64_img_tag(img_bytes: bytes, max_width_px=520) -> str:
     if not img_bytes:
@@ -274,7 +311,6 @@ def build_session_protocol_html(vehicle: dict, session: dict) -> str:
             return b""
         return arr[0].get("bytes") or b""
 
-    # Build grid HTML
     grid_items = []
     for key, label in grid_keys:
         img = first_img_bytes(key)
@@ -286,9 +322,8 @@ def build_session_protocol_html(vehicle: dict, session: dict) -> str:
             </div>
         """)
 
-    # Damages
-    dmg_blocks = []
     damages = session.get("damages", []) or []
+    dmg_blocks = []
     if not damages:
         dmg_blocks.append('<div class="muted">— keine Schäden erfasst —</div>')
     else:
@@ -370,7 +405,7 @@ def build_session_protocol_html(vehicle: dict, session: dict) -> str:
   {''.join(dmg_blocks)}
 
   <div class="footer">
-    Erstellt am {html_lib.escape(now_iso())} · ReturnGuard Showcase v0.3b · Tipp: Im Browser „Drucken“ → „Als PDF speichern“.
+    Erstellt am {html_lib.escape(now_iso())} · ReturnGuard Showcase v0.3c · Tipp: Im Browser „Drucken“ → „Als PDF speichern“.
   </div>
 </body>
 </html>
@@ -384,22 +419,30 @@ def build_session_protocol_html(vehicle: dict, session: dict) -> str:
 ensure_state()
 
 st.title("🛡️ ReturnGuard – Fahrzeug Übergabe-Check (Showcase)")
-st.caption("Wizard-Fotos (1/6), Historie, Vorher/Nachher, Protokoll-Download (HTML, druckbar als PDF), Pitch-Buttons.")
+st.caption("Wizard-Fotos (1/6), Historie, Vorher/Nachher, Protokoll-Download, Pitch-Buttons (Vorher/Nachher).")
 
-with st.expander("⚡ Pitch-Modus (1 Klick statt Tipparbeit)", expanded=True):
-    c1, c2, c3 = st.columns([1, 1, 2])
+with st.expander("⚡ Pitch-Modus (Vorher/Nachher in 2 Klicks)", expanded=True):
+    c1, c2, c3, c4 = st.columns([1, 1, 1, 2])
+
     with c1:
         if st.button("🧪 Felder vorausfüllen", use_container_width=True):
             pitch_prefill_fields()
             st.success("Felder sind vorausgefüllt.")
+
     with c2:
-        if st.button("🚀 Demo-Fahrzeug + Demo-Session erzeugen", type="primary", use_container_width=True):
-            pitch_prefill_fields()
-            pitch_create_demo_vehicle_and_session()
-            st.success("Demo ist erstellt. Rechts → Historie → Protokoll herunterladen.")
+        if st.button("🚀 Demo VORHER (Übergabe)", type="primary", use_container_width=True):
+            pitch_create_before()
+            st.success("VORHER erstellt. Jetzt Tab 3 oder Historie zeigen.")
             st.rerun()
+
     with c3:
-        st.caption("Pitch-Ablauf: Demo klicken → Historie öffnen → Protokoll herunterladen → im Browser als PDF speichern.")
+        if st.button("🚀 Demo NACHHER (Rückgabe)", type="primary", use_container_width=True):
+            pitch_create_after()
+            st.success("NACHHER erstellt (mit zusätzlichem Schaden).")
+            st.rerun()
+
+    with c4:
+        st.caption("Pitch-Ablauf: VORHER klicken → NACHHER klicken → Tab 3 Vergleich → Historie → Protokolle ziehen.")
 
 colA, colB = st.columns([1, 2], gap="large")
 
@@ -412,7 +455,7 @@ with colA:
         brand = st.text_input("Marke*", placeholder="Audi", key="brand_in")
         model = st.text_input("Modell*", placeholder="A3 Sportback", key="model_in")
         vin = st.text_input("FIN/VIN (optional)", placeholder="WAUZZZ...", key="vin_in")
-        note = st.text_area("Notiz (optional)", placeholder="z.B. Poolfahrzeug, Winterräder an Bord…", height=80, key="note_in")
+        note = st.text_area("Notiz (optional)", placeholder="z.B. Poolfahrzeug…", height=80, key="note_in")
 
         if st.button("Fahrzeug speichern", type="primary", use_container_width=True):
             if not plate.strip() or not brand.strip() or not model.strip():
@@ -465,7 +508,7 @@ with colA:
             horizontal=True,
             key="s_type_in",
         )
-        counterparty = st.text_input("Übergabe an / Rückgabe von (optional)", placeholder="Name (Mitarbeiter/Kunde)", key="counterparty_in")
+        counterparty = st.text_input("Übergabe an / Rückgabe von (optional)", placeholder="Name", key="counterparty_in")
 
         if st.button("Neue Session starten", use_container_width=True):
             sid = new_id("sess")
@@ -494,26 +537,17 @@ with colB:
         sessions_for_vehicle = get_vehicle_sessions(vid)
         sessions_for_vehicle_sorted = sorted(sessions_for_vehicle, key=lambda s: s["timestamp"], reverse=True)
 
-        active_sid = st.session_state.get("active_session_id")
-        if active_sid and active_sid in st.session_state.sessions:
-            active = st.session_state.sessions[active_sid]
-            if active["vehicle_id"] != vid:
-                st.session_state.active_session_id = None
-                active_sid = None
-
         st.subheader("📸 Ablauf")
         tabs = st.tabs(["1) Guided Check", "2) Historie", "3) Vorher/Nachher", "4) Export (Demo)"])
 
-        # -----------------------------
-        # Tab 1: Wizard
-        # -----------------------------
+        # Tab 1: Wizard (kurz gehalten – Fokus Pitch)
         with tabs[0]:
-            if not st.session_state.get("active_session_id") or st.session_state.sessions.get(st.session_state.get("active_session_id"), {}).get("vehicle_id") != vid:
+            active_sid = st.session_state.get("active_session_id")
+            if not active_sid or active_sid not in st.session_state.sessions or st.session_state.sessions[active_sid]["vehicle_id"] != vid:
                 st.info("Starte links eine neue Session, um den Wizard zu nutzen.")
             else:
-                sid = st.session_state.active_session_id
+                sid = active_sid
                 session = st.session_state.sessions[sid]
-
                 if "wizard_step" not in session:
                     session["wizard_step"] = 0
 
@@ -525,19 +559,7 @@ with colB:
                 total_required = len([1 for k, _ in WIZARD_STEPS if not is_optional(k)])
                 done_required, _ = progress_required_photos(session)
                 st.progress(done_required / total_required if total_required else 0.0)
-                st.caption(f"Pflichtfotos: {done_required}/{total_required} erledigt (Felgen optional am Ende).")
-
-                cJ1, cJ2 = st.columns([1, 1])
-                with cJ1:
-                    if st.button("➡️ Zum nächsten fehlenden Pflichtfoto", use_container_width=True, disabled=session["closed"]):
-                        session["wizard_step"] = find_next_missing_required_index(session)
-                        st.rerun()
-                with cJ2:
-                    if st.button("🔁 Schritt 1/6", use_container_width=True, disabled=session["closed"]):
-                        session["wizard_step"] = 0
-                        st.rerun()
-
-                st.divider()
+                st.caption(f"Pflichtfotos: {done_required}/{total_required} erledigt (Felgen optional).")
 
                 session["wizard_step"] = max(0, min(session["wizard_step"], len(WIZARD_STEPS) - 1))
                 step_index = session["wizard_step"]
@@ -548,11 +570,9 @@ with colB:
                     st.markdown(f"## Schritt {step_index + 1}/{total_required}: **{step_label}**")
                 else:
                     st.markdown(f"## Optional: **{step_label}**")
-
                 st.write(WIZARD_HINTS.get(step_key, ""))
 
                 allow_multi = True if optional else False
-
                 files = st.file_uploader(
                     f"Foto hochladen – {step_label}",
                     type=["jpg", "jpeg", "png", "heic"],
@@ -564,116 +584,32 @@ with colB:
                 if files:
                     if allow_multi:
                         session["photos"][step_key] = [{"name": f.name, "bytes": f.getvalue()} for f in files]
-                        st.success(f"{len(files)} Datei(en) gespeichert.")
                     else:
                         f = files
                         session["photos"][step_key] = [{"name": f.name, "bytes": f.getvalue()}]
-                        st.success("1 Datei gespeichert.")
+                    st.success("Gespeichert.")
 
                 stored = session["photos"].get(step_key) or []
                 if stored and stored[0].get("bytes"):
-                    st.caption(f"Gespeichert: {len(stored)}")
-                    cols = st.columns(min(4, len(stored)))
-                    for i, item in enumerate(stored[:4]):
-                        with cols[i % len(cols)]:
-                            st.image(item["bytes"], caption=item.get("name", ""), use_container_width=True)
-                else:
-                    if optional:
-                        st.info("Optional – kannst du überspringen.")
-                    else:
-                        st.warning("Noch kein Foto gespeichert.")
+                    st.image(stored[0]["bytes"], caption=stored[0].get("name", ""), use_container_width=True)
 
-                navL, navM, navR = st.columns([1, 1, 1])
+                navL, navR = st.columns(2)
                 with navL:
                     if st.button("⬅️ Zurück", use_container_width=True, disabled=session["closed"] or step_index == 0):
                         session["wizard_step"] = step_index - 1
                         st.rerun()
-                with navM:
-                    if st.button("⏭️ Überspringen", use_container_width=True, disabled=session["closed"] or not optional):
-                        st.info("Optional übersprungen. Pflichtfotos reichen zum Abschluss.")
                 with navR:
-                    next_disabled = session["closed"]
-                    if not optional and not step_has_photo(session, step_key):
-                        next_disabled = True
+                    next_disabled = session["closed"] or (not optional and not step_has_photo(session, step_key))
                     if st.button("Weiter ➡️", use_container_width=True, disabled=next_disabled):
                         if step_index < len(WIZARD_STEPS) - 1:
                             session["wizard_step"] = step_index + 1
                             st.rerun()
-                        else:
-                            st.success("Wizard fertig. Unten kannst du Schäden erfassen oder abschließen.")
 
-                st.divider()
-
-                st.markdown("### Schäden hinzufügen (manuell)")
-                with st.container(border=True):
-                    c1, c2, c3 = st.columns([1, 1, 2])
-                    with c1:
-                        cat = st.selectbox("Kategorie", DAMAGE_CATEGORIES, key=f"cat_{sid}", disabled=session["closed"])
-                    with c2:
-                        pos = st.selectbox("Position", POSITIONS, key=f"pos_{sid}", disabled=session["closed"])
-                    with c3:
-                        note = st.text_input(
-                            "Notiz (optional)",
-                            key=f"note_{sid}",
-                            placeholder="z.B. Kratzer ca. 5cm, Stoßfänger unten",
-                            disabled=session["closed"],
-                        )
-
-                    dmg_files = st.file_uploader(
-                        "Schadensfoto(s) hochladen",
-                        type=["jpg", "jpeg", "png", "heic"],
-                        accept_multiple_files=True,
-                        key=f"dmg_{sid}",
-                        disabled=session["closed"],
-                    )
-
-                    add = st.button("Schaden speichern", type="secondary", use_container_width=True, disabled=session["closed"])
-                    if add:
-                        if not dmg_files:
-                            st.error("Bitte mindestens ein Schadensfoto hochladen.")
-                        else:
-                            dmg = {
-                                "id": new_id("dmg"),
-                                "timestamp": now_iso(),
-                                "category": cat,
-                                "position": pos,
-                                "note": (note or "").strip(),
-                                "photos": [{"name": f.name, "bytes": f.getvalue()} for f in dmg_files],
-                            }
-                            session["damages"].append(dmg)
-                            st.success("Schaden gespeichert.")
-
-                st.divider()
-                cL, cR = st.columns([1, 1])
-                with cL:
-                    if st.button("✅ Session abschließen", type="primary", use_container_width=True, disabled=session["closed"]):
-                        missing = []
-                        for k, label in REQUIRED_SHOTS:
-                            if k == "wheels":
-                                continue
-                            if not session["photos"].get(k):
-                                missing.append(label)
-                        if missing:
-                            st.error("Noch fehlen Pflichtfotos: " + ", ".join(missing))
-                            session["wizard_step"] = find_next_missing_required_index(session)
-                            st.rerun()
-                        else:
-                            session["closed"] = True
-                            st.success("Session abgeschlossen (gespeichert in Historie).")
-                with cR:
-                    if st.button("🗑️ Session verwerfen (Demo)", use_container_width=True):
-                        del st.session_state.sessions[sid]
-                        st.session_state.active_session_id = None
-                        st.warning("Session verworfen.")
-                        st.rerun()
-
-        # -----------------------------
-        # Tab 2: History (Protocol download HERE)
-        # -----------------------------
+        # Tab 2: Historie + Download (FIXED key!)
         with tabs[1]:
             st.markdown("### Historie")
             if not sessions_for_vehicle_sorted:
-                st.info("Noch keine Sessions für dieses Fahrzeug.")
+                st.info("Noch keine Sessions.")
             else:
                 for s in sessions_for_vehicle_sorted:
                     with st.expander(session_label(s), expanded=False):
@@ -691,25 +627,15 @@ with colB:
                             data=protocol_html.encode("utf-8"),
                             file_name=file_name,
                             mime="text/html",
-                            use_container_width=True
+                            use_container_width=True,
+                            key=f"dl_protocol_{s['id']}"  # <- FIX: unique key prevents DuplicateElementId
                         )
 
-                        # quick preview
-                        preview_keys = ["front", "rear", "left", "right"]
-                        pcols = st.columns(4)
-                        for i, k in enumerate(preview_keys):
-                            imgs = s["photos"].get(k) or []
-                            if imgs and imgs[0].get("bytes"):
-                                with pcols[i]:
-                                    st.image(imgs[0]["bytes"], caption=k, use_container_width=True)
-
-        # -----------------------------
-        # Tab 3: Before/After compare
-        # -----------------------------
+        # Tab 3: Vorher/Nachher
         with tabs[2]:
             st.markdown("### Vorher/Nachher Vergleich")
             if len(sessions_for_vehicle_sorted) < 2:
-                st.info("Für den Vergleich brauchst du mindestens zwei Sessions (z.B. Übergabe + Rückgabe).")
+                st.info("Für den Vergleich brauchst du mindestens zwei Sessions (z.B. Demo Vorher + Nachher).")
             else:
                 options = [s["id"] for s in sessions_for_vehicle_sorted]
                 labels = {s["id"]: session_label(s) for s in sessions_for_vehicle_sorted}
@@ -723,7 +649,6 @@ with colB:
                 sa = st.session_state.sessions[sid_a]
                 sb = st.session_state.sessions[sid_b]
 
-                st.caption("Tipp: Wähle A=Übergabe und B=Rückgabe.")
                 shot_pairs = [
                     ("front", "Front"),
                     ("rear", "Heck"),
@@ -751,27 +676,39 @@ with colB:
                         else:
                             st.info("Kein Foto.")
 
-        # -----------------------------
+                st.divider()
+                st.markdown("#### Schäden (Listenvergleich)")
+                cA, cB = st.columns(2)
+                with cA:
+                    st.write("**Session A – Schäden**")
+                    if sa["damages"]:
+                        for d in sa["damages"]:
+                            st.write(f"- {d['category']} · {d['position']} ({d['timestamp']})")
+                    else:
+                        st.write("—")
+                with cB:
+                    st.write("**Session B – Schäden**")
+                    if sb["damages"]:
+                        for d in sb["damages"]:
+                            st.write(f"- {d['category']} · {d['position']} ({d['timestamp']})")
+                    else:
+                        st.write("—")
+
         # Tab 4: Export
-        # -----------------------------
         with tabs[3]:
             st.markdown("### Export (Demo)")
-            st.write("Exportiert werden **nur Metadaten** (keine Bild-Bytes), damit der Showcase stabil bleibt.")
-
-            try:
-                json_str = export_state_as_json()
-                st.download_button(
-                    "JSON Export herunterladen",
-                    data=json_str.encode("utf-8"),
-                    file_name="returnguard_handover_showcase.json",
-                    mime="application/json",
-                    use_container_width=True
-                )
-                with st.expander("JSON Vorschau", expanded=False):
-                    st.code(json_str, language="json")
-            except Exception as e:
-                st.error("Export ist fehlgeschlagen (Demo-Schutz).")
-                st.code(str(e))
+            st.write("Exportiert werden **nur Metadaten** (keine Bild-Bytes).")
+            json_str = export_state_as_json()
+            st.download_button(
+                "JSON Export herunterladen",
+                data=json_str.encode("utf-8"),
+                file_name="returnguard_handover_showcase.json",
+                mime="application/json",
+                use_container_width=True,
+                key="dl_json_export"
+            )
+            with st.expander("JSON Vorschau", expanded=False):
+                st.code(json_str, language="json")
 
 st.divider()
-st.caption("Showcase v0.3b – Wizard + HTML-Protokoll + Pitch Prefill. Nächster Schritt: echtes PDF via requirements oder iOS-App.")
+st.caption("Showcase v0.3c – Duplicate-ID Fix + Pitch Vorher/Nachher + Protokoll-Download (HTML).")
