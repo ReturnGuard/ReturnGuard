@@ -3,13 +3,9 @@ from datetime import datetime
 import uuid
 import json
 from io import BytesIO
+import base64
+import html as html_lib
 
-# PDF (reportlab ist bei dir verfügbar)
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.utils import ImageReader
-
-# Für Demo-Bilder + Text
 try:
     from PIL import Image, ImageDraw, ImageFont
     PIL_OK = True
@@ -19,7 +15,7 @@ except Exception:
 
 # -----------------------------
 # ReturnGuard Handover – Streamlit Showcase
-# v0.3: Wizard + PDF + Pitch Prefill
+# v0.3b: Wizard + Protokoll (HTML) + Pitch Prefill
 # -----------------------------
 
 st.set_page_config(page_title="ReturnGuard – Übergabe-Check (Showcase)", layout="wide")
@@ -34,7 +30,6 @@ REQUIRED_SHOTS = [
     ("wheels", "Felgen (optional)"),
 ]
 
-# Wizard steps: required without wheels + optional wheels at end
 WIZARD_STEPS = [x for x in REQUIRED_SHOTS if x[0] != "wheels"] + [("wheels", "Felgen (optional)")]
 
 DAMAGE_CATEGORIES = ["Kratzer/Lack", "Delle", "Felge", "Scheibe", "Innenraum", "Sonstiges"]
@@ -107,7 +102,6 @@ def find_next_missing_required_index(session: dict) -> int:
             continue
         if not step_has_photo(session, k):
             return i
-    # all required done -> wheels step
     for i, (k, _) in enumerate(WIZARD_STEPS):
         if is_optional(k):
             return i
@@ -159,230 +153,27 @@ def export_state_as_json() -> str:
         "vehicles": st.session_state.vehicles,
         "sessions": st.session_state.sessions,
         "exported_at": now_iso(),
-        "version": "showcase_v0.3_wizard_pdf_prefill",
+        "version": "showcase_v0.3b_wizard_html_protocol_prefill",
         "export_mode": "metadata_only",
     }
     safe = _strip_image_bytes(raw)
     return json.dumps(safe, indent=2, ensure_ascii=False)
 
 
-# ---------- PDF helpers ----------
-
-def _pil_from_bytes(img_bytes: bytes):
-    """Try to open image bytes with PIL. Returns PIL Image or None."""
-    if not PIL_OK:
-        return None
-    try:
-        im = Image.open(BytesIO(img_bytes))
-        im = im.convert("RGB")
-        return im
-    except Exception:
-        return None
-
-
-def _draw_image_fit(c: canvas.Canvas, im_reader: ImageReader, x, y, w, h):
-    """Draw image into a bounding box (w,h) keeping aspect ratio."""
-    iw, ih = im_reader.getSize()
-    if iw <= 0 or ih <= 0:
-        return
-    scale = min(w / iw, h / ih)
-    dw = iw * scale
-    dh = ih * scale
-    dx = x + (w - dw) / 2
-    dy = y + (h - dh) / 2
-    c.drawImage(im_reader, dx, dy, dw, dh, preserveAspectRatio=True, mask='auto')
-
-
-def build_session_pdf_bytes(vehicle: dict, session: dict) -> bytes:
-    """
-    Create a simple, pitch-friendly PDF:
-    - Header: vehicle + session
-    - Grid of key photos (front/rear/left/right/interior/odometer) if readable
-    - Damages list + first damage photo thumbnails
-    If an image format can't be decoded (e.g., HEIC), we list filename instead.
-    """
-    buf = BytesIO()
-    c = canvas.Canvas(buf, pagesize=A4)
-    W, H = A4
-
-    margin = 36
-    y = H - margin
-
-    # Header
-    title = "ReturnGuard – Übergabeprotokoll"
-    c.setFont("Helvetica-Bold", 16)
-    c.drawString(margin, y, title)
-    y -= 22
-
-    c.setFont("Helvetica", 10)
-    t_label = "Übergabe" if session["type"] == "handover" else "Rückgabe"
-    c.drawString(margin, y, f"Session: {t_label} · {session.get('timestamp','')}")
-    y -= 14
-
-    person = session.get("counterparty", "").strip() or "—"
-    c.drawString(margin, y, f"Person: {person}")
-    y -= 14
-
-    plate = vehicle.get("plate", "—")
-    brand = vehicle.get("brand", "—")
-    model = vehicle.get("model", "—")
-    vin = vehicle.get("vin", "").strip() or "—"
-    c.drawString(margin, y, f"Fahrzeug: {plate} · {brand} {model} · VIN: {vin}")
-    y -= 18
-
-    # Photos grid
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(margin, y, "Fotos (Pflicht / Kernansichten)")
-    y -= 10
-
-    grid_keys = [
-        ("front", "Front"),
-        ("rear", "Heck"),
-        ("left", "Links"),
-        ("right", "Rechts"),
-        ("interior_front", "Innenraum"),
-        ("odometer", "Tacho"),
-    ]
-
-    # Grid layout: 2 columns, 3 rows
-    box_w = (W - 2 * margin - 12) / 2
-    box_h = 115
-    x1 = margin
-    x2 = margin + box_w + 12
-
-    y0 = y - 8
-    c.setFont("Helvetica", 9)
-
-    row = 0
-    col = 0
-    for key, label in grid_keys:
-        bx = x1 if col == 0 else x2
-        by = y0 - (row + 1) * (box_h + 18)
-
-        # label
-        c.setFont("Helvetica-Bold", 9)
-        c.drawString(bx, by + box_h + 6, label)
-        c.setFont("Helvetica", 8)
-
-        stored = session.get("photos", {}).get(key) or []
-        if stored:
-            item = stored[0]
-            name = item.get("name", "")
-            img_bytes = item.get("bytes", b"")
-            pil = _pil_from_bytes(img_bytes)
-            if pil is not None:
-                img_reader = ImageReader(pil)
-                c.rect(bx, by, box_w, box_h, stroke=1, fill=0)
-                _draw_image_fit(c, img_reader, bx, by, box_w, box_h)
-            else:
-                c.rect(bx, by, box_w, box_h, stroke=1, fill=0)
-                c.drawString(bx + 6, by + box_h - 16, "Bildformat nicht lesbar")
-                c.drawString(bx + 6, by + box_h - 30, f"Datei: {name}")
-        else:
-            c.rect(bx, by, box_w, box_h, stroke=1, fill=0)
-            c.drawString(bx + 6, by + box_h - 16, "Kein Foto")
-
-        col += 1
-        if col == 2:
-            col = 0
-            row += 1
-
-    # Move y to below grid
-    y = y0 - 3 * (box_h + 18) - 10
-
-    # Damages
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(margin, y, "Schäden (manuell erfasst)")
-    y -= 14
-
-    damages = session.get("damages", []) or []
-    c.setFont("Helvetica", 10)
-
-    if not damages:
-        c.drawString(margin, y, "— keine Schäden erfasst —")
-        y -= 14
-    else:
-        for idx, d in enumerate(damages, start=1):
-            if y < margin + 120:
-                c.showPage()
-                y = H - margin
-                c.setFont("Helvetica-Bold", 12)
-                c.drawString(margin, y, "Schäden (Fortsetzung)")
-                y -= 16
-                c.setFont("Helvetica", 10)
-
-            cat = d.get("category", "—")
-            pos = d.get("position", "—")
-            ts = d.get("timestamp", "")
-            note = (d.get("note", "") or "").strip()
-
-            c.setFont("Helvetica-Bold", 10)
-            c.drawString(margin, y, f"{idx}. {cat} · {pos} · {ts}")
-            y -= 12
-
-            c.setFont("Helvetica", 10)
-            if note:
-                c.drawString(margin, y, f"Notiz: {note}")
-                y -= 12
-
-            # damage photo thumbnails (max 2)
-            photos = d.get("photos", []) or []
-            thumb_w = (W - 2 * margin - 12) / 2
-            thumb_h = 90
-            bx1 = margin
-            bx2 = margin + thumb_w + 12
-            by = y - thumb_h - 6
-
-            if photos:
-                for j in range(min(2, len(photos))):
-                    bx = bx1 if j == 0 else bx2
-                    item = photos[j]
-                    name = item.get("name", "")
-                    img_bytes = item.get("bytes", b"")
-                    pil = _pil_from_bytes(img_bytes)
-                    c.rect(bx, by, thumb_w, thumb_h, stroke=1, fill=0)
-                    if pil is not None:
-                        img_reader = ImageReader(pil)
-                        _draw_image_fit(c, img_reader, bx, by, thumb_w, thumb_h)
-                    else:
-                        c.setFont("Helvetica", 8)
-                        c.drawString(bx + 6, by + thumb_h - 16, "Bildformat nicht lesbar")
-                        c.drawString(bx + 6, by + thumb_h - 30, f"Datei: {name}")
-                        c.setFont("Helvetica", 10)
-
-                y = by - 12
-            else:
-                c.drawString(margin, y, "Keine Schadensfotos")
-                y -= 12
-
-    # Footer
-    c.setFont("Helvetica", 8)
-    c.drawString(margin, margin - 10, f"Erstellt am {now_iso()} · ReturnGuard Showcase v0.3")
-
-    c.save()
-    return buf.getvalue()
-
-
 # ---------- Pitch / Demo helpers ----------
 
 def make_demo_image_bytes(label: str, w=1280, h=720) -> bytes:
-    """Creates a simple labeled PNG image for pitch sessions."""
     if not PIL_OK:
-        # fallback: empty bytes (won't crash export, but preview won't show)
         return b""
     img = Image.new("RGB", (w, h), (240, 240, 240))
     draw = ImageDraw.Draw(img)
-
-    # Try default font
     try:
         font = ImageFont.load_default()
     except Exception:
         font = None
-
     text = f"DEMO FOTO\n{label}\n{now_iso()}"
     draw.rectangle([40, 40, w - 40, h - 40], outline=(50, 50, 50), width=6)
     draw.text((80, 120), text, fill=(10, 10, 10), font=font, spacing=10)
-
     out = BytesIO()
     img.save(out, format="PNG")
     return out.getvalue()
@@ -399,7 +190,6 @@ def pitch_prefill_fields():
 
 
 def pitch_create_demo_vehicle_and_session():
-    # Create vehicle
     vid = new_id("veh")
     v = {
         "id": vid,
@@ -413,7 +203,6 @@ def pitch_create_demo_vehicle_and_session():
     st.session_state.vehicles[vid] = v
     st.session_state.selected_vehicle_id = vid
 
-    # Create session
     sid = new_id("sess")
     s = {
         "id": sid,
@@ -427,10 +216,8 @@ def pitch_create_demo_vehicle_and_session():
         "wizard_step": 0,
     }
 
-    # Add demo photos for all required shots
     for k, label in REQUIRED_SHOTS:
         if k == "wheels":
-            # optional: leave empty or add 2 demo pics
             s["photos"][k] = [
                 {"name": f"demo_{k}_1.png", "bytes": make_demo_image_bytes("Felge links (Demo)")},
                 {"name": f"demo_{k}_2.png", "bytes": make_demo_image_bytes("Felge rechts (Demo)")},
@@ -438,7 +225,6 @@ def pitch_create_demo_vehicle_and_session():
         else:
             s["photos"][k] = [{"name": f"demo_{k}.png", "bytes": make_demo_image_bytes(label)}]
 
-    # Add one demo damage
     dmg = {
         "id": new_id("dmg"),
         "timestamp": now_iso(),
@@ -453,13 +239,152 @@ def pitch_create_demo_vehicle_and_session():
     st.session_state.active_session_id = sid
 
 
+# ---------- Protocol (HTML download, print-to-PDF friendly) ----------
+
+def _b64_img_tag(img_bytes: bytes, max_width_px=520) -> str:
+    if not img_bytes:
+        return ""
+    b64 = base64.b64encode(img_bytes).decode("ascii")
+    return f'<img src="data:image/png;base64,{b64}" style="max-width:{max_width_px}px;width:100%;border:1px solid #ddd;border-radius:8px;" />'
+
+
+def build_session_protocol_html(vehicle: dict, session: dict) -> str:
+    plate = html_lib.escape(vehicle.get("plate", "—"))
+    brand = html_lib.escape(vehicle.get("brand", "—"))
+    model = html_lib.escape(vehicle.get("model", "—"))
+    vin = html_lib.escape((vehicle.get("vin") or "—"))
+    note = html_lib.escape((vehicle.get("note") or "").strip())
+
+    t_label = "Übergabe" if session.get("type") == "handover" else "Rückgabe"
+    timestamp = html_lib.escape(session.get("timestamp", ""))
+    person = html_lib.escape((session.get("counterparty") or "—").strip() or "—")
+
+    grid_keys = [
+        ("front", "Front"),
+        ("rear", "Heck"),
+        ("left", "Links"),
+        ("right", "Rechts"),
+        ("interior_front", "Innenraum"),
+        ("odometer", "Tacho"),
+    ]
+
+    def first_img_bytes(key: str):
+        arr = session.get("photos", {}).get(key) or []
+        if not arr:
+            return b""
+        return arr[0].get("bytes") or b""
+
+    # Build grid HTML
+    grid_items = []
+    for key, label in grid_keys:
+        img = first_img_bytes(key)
+        img_html = _b64_img_tag(img, max_width_px=420) if img else '<div class="empty">Kein Foto</div>'
+        grid_items.append(f"""
+            <div class="card">
+              <div class="card-title">{html_lib.escape(label)}</div>
+              {img_html}
+            </div>
+        """)
+
+    # Damages
+    dmg_blocks = []
+    damages = session.get("damages", []) or []
+    if not damages:
+        dmg_blocks.append('<div class="muted">— keine Schäden erfasst —</div>')
+    else:
+        for i, d in enumerate(damages, start=1):
+            cat = html_lib.escape(d.get("category", "—"))
+            pos = html_lib.escape(d.get("position", "—"))
+            ts = html_lib.escape(d.get("timestamp", ""))
+            dnote = html_lib.escape((d.get("note") or "").strip())
+
+            photos = d.get("photos", []) or []
+            photo_htmls = []
+            for ph in photos[:2]:
+                img = ph.get("bytes") or b""
+                if img:
+                    photo_htmls.append(_b64_img_tag(img, max_width_px=420))
+            photos_html = "".join(photo_htmls) if photo_htmls else '<div class="muted">Keine Schadensfotos</div>'
+
+            dmg_blocks.append(f"""
+                <div class="damage">
+                  <div class="damage-title">{i}. {cat} · {pos} · {ts}</div>
+                  {"<div class='muted'>Notiz: " + dnote + "</div>" if dnote else ""}
+                  <div class="damage-photos">{photos_html}</div>
+                </div>
+            """)
+
+    html = f"""
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ReturnGuard Protokoll</title>
+<style>
+  body {{ font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial; margin: 28px; color:#111; }}
+  .header {{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; }}
+  h1 {{ margin:0 0 6px 0; font-size:20px; }}
+  .meta {{ font-size:12px; line-height:1.6; }}
+  .badge {{ display:inline-block; padding:4px 10px; border-radius:999px; background:#f2f2f2; font-size:12px; }}
+  .grid {{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:16px; }}
+  .card {{ border:1px solid #e5e5e5; border-radius:12px; padding:10px; }}
+  .card-title {{ font-weight:700; margin-bottom:8px; font-size:13px; }}
+  .empty {{ border:1px dashed #ccc; border-radius:10px; padding:18px; text-align:center; color:#666; }}
+  .section-title {{ margin-top:18px; font-weight:800; }}
+  .muted {{ color:#666; font-size:12px; }}
+  .damage {{ border:1px solid #e5e5e5; border-radius:12px; padding:10px; margin-top:10px; }}
+  .damage-title {{ font-weight:800; font-size:13px; margin-bottom:6px; }}
+  .damage-photos {{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }}
+  .footer {{ margin-top:18px; font-size:11px; color:#666; border-top:1px solid #eee; padding-top:10px; }}
+  @media print {{
+    body {{ margin: 10mm; }}
+    .damage, .card {{ break-inside: avoid; }}
+  }}
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>ReturnGuard – Übergabeprotokoll</h1>
+      <div class="badge">{html_lib.escape(t_label)}</div>
+      <div class="meta">
+        <div><b>Datum/Zeit:</b> {timestamp}</div>
+        <div><b>Person:</b> {person}</div>
+        <div><b>Fahrzeug:</b> {plate} · {brand} {model}</div>
+        <div><b>VIN:</b> {vin}</div>
+        {f"<div><b>Notiz:</b> {note}</div>" if note else ""}
+      </div>
+    </div>
+    <div class="meta" style="text-align:right;">
+      <div><b>Session-ID:</b> {html_lib.escape(session.get("id",""))}</div>
+      <div><b>Fahrzeug-ID:</b> {html_lib.escape(vehicle.get("id",""))}</div>
+    </div>
+  </div>
+
+  <div class="section-title">Fotos (Kernansichten)</div>
+  <div class="grid">
+    {''.join(grid_items)}
+  </div>
+
+  <div class="section-title">Schäden (manuell erfasst)</div>
+  {''.join(dmg_blocks)}
+
+  <div class="footer">
+    Erstellt am {html_lib.escape(now_iso())} · ReturnGuard Showcase v0.3b · Tipp: Im Browser „Drucken“ → „Als PDF speichern“.
+  </div>
+</body>
+</html>
+"""
+    return html
+
+
 # -----------------------------
 # UI
 # -----------------------------
 ensure_state()
 
 st.title("🛡️ ReturnGuard – Fahrzeug Übergabe-Check (Showcase)")
-st.caption("Wizard-Fotos (1/6), Schadensdoku, Historie, Vorher/Nachher, PDF-Protokoll, Pitch-Buttons.")
+st.caption("Wizard-Fotos (1/6), Historie, Vorher/Nachher, Protokoll-Download (HTML, druckbar als PDF), Pitch-Buttons.")
 
 with st.expander("⚡ Pitch-Modus (1 Klick statt Tipparbeit)", expanded=True):
     c1, c2, c3 = st.columns([1, 1, 2])
@@ -471,10 +396,10 @@ with st.expander("⚡ Pitch-Modus (1 Klick statt Tipparbeit)", expanded=True):
         if st.button("🚀 Demo-Fahrzeug + Demo-Session erzeugen", type="primary", use_container_width=True):
             pitch_prefill_fields()
             pitch_create_demo_vehicle_and_session()
-            st.success("Demo ist erstellt. Rechts kannst du sofort zeigen + PDF ziehen.")
+            st.success("Demo ist erstellt. Rechts → Historie → Protokoll herunterladen.")
             st.rerun()
     with c3:
-        st.caption("Für den Pitch: Klick auf Demo → gehe rechts auf Historie → PDF herunterladen. Fertig. 😄")
+        st.caption("Pitch-Ablauf: Demo klicken → Historie öffnen → Protokoll herunterladen → im Browser als PDF speichern.")
 
 colA, colB = st.columns([1, 2], gap="large")
 
@@ -558,7 +483,6 @@ with colA:
             st.session_state.active_session_id = sid
             st.success("Session gestartet. Rechts kannst du jetzt den Check durchführen.")
 
-
 # ---------- Right column ----------
 with colB:
     vid = st.session_state.selected_vehicle_id
@@ -570,7 +494,6 @@ with colB:
         sessions_for_vehicle = get_vehicle_sessions(vid)
         sessions_for_vehicle_sorted = sorted(sessions_for_vehicle, key=lambda s: s["timestamp"], reverse=True)
 
-        # Active session handling
         active_sid = st.session_state.get("active_session_id")
         if active_sid and active_sid in st.session_state.sessions:
             active = st.session_state.sessions[active_sid]
@@ -582,7 +505,7 @@ with colB:
         tabs = st.tabs(["1) Guided Check", "2) Historie", "3) Vorher/Nachher", "4) Export (Demo)"])
 
         # -----------------------------
-        # Tab 1: Guided Check (WIZARD)
+        # Tab 1: Wizard
         # -----------------------------
         with tabs[0]:
             if not st.session_state.get("active_session_id") or st.session_state.sessions.get(st.session_state.get("active_session_id"), {}).get("vehicle_id") != vid:
@@ -616,7 +539,6 @@ with colB:
 
                 st.divider()
 
-                # Clamp wizard step
                 session["wizard_step"] = max(0, min(session["wizard_step"], len(WIZARD_STEPS) - 1))
                 step_index = session["wizard_step"]
                 step_key, step_label = WIZARD_STEPS[step_index]
@@ -644,7 +566,6 @@ with colB:
                         session["photos"][step_key] = [{"name": f.name, "bytes": f.getvalue()} for f in files]
                         st.success(f"{len(files)} Datei(en) gespeichert.")
                     else:
-                        # accept_multiple_files=False -> UploadedFile
                         f = files
                         session["photos"][step_key] = [{"name": f.name, "bytes": f.getvalue()}]
                         st.success("1 Datei gespeichert.")
@@ -667,7 +588,6 @@ with colB:
                     if st.button("⬅️ Zurück", use_container_width=True, disabled=session["closed"] or step_index == 0):
                         session["wizard_step"] = step_index - 1
                         st.rerun()
-
                 with navM:
                     if st.button("⏭️ Überspringen", use_container_width=True, disabled=session["closed"] or not optional):
                         st.info("Optional übersprungen. Pflichtfotos reichen zum Abschluss.")
@@ -675,7 +595,6 @@ with colB:
                     next_disabled = session["closed"]
                     if not optional and not step_has_photo(session, step_key):
                         next_disabled = True
-
                     if st.button("Weiter ➡️", use_container_width=True, disabled=next_disabled):
                         if step_index < len(WIZARD_STEPS) - 1:
                             session["wizard_step"] = step_index + 1
@@ -724,19 +643,6 @@ with colB:
                             session["damages"].append(dmg)
                             st.success("Schaden gespeichert.")
 
-                if session["damages"]:
-                    st.markdown("#### Gespeicherte Schäden")
-                    for d in session["damages"][::-1]:
-                        with st.expander(f"{d['category']} · {d['position']} · {d['timestamp']}", expanded=False):
-                            if (d.get("note") or "").strip():
-                                st.write(d["note"])
-                            phs = d.get("photos") or []
-                            if phs and phs[0].get("bytes"):
-                                cols = st.columns(min(4, len(phs)))
-                                for i, ph in enumerate(phs[:4]):
-                                    with cols[i % len(cols)]:
-                                        st.image(ph["bytes"], caption=ph.get("name", ""), use_container_width=True)
-
                 st.divider()
                 cL, cR = st.columns([1, 1])
                 with cL:
@@ -762,7 +668,7 @@ with colB:
                         st.rerun()
 
         # -----------------------------
-        # Tab 2: History (PDF HERE)
+        # Tab 2: History (Protocol download HERE)
         # -----------------------------
         with tabs[1]:
             st.markdown("### Historie")
@@ -777,17 +683,18 @@ with colB:
                             f"Pflichtfotos {done_required}/{total_required} · Schäden: {len(s['damages'])}"
                         )
 
-                        # PDF button
-                        pdf_bytes = build_session_pdf_bytes(vehicle, s)
-                        file_name = f"ReturnGuard_Protokoll_{vehicle.get('plate','Fahrzeug')}_{s.get('timestamp','')}.pdf".replace(" ", "_").replace(":", "-")
+                        protocol_html = build_session_protocol_html(vehicle, s)
+                        file_name = f"ReturnGuard_Protokoll_{vehicle.get('plate','Fahrzeug')}_{s.get('timestamp','')}.html".replace(" ", "_").replace(":", "-")
+
                         st.download_button(
-                            "📄 PDF-Protokoll herunterladen",
-                            data=pdf_bytes,
+                            "📄 Protokoll herunterladen (HTML → im Browser als PDF speichern)",
+                            data=protocol_html.encode("utf-8"),
                             file_name=file_name,
-                            mime="application/pdf",
+                            mime="text/html",
                             use_container_width=True
                         )
 
+                        # quick preview
                         preview_keys = ["front", "rear", "left", "right"]
                         pcols = st.columns(4)
                         for i, k in enumerate(preview_keys):
@@ -844,24 +751,6 @@ with colB:
                         else:
                             st.info("Kein Foto.")
 
-                st.divider()
-                st.markdown("#### Schäden (Listenvergleich)")
-                cA, cB = st.columns(2)
-                with cA:
-                    st.write("**Session A – Schäden**")
-                    if sa["damages"]:
-                        for d in sa["damages"]:
-                            st.write(f"- {d['category']} · {d['position']} ({d['timestamp']})")
-                    else:
-                        st.write("—")
-                with cB:
-                    st.write("**Session B – Schäden**")
-                    if sb["damages"]:
-                        for d in sb["damages"]:
-                            st.write(f"- {d['category']} · {d['position']} ({d['timestamp']})")
-                    else:
-                        st.write("—")
-
         # -----------------------------
         # Tab 4: Export
         # -----------------------------
@@ -871,7 +760,6 @@ with colB:
 
             try:
                 json_str = export_state_as_json()
-
                 st.download_button(
                     "JSON Export herunterladen",
                     data=json_str.encode("utf-8"),
@@ -879,13 +767,11 @@ with colB:
                     mime="application/json",
                     use_container_width=True
                 )
-
                 with st.expander("JSON Vorschau", expanded=False):
                     st.code(json_str, language="json")
-
             except Exception as e:
                 st.error("Export ist fehlgeschlagen (Demo-Schutz).")
                 st.code(str(e))
 
 st.divider()
-st.caption("Showcase v0.3 – Wizard + PDF + Pitch Prefill. Nächster Schritt: Rollen/Cloud oder echter OCR-Scan in iOS.")
+st.caption("Showcase v0.3b – Wizard + HTML-Protokoll + Pitch Prefill. Nächster Schritt: echtes PDF via requirements oder iOS-App.")
