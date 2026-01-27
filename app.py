@@ -30,13 +30,13 @@ def now_iso() -> str:
 
 def ensure_state():
     if "vehicles" not in st.session_state:
-        # vehicles: {vehicle_id: {...}}
         st.session_state.vehicles = {}
     if "sessions" not in st.session_state:
-        # sessions: {session_id: {...}}
         st.session_state.sessions = {}
     if "selected_vehicle_id" not in st.session_state:
         st.session_state.selected_vehicle_id = None
+    if "active_session_id" not in st.session_state:
+        st.session_state.active_session_id = None
 
 
 def new_id(prefix: str) -> str:
@@ -52,10 +52,7 @@ def vehicle_label(v: dict) -> str:
 
 
 def get_vehicle_sessions(vehicle_id: str):
-    return [
-        s for s in st.session_state.sessions.values()
-        if s["vehicle_id"] == vehicle_id
-    ]
+    return [s for s in st.session_state.sessions.values() if s["vehicle_id"] == vehicle_id]
 
 
 def session_label(s: dict) -> str:
@@ -64,7 +61,6 @@ def session_label(s: dict) -> str:
 
 
 def progress_required_photos(session: dict) -> tuple[int, int]:
-    # Wheels optional -> exclude from required progress
     required_keys = [k for k, _ in REQUIRED_SHOTS if k != "wheels"]
     uploaded = 0
     for k in required_keys:
@@ -73,11 +69,9 @@ def progress_required_photos(session: dict) -> tuple[int, int]:
     return uploaded, len(required_keys)
 
 
+# ---------- Export helpers (fix bytes -> metadata) ----------
+
 def _json_safe(obj):
-    """
-    Convert non-JSON-serializable objects (notably bytes) into safe placeholders.
-    For this Showcase we keep exports small: store metadata instead of raw bytes.
-    """
     if isinstance(obj, (bytes, bytearray)):
         return {"_type": "bytes", "len": len(obj)}
     if isinstance(obj, dict):
@@ -88,14 +82,10 @@ def _json_safe(obj):
 
 
 def _strip_image_bytes(data: dict) -> dict:
-    """
-    Create a copy where all photo byte payloads are replaced with metadata.
-    Keeps the structure intact, but avoids JSON serialization errors & huge exports.
-    """
-    # First pass: replace bytes with placeholders so json can clone safely
+    # Clone safely (bytes become placeholders)
     data = json.loads(json.dumps(_json_safe(data), ensure_ascii=False))
 
-    # Second pass: reduce photo objects to just name + size
+    # Reduce photo objects to just name + size
     for sess in data.get("sessions", {}).values():
         photos = sess.get("photos", {}) or {}
         for key, items in photos.items():
@@ -105,10 +95,7 @@ def _strip_image_bytes(data: dict) -> dict:
                 b = it.get("bytes")
                 if isinstance(b, dict):
                     size = b.get("len")
-                cleaned.append({
-                    "name": it.get("name"),
-                    "size_bytes": size,
-                })
+                cleaned.append({"name": it.get("name"), "size_bytes": size})
             photos[key] = cleaned
 
         for dmg in sess.get("damages", []) or []:
@@ -118,10 +105,7 @@ def _strip_image_bytes(data: dict) -> dict:
                 b = it.get("bytes")
                 if isinstance(b, dict):
                     size = b.get("len")
-                cleaned.append({
-                    "name": it.get("name"),
-                    "size_bytes": size,
-                })
+                cleaned.append({"name": it.get("name"), "size_bytes": size})
             dmg["photos"] = cleaned
 
     return data
@@ -138,6 +122,7 @@ def export_state_as_json() -> str:
     safe = _strip_image_bytes(raw)
     return json.dumps(safe, indent=2, ensure_ascii=False)
 
+
 # -----------------------------
 # UI
 # -----------------------------
@@ -148,8 +133,10 @@ st.caption("Prototyp: geführte Fotos, Schadensdoku, Historie, Vorher/Nachher-Ve
 
 colA, colB = st.columns([1, 2], gap="large")
 
+# ---------- Left column ----------
 with colA:
     st.subheader("🚗 Fahrzeuge")
+
     with st.expander("➕ Neues Fahrzeug anlegen", expanded=True):
         plate = st.text_input("Kennzeichen*", placeholder="M-AB 1234")
         brand = st.text_input("Marke*", placeholder="Audi")
@@ -199,10 +186,16 @@ with colA:
             st.write(f"- Notiz: {v['note']}")
 
         st.divider()
-
         st.subheader("🧾 Session starten")
-        s_type = st.radio("Session-Typ", options=["handover", "return"], format_func=lambda x: "Übergabe" if x == "handover" else "Rückgabe", horizontal=True)
+
+        s_type = st.radio(
+            "Session-Typ",
+            options=["handover", "return"],
+            format_func=lambda x: "Übergabe" if x == "handover" else "Rückgabe",
+            horizontal=True
+        )
         counterparty = st.text_input("Übergabe an / Rückgabe von (optional)", placeholder="Name (Mitarbeiter/Kunde)")
+
         if st.button("Neue Session starten", use_container_width=True):
             sid = new_id("sess")
             st.session_state.sessions[sid] = {
@@ -211,7 +204,7 @@ with colA:
                 "type": s_type,
                 "timestamp": now_iso(),
                 "counterparty": counterparty.strip(),
-                "photos": {k: [] for k, _ in REQUIRED_SHOTS},  # each key -> list of uploaded files (bytes)
+                "photos": {k: [] for k, _ in REQUIRED_SHOTS},  # list of dicts {name, bytes}
                 "damages": [],  # list of damage dicts
                 "closed": False,
             }
@@ -219,6 +212,7 @@ with colA:
             st.success("Session gestartet. Rechts kannst du jetzt den Check durchführen.")
 
 
+# ---------- Right column ----------
 with colB:
     vid = st.session_state.selected_vehicle_id
 
@@ -228,13 +222,13 @@ with colB:
         sessions_for_vehicle = get_vehicle_sessions(vid)
         sessions_for_vehicle_sorted = sorted(sessions_for_vehicle, key=lambda s: s["timestamp"], reverse=True)
 
-        # Active session handling
+        # Active session handling (if vehicle changed, drop active)
         active_sid = st.session_state.get("active_session_id")
         if active_sid and active_sid in st.session_state.sessions:
             active = st.session_state.sessions[active_sid]
             if active["vehicle_id"] != vid:
-                # If vehicle changed, don't auto-switch active session
                 active_sid = None
+                st.session_state.active_session_id = None
 
         st.subheader("📸 Ablauf")
         tabs = st.tabs(["1) Guided Check", "2) Historie", "3) Vorher/Nachher", "4) Export (Demo)"])
@@ -258,7 +252,6 @@ with colB:
                 st.progress(uploaded / total if total else 0.0)
                 st.caption(f"Pflichtfotos: {uploaded}/{total} erledigt (Felgen optional)")
 
-                # Guided required photos
                 st.markdown("#### Pflichtfotos (geführt)")
                 for key, label in REQUIRED_SHOTS:
                     with st.expander(f"{label}", expanded=False):
@@ -283,11 +276,9 @@ with colB:
                         )
 
                         if files:
-                            # store bytes
                             session["photos"][key] = [{"name": f.name, "bytes": f.getvalue()} for f in files]
                             st.success(f"{len(files)} Datei(en) gespeichert.")
 
-                        # preview
                         stored = session["photos"].get(key) or []
                         if stored:
                             st.caption(f"Gespeichert: {len(stored)}")
@@ -306,7 +297,12 @@ with colB:
                     with c2:
                         pos = st.selectbox("Position", POSITIONS, key=f"pos_{sid}", disabled=session["closed"])
                     with c3:
-                        note = st.text_input("Notiz (optional)", key=f"note_{sid}", placeholder="z.B. Kratzer ca. 5cm, Stoßfänger unten", disabled=session["closed"])
+                        note = st.text_input(
+                            "Notiz (optional)",
+                            key=f"note_{sid}",
+                            placeholder="z.B. Kratzer ca. 5cm, Stoßfänger unten",
+                            disabled=session["closed"],
+                        )
 
                     dmg_files = st.file_uploader(
                         "Schadensfoto(s) hochladen",
@@ -332,7 +328,6 @@ with colB:
                             session["damages"].append(dmg)
                             st.success("Schaden gespeichert.")
 
-                # list damages
                 if session["damages"]:
                     st.markdown("#### Gespeicherte Schäden")
                     for d in session["damages"][::-1]:
@@ -348,7 +343,6 @@ with colB:
                 cL, cR = st.columns([1, 1])
                 with cL:
                     if st.button("Session abschließen", type="primary", use_container_width=True, disabled=session["closed"]):
-                        # Require mandatory photos except wheels
                         missing = []
                         for k, label in REQUIRED_SHOTS:
                             if k == "wheels":
@@ -377,8 +371,11 @@ with colB:
                 for s in sessions_for_vehicle_sorted:
                     with st.expander(session_label(s), expanded=False):
                         uploaded, total = progress_required_photos(s)
-                        st.caption(f"Status: {'✅ abgeschlossen' if s['closed'] else '🟡 offen'} · Pflichtfotos {uploaded}/{total} · Schäden: {len(s['damages'])}")
-                        # quick preview of the 4 main shots
+                        st.caption(
+                            f"Status: {'✅ abgeschlossen' if s['closed'] else '🟡 offen'} · "
+                            f"Pflichtfotos {uploaded}/{total} · Schäden: {len(s['damages'])}"
+                        )
+
                         preview_keys = ["front", "rear", "left", "right"]
                         pcols = st.columns(4)
                         for i, k in enumerate(preview_keys):
@@ -408,7 +405,14 @@ with colB:
                 sb = st.session_state.sessions[sid_b]
 
                 st.caption("Tipp: Wähle A=Übergabe und B=Rückgabe.")
-                shot_pairs = [("front", "Front"), ("rear", "Heck"), ("left", "Links"), ("right", "Rechts"), ("interior_front", "Innenraum"), ("odometer", "Tacho")]
+                shot_pairs = [
+                    ("front", "Front"),
+                    ("rear", "Heck"),
+                    ("left", "Links"),
+                    ("right", "Rechts"),
+                    ("interior_front", "Innenraum"),
+                    ("odometer", "Tacho"),
+                ]
 
                 for key, label in shot_pairs:
                     st.markdown(f"#### {label}")
@@ -447,29 +451,29 @@ with colB:
                         st.write("—")
 
         # -----------------------------
-        # Tab 4: Export
+        # Tab 4: Export (FIXED)
         # -----------------------------
-       with tabs[3]:
-    st.markdown("### Export (Demo)")
-    st.write("Exportiert werden **nur Metadaten** (keine Bild-Bytes), damit der Showcase stabil bleibt.")
+        with tabs[3]:
+            st.markdown("### Export (Demo)")
+            st.write("Exportiert werden **nur Metadaten** (keine Bild-Bytes), damit der Showcase stabil bleibt.")
 
-    try:
-        json_str = export_state_as_json()
+            try:
+                json_str = export_state_as_json()
 
-        st.download_button(
-            "JSON Export herunterladen",
-            data=json_str.encode("utf-8"),
-            file_name="returnguard_handover_showcase.json",
-            mime="application/json",
-            use_container_width=True
-        )
+                st.download_button(
+                    "JSON Export herunterladen",
+                    data=json_str.encode("utf-8"),
+                    file_name="returnguard_handover_showcase.json",
+                    mime="application/json",
+                    use_container_width=True
+                )
 
-        with st.expander("JSON Vorschau", expanded=False):
-            st.code(json_str, language="json")
+                with st.expander("JSON Vorschau", expanded=False):
+                    st.code(json_str, language="json")
 
-    except Exception as e:
-        st.error("Export ist fehlgeschlagen (Demo-Schutz).")
-        st.code(str(e))
+            except Exception as e:
+                st.error("Export ist fehlgeschlagen (Demo-Schutz).")
+                st.code(str(e))
 
 # Footer
 st.divider()
