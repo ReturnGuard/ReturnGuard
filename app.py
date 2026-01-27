@@ -247,4 +247,168 @@ with colB:
                 with st.container(border=True):
                     c1, c2, c3 = st.columns([1, 1, 2])
                     with c1:
-                        cat = st.selectbox("Kategori
+                        cat = st.selectbox("Kategorie", DAMAGE_CATEGORIES, key=f"cat_{sid}", disabled=session["closed"])
+                    with c2:
+                        pos = st.selectbox("Position", POSITIONS, key=f"pos_{sid}", disabled=session["closed"])
+                    with c3:
+                        note = st.text_input("Notiz (optional)", key=f"note_{sid}", placeholder="z.B. Kratzer ca. 5cm, Stoßfänger unten", disabled=session["closed"])
+
+                    dmg_files = st.file_uploader(
+                        "Schadensfoto(s) hochladen",
+                        type=["jpg", "jpeg", "png", "heic"],
+                        accept_multiple_files=True,
+                        key=f"dmg_{sid}",
+                        disabled=session["closed"],
+                    )
+
+                    add = st.button("Schaden speichern", type="secondary", use_container_width=True, disabled=session["closed"])
+                    if add:
+                        if not dmg_files:
+                            st.error("Bitte mindestens ein Schadensfoto hochladen.")
+                        else:
+                            dmg = {
+                                "id": new_id("dmg"),
+                                "timestamp": now_iso(),
+                                "category": cat,
+                                "position": pos,
+                                "note": note.strip(),
+                                "photos": [{"name": f.name, "bytes": f.getvalue()} for f in dmg_files],
+                            }
+                            session["damages"].append(dmg)
+                            st.success("Schaden gespeichert.")
+
+                # list damages
+                if session["damages"]:
+                    st.markdown("#### Gespeicherte Schäden")
+                    for d in session["damages"][::-1]:
+                        with st.expander(f"{d['category']} · {d['position']} · {d['timestamp']}", expanded=False):
+                            if d.get("note"):
+                                st.write(d["note"])
+                            cols = st.columns(min(4, len(d["photos"])))
+                            for i, ph in enumerate(d["photos"][:4]):
+                                with cols[i % len(cols)]:
+                                    st.image(ph["bytes"], caption=ph["name"], use_container_width=True)
+
+                st.divider()
+                cL, cR = st.columns([1, 1])
+                with cL:
+                    if st.button("Session abschließen", type="primary", use_container_width=True, disabled=session["closed"]):
+                        # Require mandatory photos except wheels
+                        missing = []
+                        for k, label in REQUIRED_SHOTS:
+                            if k == "wheels":
+                                continue
+                            if not session["photos"].get(k):
+                                missing.append(label)
+                        if missing:
+                            st.error("Noch fehlen Pflichtfotos: " + ", ".join(missing))
+                        else:
+                            session["closed"] = True
+                            st.success("Session abgeschlossen (gespeichert in Historie).")
+                with cR:
+                    if st.button("Session verwerfen (Demo)", use_container_width=True):
+                        del st.session_state.sessions[sid]
+                        st.session_state.active_session_id = None
+                        st.warning("Session verworfen.")
+
+        # -----------------------------
+        # Tab 2: History
+        # -----------------------------
+        with tabs[1]:
+            st.markdown("### Historie")
+            if not sessions_for_vehicle_sorted:
+                st.info("Noch keine Sessions für dieses Fahrzeug.")
+            else:
+                for s in sessions_for_vehicle_sorted:
+                    with st.expander(session_label(s), expanded=False):
+                        uploaded, total = progress_required_photos(s)
+                        st.caption(f"Status: {'✅ abgeschlossen' if s['closed'] else '🟡 offen'} · Pflichtfotos {uploaded}/{total} · Schäden: {len(s['damages'])}")
+                        # quick preview of the 4 main shots
+                        preview_keys = ["front", "rear", "left", "right"]
+                        pcols = st.columns(4)
+                        for i, k in enumerate(preview_keys):
+                            imgs = s["photos"].get(k) or []
+                            if imgs:
+                                with pcols[i]:
+                                    st.image(imgs[0]["bytes"], caption=k, use_container_width=True)
+
+        # -----------------------------
+        # Tab 3: Before/After compare
+        # -----------------------------
+        with tabs[2]:
+            st.markdown("### Vorher/Nachher Vergleich")
+            if len(sessions_for_vehicle_sorted) < 2:
+                st.info("Für den Vergleich brauchst du mindestens zwei Sessions (z.B. Übergabe + Rückgabe).")
+            else:
+                options = [s["id"] for s in sessions_for_vehicle_sorted]
+                labels = {s["id"]: session_label(s) for s in sessions_for_vehicle_sorted}
+
+                c1, c2 = st.columns(2)
+                with c1:
+                    sid_a = st.selectbox("Session A (Vorher)", options=options, format_func=lambda x: labels[x], key="cmp_a")
+                with c2:
+                    sid_b = st.selectbox("Session B (Nachher)", options=options, format_func=lambda x: labels[x], key="cmp_b")
+
+                sa = st.session_state.sessions[sid_a]
+                sb = st.session_state.sessions[sid_b]
+
+                st.caption("Tipp: Wähle A=Übergabe und B=Rückgabe.")
+                shot_pairs = [("front", "Front"), ("rear", "Heck"), ("left", "Links"), ("right", "Rechts"), ("interior_front", "Innenraum"), ("odometer", "Tacho")]
+
+                for key, label in shot_pairs:
+                    st.markdown(f"#### {label}")
+                    ca, cb = st.columns(2)
+                    with ca:
+                        st.write("**Session A**")
+                        imgs = sa["photos"].get(key) or []
+                        if imgs:
+                            st.image(imgs[0]["bytes"], use_container_width=True)
+                        else:
+                            st.info("Kein Foto.")
+                    with cb:
+                        st.write("**Session B**")
+                        imgs = sb["photos"].get(key) or []
+                        if imgs:
+                            st.image(imgs[0]["bytes"], use_container_width=True)
+                        else:
+                            st.info("Kein Foto.")
+
+                st.divider()
+                st.markdown("#### Schäden (Listenvergleich)")
+                cA, cB = st.columns(2)
+                with cA:
+                    st.write("**Session A – Schäden**")
+                    if sa["damages"]:
+                        for d in sa["damages"]:
+                            st.write(f"- {d['category']} · {d['position']} ({d['timestamp']})")
+                    else:
+                        st.write("—")
+                with cB:
+                    st.write("**Session B – Schäden**")
+                    if sb["damages"]:
+                        for d in sb["damages"]:
+                            st.write(f"- {d['category']} · {d['position']} ({d['timestamp']})")
+                    else:
+                        st.write("—")
+
+        # -----------------------------
+        # Tab 4: Export
+        # -----------------------------
+        with tabs[3]:
+            st.markdown("### Export (Demo)")
+            st.write("Für Investor-/Stakeholder-Demos ist Export praktisch (z.B. als Protokoll-Quelle).")
+            json_str = export_state_as_json()
+            st.download_button(
+                "JSON Export herunterladen",
+                data=json_str.encode("utf-8"),
+                file_name="returnguard_handover_showcase.json",
+                mime="application/json",
+                use_container_width=True
+            )
+            with st.expander("JSON Vorschau", expanded=False):
+                st.code(json_str, language="json")
+
+
+# Footer
+st.divider()
+st.caption("Showcase v0.1 – Nächster Schritt: PDF-Protokoll + (optional) OCR-Scan-Simulation + Rollen/Cloud.")
