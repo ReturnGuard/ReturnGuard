@@ -181,3 +181,22 @@ elif page == "📊 Investor Dashboard":
     with col_i2:
         st.subheader("Exit Strategie")
         st.write("Ziel 2029: Akquisition durch Mobile.de oder Versicherungskonzerne (Allianz/HUK).")
+PROMPT: IMPLEMENT B2B MARKETPLACE & LEGAL REFERRAL
+Aktualisiere die 'app.py' im Zweig 'test-neuaufbau-from-main' um folgende B2B-Funktionen:
+
+1. WERKSTATT-MARKTPLATZ (Neuer Menüpunkt):
+   - Erstelle eine Ansicht 'Partner-Portal'.
+   - Zeige eine Liste von "Offenen Reparatur-Anfragen" (Leads).
+   - Jeder Lead enthält: Fahrzeugmodell, Schadenstyp (z.B. SMR Lack), Distanz und den 'Lead-Preis' (z.B. 15,00 €).
+   - Button: "Lead jetzt kaufen & Kontaktdaten freischalten".
+
+2. ANWALT-REFERRAL:
+   - Füge auf der 'Shadow Expert' Seite einen Bereich hinzu: "Rechtlicher Beistand nötig?".
+   - Button: "Fall an spezialisierten Anwalt übergeben".
+   - Info-Text: "Kostenlose Erstberatung über ReturnGuard-Partneranwälte." (Hier generieren wir die Referral-Fee).
+
+3. LEAD-QUALITÄT (Daten-Output):
+   - Stelle sicher, dass die Expert-Check Daten als sauberes JSON-Objekt im Hintergrund bereitliegen (simuliert für das Investor-Dashboard als 'Daten-Asset').
+
+4. DESIGN-UPGRADE:
+   - Ersetze einfache Checkboxen im Expert-Check durch 'st.button' oder Karten-Elemente, damit es mehr nach einer modernen App aussieht.
