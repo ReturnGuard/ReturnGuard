@@ -1,246 +1,183 @@
 import streamlit as st
 import pandas as pd
 import json
-from datetime import datetime, timedelta
+import plotly.express as px
+from datetime import datetime
 
-# ==================== CONFIGURATION & THEME ====================
+# =================================================================
+# RETURN GUARD v0.2 - FULL PROTOTYPE FOR INVESTORS
+# =================================================================
+
+# Konfiguration
 st.set_page_config(
-    page_title="ReturnGuard v0.2 | Professional Leasing Protection",
+    page_title="ReturnGuard | Ihr Leasing-Schutzschild",
     page_icon="🛡️",
     layout="wide"
 )
 
-# Custom CSS für den Investor-Showcase Look
+# Professionelles Styling (ReturnGuard Brand)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-    .main { background-color: #f8f9fa; }
-    .stButton>button { 
-        background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%); 
-        color: white; border-radius: 8px; border: none; padding: 0.5rem 1rem;
-    }
-    .veto-card { 
-        background-color: #fff1f2; border-left: 5px solid #e11d48; 
-        padding: 1.5rem; border-radius: 8px; margin: 1rem 0;
-    }
-    .savings-badge {
-        background-color: #dcfce7; color: #166534;
-        padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold;
-    }
+    .stApp { background-color: #f9fafb; }
+    
+    /* Hero Section */
+    .hero { background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%); color: white; padding: 3rem; border-radius: 15px; margin-bottom: 2rem; }
+    
+    /* Veto & Status Cards */
+    .veto-card { background: #fff1f2; border-left: 5px solid #e11d48; padding: 1.5rem; border-radius: 8px; margin: 10px 0; }
+    .info-card { background: #f0fdf4; border-left: 5px solid #16a34a; padding: 1rem; border-radius: 8px; }
+    
+    /* Sidebar */
+    .css-1d391kg { background-color: #ffffff !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== DATA HEART (SESSION STATE) ====================
+# ==================== LOGIK & DATEN-HUB ====================
 if 'rg_data' not in st.session_state:
     st.session_state.rg_data = {
-        "vehicle": {"vin": "---", "brand": "---", "model": "---", "year": "---", "mileage": 0},
-        "customer": {"name": "---", "address": "---", "email": "---"},
-        "assessment": {"damages": [], "vetos": [], "confidence": 0.0},
-        "financials": {"dealer_total": 0.0, "rg_total": 0.0, "savings": 0.0},
-        "is_ocr_done": False
+        "vehicle": {"brand": "---", "model": "---", "vin": "---", "ez": "---"},
+        "analysis": {"vetos": [], "savings": 0, "status": "Green"},
+        "is_scanned": False
     }
 
-# ==================== HELPER FUNCTIONS ====================
-def simulate_ocr():
-    """Simuliert den Deep-Scan des Fahrzeugscheins"""
+def run_ocr_simulation():
     st.session_state.rg_data["vehicle"] = {
-        "vin": "WVGZZZ1K7FW001234",
-        "brand": "Volkswagen",
-        "model": "Golf VIII (GTE)",
-        "year": "2022",
-        "mileage": 42500
+        "brand": "Volkswagen", "model": "Golf VIII GTE",
+        "vin": "WVGZZZ1K7FW00XXXX", "ez": "03/2022"
     }
-    st.session_state.rg_data["customer"] = {
-        "name": "Max Mustermann",
-        "address": "Musterstraße 1, 80331 München",
-        "email": "max.mustermann@email.de"
-    }
-    st.session_state.rg_data["is_ocr_done"] = True
-    st.toast("Fahrzeugschein erfolgreich gescannt!", icon="✅")
+    st.session_state.rg_data["is_scanned"] = True
+    st.toast("Fahrzeugschein-Daten extrahiert!", icon="📄")
 
-# ==================== SIDEBAR NAVIGATION ====================
+# ==================== SIDEBAR ====================
 with st.sidebar:
-    st.image("https://via.placeholder.com/150x50?text=ReturnGuard", width=150)
-    st.title("Navigation")
-    page = st.radio("Bereich wählen:", [
-        "🏠 Home", 
-        "🔍 Expert-Check", 
-        "🛡️ Shadow Expert (Veto)", 
-        "🏢 Fleet-Portal", 
-        "📊 Investor-Dashboard"
-    ])
+    st.title("🛡️ ReturnGuard")
+    st.caption("Version 0.2 | Investor Showcase")
+    st.divider()
+    
+    page = st.radio("Menü", ["🏠 Home", "🔍 Expert-Check", "⚖️ Shadow Expert", "🏢 Fleet-Portal", "📊 Investor Dashboard"])
     
     st.divider()
-    if st.button("📄 Fahrzeugschein scannen (OCR)"):
-        simulate_ocr()
+    if st.button("📸 Fahrzeugschein scannen"):
+        run_ocr_simulation()
+    
+    if st.session_state.rg_data["is_scanned"]:
+        st.success(f"Aktiv: {st.session_state.rg_data['vehicle']['model']}")
 
 # ==================== PAGE 1: HOME ====================
 if page == "🏠 Home":
-    st.title("Willkommen bei ReturnGuard")
-    st.subheader("Ihr digitaler Schutzschild bei der Leasingrückgabe.")
+    st.markdown("""
+    <div class="hero">
+        <h1>Die Zukunft der Leasingrückgabe.</h1>
+        <p>ReturnGuard schützt Leasingnehmer vor unberechtigten Nachforderungen durch herstellerunabhängige Prüfung & Rechts-KI.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown(f"""
-        ### Warum ReturnGuard?
-        * **Unabhängig:** Wir prüfen Händlerforderungen gegen Hersteller-Kataloge.
-        * **Rechtssicher:** Inklusive aktueller OLG-Urteile (z.B. OLG Stuttgart 2025).
-        * **Kosteneffizient:** Durchschnittliche Ersparnis von **850 € pro Rückgabe**.
-        """)
-        if st.button("Jetzt Expert-Check starten"):
-            st.info("Bitte nutzen Sie die Navigation links, um fortzufahren.")
-    
+        st.subheader("1. Vor-Check")
+        st.write("Prüfen Sie Ihr Fahrzeug modular nach den 14 Vest-Punkten.")
     with col2:
-        st.info("**Aktueller Status:** " + 
-                ("✅ Dokumente erkannt" if st.session_state.rg_data["is_ocr_done"] else "⚠️ Bitte Fahrzeugschein scannen"))
-        if st.session_state.rg_data["is_ocr_done"]:
-            st.write(f"**Fahrzeug:** {st.session_state.rg_data['vehicle']['brand']} {st.session_state.rg_data['vehicle']['model']}")
-            st.write(f"**Halter:** {st.session_state.rg_data['customer']['name']}")
+        st.subheader("2. Shadow Expert")
+        st.write("Wir prüfen Händler-Gutachten gegen offizielle Hersteller-Kataloge.")
+    with col3:
+        st.subheader("3. Geld sparen")
+        st.write("Durchschnittlich 850 € Ersparnis durch Veto-Logik und Partner-Netzwerk.")
+
 # ==================== PAGE 2: EXPERT-CHECK ====================
-if page == "🔍 Expert-Check":
-    st.title("Interaktiver Fahrzeug-Check")
-    st.write("Markieren Sie die betroffenen Stellen am Fahrzeug oder nutzen Sie die Kategorien.")
+elif page == "🔍 Expert-Check":
+    st.title("Modularer Expert-Check")
+    st.info("Klicken Sie auf die Bereiche, um Schäden zu dokumentieren. Der Shadow Expert prüft im Hintergrund.")
 
-    # Interaktive SVG Skizze (Simuliert als Spalten-Buttons für Stabilität)
-    st.subheader("Fahrzeug-Bereich wählen")
-    c1, c2, c3, c4 = st.columns(4)
-    with c1: 
-        if st.button("🚗 Front / Motorhaube"): st.session_state.target_cat = "Außenhaut"
-    with c2:
-        if st.button("🎡 Räder / Felgen"): st.session_state.target_cat = "Fahrwerk"
-    with c3:
-        if st.button("🪟 Glas / Optik"): st.session_state.target_cat = "Verglasung"
-    with c4:
-        if st.button("🛋️ Innenraum"): st.session_state.target_cat = "Innenraum"
-
-    st.divider()
-
-    # Modulares Audit System
-    with st.expander("🛡️ Außenhaut & Karosserie", expanded=(st.session_state.get('target_cat') == "Außenhaut")):
-        col_a, col_b = st.columns(2)
-        with col_a:
-            delle = st.checkbox("Delle / Beule (Tür/Haube)")
+    # Kategorien
+    with st.expander("🚗 Außenhaut & Karosserie", expanded=True):
+        c1, c2 = st.columns(2)
+        with c1:
+            delle = st.checkbox("Delle / Beule vorhanden")
             kratzer = st.checkbox("Kratzer (Lackbeschädigung)")
-        with col_b:
+        with c2:
             if delle:
-                groesse = st.slider("Größe der Delle (in mm)", 0, 100, 15)
-                # Shadow Expert Preview Logik
-                if groesse < 20:
-                    st.info("💡 **Shadow Expert:** VWFS & BMW akzeptieren Dellen < 20mm oft als Gebrauchsspur.")
+                size = st.slider("Größe der Delle (mm)", 5, 50, 15)
+                if size <= 20:
+                    st.markdown('<div class="info-card">💡 <b>Shadow Expert:</b> Dellen < 20mm gelten bei VWFS/Audi als akzeptierter Verschleiß. 0€ Kosten.</div>', unsafe_allow_html=True)
                 else:
-                    st.warning("⚠️ **Shadow Expert:** Über 20mm gilt meist als reparaturpflichtiger Schaden.")
+                    st.warning("⚠️ Reparaturpflichtiger Schaden (> 20mm).")
 
-    with st.expander("🎡 Fahrwerk & Räder", expanded=(st.session_state.get('target_cat') == "Fahrwerk")):
-        felge = st.checkbox("Bordsteinschaden an Felge")
+    with st.expander("🎡 Fahrwerk & Räder"):
+        felge = st.checkbox("Bordsteinschaden")
         if felge:
-            tiefe = st.number_input("Tiefe des Kratzers (in mm)", 0.0, 5.0, 0.5)
+            tiefe = st.number_input("Tiefe (mm)", 0.1, 5.0, 0.5)
             if tiefe < 1.0:
-                st.info("💡 **Shadow Expert:** Kratzer < 1mm Tiefe sind laut BMW/Mercedes meist zulässiger Verschleiß.")
+                st.info("💡 **Shadow Expert:** Kratzer < 1mm Tiefe sind laut BMW/Mercedes meist zulässig.")
 
-    with st.expander("🪟 Verglasung & Optik", expanded=(st.session_state.get('target_cat') == "Verglasung")):
-        stein = st.checkbox("Steinschlag Windschutzscheibe")
-        if stein:
-            sichtfeld = st.radio("Lage des Steinschlags:", ["Im Sichtfeld des Fahrers", "Am Rand / Beifahrerseite"])
-            if sichtfeld == "Am Rand / Beifahrerseite":
-                st.success("💡 **Shadow Expert:** Außerhalb des Sichtfelds ist eine Reparatur (ca. 100€) statt Tausch (ca. 1000€) zulässig.")
+    with st.expander("🪟 Verglasung & Optik"):
+        st.write("Checkliste: Windschutzscheibe, Scheinwerfer, Spiegelgläser.")
 
-# ==================== PAGE 3: SHADOW EXPERT (VETO) ====================
-if page == "🛡️ Shadow Expert (Veto)":
-    st.title("Shadow Expert: Händler-Protokoll Veto-Check")
-    st.write("Laden Sie hier das Rückgabeprotokoll des Händlers hoch, um unberechtigte Forderungen zu finden.")
+    with st.expander("🛋️ Innenraum & Technik"):
+        st.write("Checkliste: Sitze, Gerüche, Elektronik, Bordwerkzeug.")
+
+# ==================== PAGE 3: SHADOW EXPERT ====================
+elif page == "⚖️ Shadow Expert":
+    st.title("Shadow Expert: Veto-Analyse")
+    st.write("Laden Sie das Gutachten des Händlers hoch. Wir finden die Fehler.")
     
-    uploaded_file = st.file_uploader("Protokoll (PDF/JPG) hochladen", type=["pdf", "jpg", "png"])
+    up = st.file_uploader("Gutachten / Protokoll hochladen", type=["pdf", "jpg"])
     
-    if uploaded_file:
-        with st.status("Analysiere Protokoll gegen Hersteller-Kataloge 2026...", expanded=True):
-            st.write("Suche nach Positionen...")
-            st.write("Vergleiche mit OLG Stuttgart Az. 6 U 84/24...")
-        
-        st.subheader("Analyse-Ergebnis")
-        
-        # Beispiel für ein gefundenes Veto
+    if up or st.button("Beispiel-Analyse starten"):
         st.markdown("""
         <div class="veto-card">
-            <h4>❌ VETO: Position 'Alufelge vorne rechts'</h4>
-            <p><b>Händler-Forderung:</b> 450,00 € (Austausch)</p>
-            <p><b>Shadow Expert Urteil:</b> Unberechtigt. Der Kratzer wird im Protokoll mit 12mm beschrieben. 
-            Laut aktuellem BMW-Schadenskatalog sind Kratzer bis 20mm als Gebrauchsspur zu akzeptieren.</p>
-            <p><b>Rechtlicher Hebel:</b> OLG Stuttgart (Neu-für-Alt Abzug nicht berücksichtigt).</p>
-            <span class="savings-badge">Potenzielle Ersparnis: 450,00 €</span>
+            <h3>❌ VETO GEFUNDEN</h3>
+            <p><b>Position:</b> Stoßfänger vorne (Lackierung)<br>
+            <b>Händler-Forderung:</b> 480,00 €</p>
+            <p><b>Begründung:</b> Der beschriebene Kratzer ist polierbar und nicht grundierungstief. 
+            Laut OLG Stuttgart (Az. 6 U 84/24) ist dies als normale Gebrauchsspur einzustufen.</p>
+            <p><b>Handlungsempfehlung:</b> Widerspruch einlegen. Unterschrift vor Ort verweigern.</p>
+            <h4 style="color: #e11d48;">Ersparnis-Potenzial: 480,00 €</h4>
         </div>
         """, unsafe_allow_html=True)
         
-        if st.button("Widerspruchs-Schreiben generieren (PDF)"):
-            st.success("Widerspruch wurde erstellt. Bitte beim Händler vorlegen.")
-            st.download_button("Datei herunterladen", "Hier stünde der Text des Schreibens...", file_name="Widerspruch_ReturnGuard.txt")
-# ==================== PAGE 4: FLEET-PORTAL (B2B SaaS) ====================
-if page == "🏢 Fleet-Portal":
-    st.title("ReturnGuard Fleet Cockpit")
-    st.subheader("Zentrales Management für KMU-Fuhrparks")
+        if st.button("Widerspruchs-Brief (PDF) generieren"):
+            st.success("Widerspruchs-Brief wurde erstellt! Senden Sie diesen an Ihr Autohaus.")
+
+# ==================== PAGE 4: FLEET-PORTAL ====================
+elif page == "🏢 Fleet-Portal":
+    st.title("Fleet Manager Cockpit")
+    st.write("Verwalten Sie Ihre KMU-Flotte und minimieren Sie Rückgabekosten.")
     
-    # Metriken für den Fuhrparkleiter
-    m1, m2, m3 = st.columns(3)
-    m1.metric("Aktive Fahrzeuge", "12", "+2 diesen Monat")
-    m2.metric("Schadensrisiko gesamt", "4.250 €", "-15% vs. Vormonat")
-    m3.metric("CO2 Ersparnis (SMR)", "340 kg", "Durch Smart-Repair")
-
-    st.divider()
+    col_m1, col_m2, col_m3 = st.columns(3)
+    col_m1.metric("Fahrzeuge im Check", "8", "+2")
+    col_m2.metric("Veto-Ersparnis (YTD)", "5.420 €", "Active")
+    col_m3.metric("Fleet-Health", "85%", "Gut")
     
-    # Flotten-Tabelle
-    st.write("### Aktueller Flotten-Status")
-    fleet_data = pd.DataFrame([
-        {"Kennzeichen": "M-RG 2024", "Modell": "VW Golf VIII", "Status": "🟢 OK", "Rückgabe": "15.03.2026"},
-        {"Kennzeichen": "M-RG 2025", "Modell": "BMW 320d", "Status": "🟡 Check nötig", "Rückgabe": "20.02.2026"},
-        {"Kennzeichen": "M-RG 2026", "Modell": "Audi A4", "Status": "🔴 Schaden gemeldet", "Rückgabe": "01.02.2026"},
-    ])
-    st.table(fleet_data)
+    data = {
+        "Kennzeichen": ["M-RG 101", "M-RG 102", "M-RG 103"],
+        "Modell": ["VW Golf", "Audi A4", "BMW 3er"],
+        "Rückgabe": ["Feb 26", "Mär 26", "Jun 26"],
+        "Risiko": ["Hoch (3 Posten)", "Gering", "Keines"]
+    }
+    st.table(pd.DataFrame(data))
 
-    st.info("💡 **Manager-Tipp:** Für das Fahrzeug M-RG 2026 steht die Rückgabe in weniger als 30 Tagen an. Ein Smart-Repair Check jetzt spart ca. 650 € gegenüber der Leasing-Nachzahlung.")
-
-# ==================== PAGE 5: INVESTOR-DASHBOARD ====================
-if page == "📊 Investor-Dashboard":
-    st.title("Investor Relations & Market Opportunity")
+# ==================== PAGE 5: INVESTOR DASHBOARD ====================
+elif page == "📊 Investor Dashboard":
+    st.title("Investor Relations")
     
-    tab1, tab2, tab3 = st.tabs(["💰 Business Model", "🌍 Market (TAM/SAM/SOM)", "📈 Future Outlook"])
+    # TAM/SAM/SOM Plot
+    fig = px.bar(
+        x=["TAM (EU)", "SAM (DACH)", "SOM (Y3)"], 
+        y=[1750, 200, 5],
+        title="Marktpotential in Mio. €",
+        labels={'x': 'Marktsegment', 'y': 'Mio. €'},
+        color_discrete_sequence=['#1B365D']
+    )
+    st.plotly_chart(fig, use_container_width=True)
     
-    with tab1:
-        st.write("### Erlösströme (Unit Economics)")
-        col_rev1, col_rev2 = st.columns(2)
-        with col_rev1:
-            st.write("**B2C Transaktional**")
-            st.success("Lead-Fee: 29€ - 129€ pro Fall")
-            st.success("Express-Check: 49€ Fix")
-        with col_rev2:
-            st.write("**B2B SaaS (Recurring)**")
-            st.info("Starter (bis 10 Pkw): 49€ / Monat")
-            st.info("Business (bis 50 Pkw): 149€ / Monat")
-
-    with tab2:
-        st.write("### Marktpotenzial 2026")
-        # TAM/SAM/SOM Darstellung
-        st.markdown("""
-        * **TAM (Total Addressable Market):** 1,75 Mrd. € (EU-Leasingmarkt)
-        * **SAM (Serviceable Addressable Market):** 200 Mio. € (DACH Leasingrückläufer)
-        * **SOM (Serviceable Obtainable Market):** 5 Mio. € (Ziel Year 3)
-        """)
-        
-        # Interaktiver Hebel für Investoren
-        market_share = st.slider("Marktanteil am SAM (%)", 0.1, 5.0, 1.0)
-        projected_rev = 200 * (market_share / 100)
-        st.metric("Projizierter Jahresumsatz (DACH)", f"{projected_rev:.1f} Mio. €")
-
-    with tab3:
-        st.write("### Future Outlook: The Data Platform")
-        st.write("""
-        ReturnGuard sammelt validierte Zustandsdaten von tausenden Fahrzeugen. 
-        Diese Daten sind hochgradig relevant für:
-        1. **Versicherungen:** Präzise Risikokalkulation.
-        2. **Gebrauchtwagenbörsen:** Verifizierte Zustandsberichte ('Certified by ReturnGuard').
-        3. **Hersteller:** Feedback zur Langlebigkeit von Bauteilen.
-        """)
-        st.warning("Strategisches Ziel: Exit-Option an Mobile.de oder Allianz X bis 2029.")
-
-# ==================== FOOTER ====================
-st.sidebar.divider()
-st.sidebar.caption("© 2026 ReturnGuard - Version 0.2 (Investor Build)")
+    col_i1, col_i2 = st.columns(2)
+    with col_i1:
+        st.subheader("Revenue Streams")
+        st.write("- **B2C:** 49€ pro Fall-Check")
+        st.write("- **B2B:** 149€/Monat SaaS-Fee")
+        st.write("- **Affiliate:** 15% Provision für Werkstatt-Leads")
+    with col_i2:
+        st.subheader("Exit Strategie")
+        st.write("Ziel 2029: Akquisition durch Mobile.de oder Versicherungskonzerne (Allianz/HUK).")
