@@ -1,164 +1,250 @@
 import streamlit as st
-import pandas as pd
-import json
-import plotly.express as px
 from datetime import datetime
+import uuid
+import json
 
-# =================================================================
-# RETURN GUARD v0.2 - FULL PROTOTYPE FOR INVESTORS (CLEANED)
-# =================================================================
+# -----------------------------
+# ReturnGuard Handover – Streamlit Showcase
+# Single-file prototype (no backend). Data stored in st.session_state.
+# -----------------------------
 
-# Konfiguration
-st.set_page_config(
-    page_title="ReturnGuard | Ihr Leasing-Schutzschild",
-    page_icon="🛡️",
-    layout="wide"
-)
+st.set_page_config(page_title="ReturnGuard – Übergabe-Check (Showcase)", layout="wide")
 
-# Professionelles Styling (ReturnGuard Brand)
-st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-    .stApp { background-color: #f9fafb; }
-    
-    /* Hero Section */
-    .hero { background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%); color: white; padding: 3rem; border-radius: 15px; margin-bottom: 2rem; }
-    
-    /* Veto & Status Cards */
-    .veto-card { background: #fff1f2; border-left: 5px solid #e11d48; padding: 1.5rem; border-radius: 8px; margin: 10px 0; }
-    .info-card { background: #f0fdf4; border-left: 5px solid #16a34a; padding: 1rem; border-radius: 8px; }
-    
-    /* Sidebar */
-    .css-1d391kg { background-color: #ffffff !important; }
-</style>
-""", unsafe_allow_html=True)
+REQUIRED_SHOTS = [
+    ("front", "Front"),
+    ("rear", "Heck"),
+    ("left", "Links"),
+    ("right", "Rechts"),
+    ("interior_front", "Innenraum vorne"),
+    ("odometer", "Tacho / Kilometerstand"),
+    ("wheels", "Felgen (optional)"),
+]
 
-# ==================== LOGIK & DATEN-HUB ====================
-if 'rg_data' not in st.session_state:
-    st.session_state.rg_data = {
-        "vehicle": {"brand": "---", "model": "---", "vin": "---", "ez": "---"},
-        "analysis": {"vetos": [], "savings": 0, "status": "Green"},
-        "is_scanned": False
+DAMAGE_CATEGORIES = ["Kratzer/Lack", "Delle", "Felge", "Scheibe", "Innenraum", "Sonstiges"]
+POSITIONS = ["Front", "Heck", "Links", "Rechts", "Innen", "Unklar"]
+
+
+def now_iso() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M")
+
+
+def ensure_state():
+    if "vehicles" not in st.session_state:
+        # vehicles: {vehicle_id: {...}}
+        st.session_state.vehicles = {}
+    if "sessions" not in st.session_state:
+        # sessions: {session_id: {...}}
+        st.session_state.sessions = {}
+    if "selected_vehicle_id" not in st.session_state:
+        st.session_state.selected_vehicle_id = None
+
+
+def new_id(prefix: str) -> str:
+    return f"{prefix}_{uuid.uuid4().hex[:10]}"
+
+
+def vehicle_label(v: dict) -> str:
+    plate = v.get("plate") or "—"
+    brand = v.get("brand") or "—"
+    model = v.get("model") or "—"
+    vin = v.get("vin") or ""
+    return f"{plate} · {brand} {model}" + (f" · VIN {vin}" if vin else "")
+
+
+def get_vehicle_sessions(vehicle_id: str):
+    return [
+        s for s in st.session_state.sessions.values()
+        if s["vehicle_id"] == vehicle_id
+    ]
+
+
+def session_label(s: dict) -> str:
+    t = "Übergabe" if s["type"] == "handover" else "Rückgabe"
+    return f"{t} · {s['timestamp']} · {s.get('counterparty','').strip() or 'ohne Name'}"
+
+
+def progress_required_photos(session: dict) -> tuple[int, int]:
+    # Wheels optional -> exclude from required progress
+    required_keys = [k for k, _ in REQUIRED_SHOTS if k != "wheels"]
+    uploaded = 0
+    for k in required_keys:
+        if session["photos"].get(k):
+            uploaded += 1
+    return uploaded, len(required_keys)
+
+
+def export_state_as_json() -> str:
+    data = {
+        "vehicles": st.session_state.vehicles,
+        "sessions": st.session_state.sessions,
+        "exported_at": now_iso(),
+        "version": "showcase_v0.1",
     }
+    return json.dumps(data, indent=2, ensure_ascii=False)
 
-def run_ocr_simulation():
-    st.session_state.rg_data["vehicle"] = {
-        "brand": "Volkswagen", "model": "Golf VIII GTE",
-        "vin": "WVGZZZ1K7FW00XXXX", "ez": "03/2022"
-    }
-    st.session_state.rg_data["is_scanned"] = True
-    st.toast("Fahrzeugschein-Daten extrahiert!", icon="📄")
 
-# ==================== SIDEBAR ====================
-with st.sidebar:
-    st.title("🛡️ ReturnGuard")
-    st.caption("Version 0.2 | Investor Showcase")
-    st.divider()
-    
-    # Menü ohne Emojis in den Strings für maximale Stabilität
-    menu_options = ["Home", "Expert-Check", "Shadow Expert", "Partner-Portal", "Fleet-Portal", "Investor Dashboard"]
-    page = st.radio("Menü wählen:", menu_options)
-    
-    st.divider()
-    if st.button("📸 Fahrzeugschein scannen"):
-        run_ocr_simulation()
-    
-    if st.session_state.rg_data["is_scanned"]:
-        st.success(f"Aktiv: {st.session_state.rg_data['vehicle']['model']}")
+# -----------------------------
+# UI
+# -----------------------------
+ensure_state()
 
-# ==================== PAGE 1: HOME ====================
-if page == "Home":
-    st.markdown("""
-    <div class="hero">
-        <h1>Die Zukunft der Leasingrückgabe.</h1>
-        <p>ReturnGuard schützt Leasingnehmer vor unberechtigten Nachforderungen durch herstellerunabhängige Prüfung & Rechts-KI.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.subheader("🏠 1. Vor-Check")
-        st.write("Prüfen Sie Ihr Fahrzeug modular nach den 14 Vest-Punkten.")
-    with col2:
-        st.subheader("⚖️ 2. Shadow Expert")
-        st.write("Wir prüfen Händler-Gutachten gegen offizielle Hersteller-Kataloge.")
-    with col3:
-        st.subheader("💰 3. Geld sparen")
-        st.write("Ersparnis durch Veto-Logik und Partner-Netzwerk.")
+st.title("🛡️ ReturnGuard – Fahrzeug Übergabe-Check (Streamlit Showcase)")
+st.caption("Prototyp: geführte Fotos, Schadensdoku, Historie, Vorher/Nachher-Vergleich. (Ohne KI / ohne Backend)")
 
-# ==================== PAGE 2: EXPERT-CHECK ====================
-elif page == "Expert-Check":
-    st.title("🔍 Modularer Expert-Check")
-    st.info("Klicken Sie auf die Bereiche, um Schäden zu dokumentieren.")
+colA, colB = st.columns([1, 2], gap="large")
 
-    with st.expander("🚗 Außenhaut & Karosserie", expanded=True):
-        c1, c2 = st.columns(2)
-        with c1:
-            delle = st.checkbox("Delle / Beule vorhanden")
-            kratzer = st.checkbox("Kratzer (Lackbeschädigung)")
-        with c2:
-            if delle:
-                size = st.slider("Größe der Delle (mm)", 5, 50, 15)
-                if size <= 20:
-                    st.markdown('<div class="info-card">💡 <b>Shadow Expert:</b> Dellen < 20mm gelten bei VWFS/Audi als akzeptierter Verschleiß. 0€ Kosten.</div>', unsafe_allow_html=True)
-                else:
-                    st.warning("⚠️ Reparaturpflichtiger Schaden (> 20mm).")
+with colA:
+    st.subheader("🚗 Fahrzeuge")
+    with st.expander("➕ Neues Fahrzeug anlegen", expanded=True):
+        plate = st.text_input("Kennzeichen*", placeholder="M-AB 1234")
+        brand = st.text_input("Marke*", placeholder="Audi")
+        model = st.text_input("Modell*", placeholder="A3 Sportback")
+        vin = st.text_input("FIN/VIN (optional)", placeholder="WAUZZZ...")
+        note = st.text_area("Notiz (optional)", placeholder="z.B. Poolfahrzeug, Winterräder an Bord…", height=80)
 
-    with st.expander("🎡 Fahrwerk & Räder"):
-        felge = st.checkbox("Bordsteinschaden")
-        if felge:
-            tiefe = st.number_input("Tiefe (mm)", 0.1, 5.0, 0.5)
-            if tiefe < 1.0:
-                st.info("💡 **Shadow Expert:** Kratzer < 1mm Tiefe sind laut BMW meist zulässig.")
+        if st.button("Fahrzeug speichern", type="primary", use_container_width=True):
+            if not plate.strip() or not brand.strip() or not model.strip():
+                st.error("Bitte mindestens Kennzeichen, Marke und Modell ausfüllen.")
+            else:
+                vid = new_id("veh")
+                st.session_state.vehicles[vid] = {
+                    "id": vid,
+                    "plate": plate.strip(),
+                    "brand": brand.strip(),
+                    "model": model.strip(),
+                    "vin": vin.strip(),
+                    "note": note.strip(),
+                    "created_at": now_iso(),
+                }
+                st.session_state.selected_vehicle_id = vid
+                st.success("Fahrzeug angelegt.")
 
-# ==================== PAGE 3: SHADOW EXPERT ====================
-elif page == "Shadow Expert":
-    st.title("⚖️ Shadow Expert: Veto-Analyse")
-    st.write("Laden Sie das Gutachten des Händlers hoch.")
-    
-    up = st.file_uploader("Gutachten hochladen", type=["pdf", "jpg"])
-    
-    if up or st.button("Beispiel-Analyse starten"):
-        st.markdown("""
-        <div class="veto-card">
-            <h3>❌ VETO GEFUNDEN</h3>
-            <p><b>Position:</b> Stoßfänger vorne (Lackierung)<br>
-            <b>Händler-Forderung:</b> 480,00 €</p>
-            <p><b>Begründung:</b> Kratzer ist polierbar. Laut OLG Stuttgart (Az. 6 U 84/24) normale Gebrauchsspur.</p>
-            <h4 style="color: #e11d48;">Ersparnis-Potenzial: 480,00 €</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if st.button("Anwaltliche Hilfe anfordern (Referral)"):
-            st.success("Anfrage an Partner-Fachanwalt übermittelt!")
+    if not st.session_state.vehicles:
+        st.info("Noch keine Fahrzeuge. Lege links eins an, dann kannst du eine Übergabe starten.")
+    else:
+        vehicle_options = list(st.session_state.vehicles.keys())
+        labels = {vid: vehicle_label(st.session_state.vehicles[vid]) for vid in vehicle_options}
 
-# ==================== PAGE 4: PARTNER-PORTAL ====================
-elif page == "Partner-Portal":
-    st.title("🛠️ Partner-Portal: Lead-Marktplatz")
-    st.write("Exklusive Reparatur-Aufträge für Werkstätten.")
+        selected = st.selectbox(
+            "Fahrzeug auswählen",
+            options=vehicle_options,
+            format_func=lambda vid: labels[vid],
+            index=vehicle_options.index(st.session_state.selected_vehicle_id)
+            if st.session_state.selected_vehicle_id in vehicle_options else 0
+        )
+        st.session_state.selected_vehicle_id = selected
 
-    tab_leads, tab_stats = st.tabs(["🎯 Offene Leads", "📈 Performance"])
-    with tab_leads:
-        with st.container():
-            c_l1, c_l2 = st.columns([3, 1])
-            with c_l1:
-                st.markdown("**Anfrage #8821 - VW Golf VIII** | Delle Tür | Potenzial: ~180€")
-            with c_l2:
-                if st.button("Lead kaufen (15€)", key="lead1"):
-                    st.success("Gekauft!")
+        v = st.session_state.vehicles[selected]
+        st.markdown("**Details**")
+        st.write(f"- Kennzeichen: **{v['plate']}**")
+        st.write(f"- Fahrzeug: **{v['brand']} {v['model']}**")
+        if v.get("vin"):
+            st.write(f"- VIN: `{v['vin']}`")
+        if v.get("note"):
+            st.write(f"- Notiz: {v['note']}")
+
         st.divider()
 
-# ==================== PAGE 5: FLEET-PORTAL ====================
-elif page == "Fleet-Portal":
-    st.title("🏢 Fleet Manager Cockpit")
-    st.metric("Veto-Ersparnis (YTD)", "5.420 €")
-    data = {"Kennzeichen": ["M-RG 101", "M-RG 102"], "Status": ["🔴 Risiko", "🟢 OK"]}
-    st.table(pd.DataFrame(data))
+        st.subheader("🧾 Session starten")
+        s_type = st.radio("Session-Typ", options=["handover", "return"], format_func=lambda x: "Übergabe" if x == "handover" else "Rückgabe", horizontal=True)
+        counterparty = st.text_input("Übergabe an / Rückgabe von (optional)", placeholder="Name (Mitarbeiter/Kunde)")
+        if st.button("Neue Session starten", use_container_width=True):
+            sid = new_id("sess")
+            st.session_state.sessions[sid] = {
+                "id": sid,
+                "vehicle_id": selected,
+                "type": s_type,
+                "timestamp": now_iso(),
+                "counterparty": counterparty.strip(),
+                "photos": {k: [] for k, _ in REQUIRED_SHOTS},  # each key -> list of uploaded files (bytes)
+                "damages": [],  # list of damage dicts
+                "closed": False,
+            }
+            st.session_state.active_session_id = sid
+            st.success("Session gestartet. Rechts kannst du jetzt den Check durchführen.")
 
-# ==================== PAGE 6: INVESTOR DASHBOARD ====================
-elif page == "Investor Dashboard":
-    st.title("📊 Investor Relations")
-    fig = px.bar(x=["TAM", "SAM", "SOM"], y=[1750, 200, 5], title="Markt (Mio. €)")
-    st.plotly_chart(fig, use_container_width=True)
-    st.write("**Revenue Streams:** B2C Check-Fees, B2B Lead-Fees, Legal Referrals.")
+
+with colB:
+    vid = st.session_state.selected_vehicle_id
+
+    if not vid:
+        st.warning("Wähle links ein Fahrzeug aus, um rechts den Ablauf zu sehen.")
+    else:
+        sessions_for_vehicle = get_vehicle_sessions(vid)
+        sessions_for_vehicle_sorted = sorted(sessions_for_vehicle, key=lambda s: s["timestamp"], reverse=True)
+
+        # Active session handling
+        active_sid = st.session_state.get("active_session_id")
+        if active_sid and active_sid in st.session_state.sessions:
+            active = st.session_state.sessions[active_sid]
+            if active["vehicle_id"] != vid:
+                # If vehicle changed, don't auto-switch active session
+                active_sid = None
+
+        st.subheader("📸 Ablauf")
+        tabs = st.tabs(["1) Guided Check", "2) Historie", "3) Vorher/Nachher", "4) Export (Demo)"])
+
+        # -----------------------------
+        # Tab 1: Guided Check
+        # -----------------------------
+        with tabs[0]:
+            if not st.session_state.get("active_session_id") or st.session_state.sessions.get(st.session_state.get("active_session_id"), {}).get("vehicle_id") != vid:
+                st.info("Starte links eine neue Session, um den geführten Check zu nutzen.")
+            else:
+                sid = st.session_state.active_session_id
+                session = st.session_state.sessions[sid]
+
+                t_label = "Übergabe" if session["type"] == "handover" else "Rückgabe"
+                st.markdown(f"### {t_label} · {session['timestamp']}")
+                if session.get("counterparty"):
+                    st.caption(f"Person: {session['counterparty']}")
+
+                uploaded, total = progress_required_photos(session)
+                st.progress(uploaded / total if total else 0.0)
+                st.caption(f"Pflichtfotos: {uploaded}/{total} erledigt (Felgen optional)")
+
+                # Guided required photos
+                st.markdown("#### Pflichtfotos (geführt)")
+                for key, label in REQUIRED_SHOTS:
+                    with st.expander(f"{label}", expanded=False):
+                        hint = {
+                            "front": "Tipp: 3–4m Abstand, Auto komplett im Bild.",
+                            "rear": "Tipp: Kennzeichen sichtbar, kompletter Heckbereich.",
+                            "left": "Tipp: komplette Seite, Räder mit drauf.",
+                            "right": "Tipp: komplette Seite, Räder mit drauf.",
+                            "interior_front": "Tipp: Armaturen + Sitze vorne sichtbar.",
+                            "odometer": "Tipp: Zündung an, km-Stand gut lesbar.",
+                            "wheels": "Optional: 1–2 Bilder pro Seite reichen.",
+                        }.get(key, "")
+
+                        st.write(hint)
+
+                        files = st.file_uploader(
+                            f"Foto(s) hochladen – {label}",
+                            type=["jpg", "jpeg", "png", "heic"],
+                            accept_multiple_files=True,
+                            key=f"u_{sid}_{key}",
+                            disabled=session["closed"],
+                        )
+
+                        if files:
+                            # store bytes
+                            session["photos"][key] = [{"name": f.name, "bytes": f.getvalue()} for f in files]
+                            st.success(f"{len(files)} Datei(en) gespeichert.")
+
+                        # preview
+                        stored = session["photos"].get(key) or []
+                        if stored:
+                            st.caption(f"Gespeichert: {len(stored)}")
+                            cols = st.columns(min(4, len(stored)))
+                            for i, item in enumerate(stored[:4]):
+                                with cols[i % len(cols)]:
+                                    st.image(item["bytes"], caption=item["name"], use_container_width=True)
+
+                st.divider()
+                st.markdown("#### Schäden hinzufügen (manuell)")
+
+                with st.container(border=True):
+                    c1, c2, c3 = st.columns([1, 1, 2])
+                    with c1:
+                        cat = st.selectbox("Kategori
