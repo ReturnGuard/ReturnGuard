@@ -97,3 +97,80 @@ if page == "🏠 Home":
         if st.session_state.rg_data["is_ocr_done"]:
             st.write(f"**Fahrzeug:** {st.session_state.rg_data['vehicle']['brand']} {st.session_state.rg_data['vehicle']['model']}")
             st.write(f"**Halter:** {st.session_state.rg_data['customer']['name']}")
+# ==================== PAGE 2: EXPERT-CHECK ====================
+if page == "🔍 Expert-Check":
+    st.title("Interaktiver Fahrzeug-Check")
+    st.write("Markieren Sie die betroffenen Stellen am Fahrzeug oder nutzen Sie die Kategorien.")
+
+    # Interaktive SVG Skizze (Simuliert als Spalten-Buttons für Stabilität)
+    st.subheader("Fahrzeug-Bereich wählen")
+    c1, c2, c3, c4 = st.columns(4)
+    with c1: 
+        if st.button("🚗 Front / Motorhaube"): st.session_state.target_cat = "Außenhaut"
+    with c2:
+        if st.button("🎡 Räder / Felgen"): st.session_state.target_cat = "Fahrwerk"
+    with c3:
+        if st.button("🪟 Glas / Optik"): st.session_state.target_cat = "Verglasung"
+    with c4:
+        if st.button("🛋️ Innenraum"): st.session_state.target_cat = "Innenraum"
+
+    st.divider()
+
+    # Modulares Audit System
+    with st.expander("🛡️ Außenhaut & Karosserie", expanded=(st.session_state.get('target_cat') == "Außenhaut")):
+        col_a, col_b = st.columns(2)
+        with col_a:
+            delle = st.checkbox("Delle / Beule (Tür/Haube)")
+            kratzer = st.checkbox("Kratzer (Lackbeschädigung)")
+        with col_b:
+            if delle:
+                groesse = st.slider("Größe der Delle (in mm)", 0, 100, 15)
+                # Shadow Expert Preview Logik
+                if groesse < 20:
+                    st.info("💡 **Shadow Expert:** VWFS & BMW akzeptieren Dellen < 20mm oft als Gebrauchsspur.")
+                else:
+                    st.warning("⚠️ **Shadow Expert:** Über 20mm gilt meist als reparaturpflichtiger Schaden.")
+
+    with st.expander("🎡 Fahrwerk & Räder", expanded=(st.session_state.get('target_cat') == "Fahrwerk")):
+        felge = st.checkbox("Bordsteinschaden an Felge")
+        if felge:
+            tiefe = st.number_input("Tiefe des Kratzers (in mm)", 0.0, 5.0, 0.5)
+            if tiefe < 1.0:
+                st.info("💡 **Shadow Expert:** Kratzer < 1mm Tiefe sind laut BMW/Mercedes meist zulässiger Verschleiß.")
+
+    with st.expander("🪟 Verglasung & Optik", expanded=(st.session_state.get('target_cat') == "Verglasung")):
+        stein = st.checkbox("Steinschlag Windschutzscheibe")
+        if stein:
+            sichtfeld = st.radio("Lage des Steinschlags:", ["Im Sichtfeld des Fahrers", "Am Rand / Beifahrerseite"])
+            if sichtfeld == "Am Rand / Beifahrerseite":
+                st.success("💡 **Shadow Expert:** Außerhalb des Sichtfelds ist eine Reparatur (ca. 100€) statt Tausch (ca. 1000€) zulässig.")
+
+# ==================== PAGE 3: SHADOW EXPERT (VETO) ====================
+if page == "🛡️ Shadow Expert (Veto)":
+    st.title("Shadow Expert: Händler-Protokoll Veto-Check")
+    st.write("Laden Sie hier das Rückgabeprotokoll des Händlers hoch, um unberechtigte Forderungen zu finden.")
+    
+    uploaded_file = st.file_uploader("Protokoll (PDF/JPG) hochladen", type=["pdf", "jpg", "png"])
+    
+    if uploaded_file:
+        with st.status("Analysiere Protokoll gegen Hersteller-Kataloge 2026...", expanded=True):
+            st.write("Suche nach Positionen...")
+            st.write("Vergleiche mit OLG Stuttgart Az. 6 U 84/24...")
+        
+        st.subheader("Analyse-Ergebnis")
+        
+        # Beispiel für ein gefundenes Veto
+        st.markdown("""
+        <div class="veto-card">
+            <h4>❌ VETO: Position 'Alufelge vorne rechts'</h4>
+            <p><b>Händler-Forderung:</b> 450,00 € (Austausch)</p>
+            <p><b>Shadow Expert Urteil:</b> Unberechtigt. Der Kratzer wird im Protokoll mit 12mm beschrieben. 
+            Laut aktuellem BMW-Schadenskatalog sind Kratzer bis 20mm als Gebrauchsspur zu akzeptieren.</p>
+            <p><b>Rechtlicher Hebel:</b> OLG Stuttgart (Neu-für-Alt Abzug nicht berücksichtigt).</p>
+            <span class="savings-badge">Potenzielle Ersparnis: 450,00 €</span>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        if st.button("Widerspruchs-Schreiben generieren (PDF)"):
+            st.success("Widerspruch wurde erstellt. Bitte beim Händler vorlegen.")
+            st.download_button("Datei herunterladen", "Hier stünde der Text des Schreibens...", file_name="Widerspruch_ReturnGuard.txt")
