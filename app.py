@@ -449,20 +449,27 @@ with colB:
         # -----------------------------
         # Tab 4: Export
         # -----------------------------
-        with tabs[3]:
-            st.markdown("### Export (Demo)")
-            st.write("Für Investor-/Stakeholder-Demos ist Export praktisch (z.B. als Protokoll-Quelle).")
-            json_str = export_state_as_json()
-            st.download_button(
-                "JSON Export herunterladen",
-                data=json_str.encode("utf-8"),
-                file_name="returnguard_handover_showcase.json",
-                mime="application/json",
-                use_container_width=True
-            )
-            with st.expander("JSON Vorschau", expanded=False):
-                st.code(json_str, language="json")
+       with tabs[3]:
+    st.markdown("### Export (Demo)")
+    st.write("Exportiert werden **nur Metadaten** (keine Bild-Bytes), damit der Showcase stabil bleibt.")
 
+    try:
+        json_str = export_state_as_json()
+
+        st.download_button(
+            "JSON Export herunterladen",
+            data=json_str.encode("utf-8"),
+            file_name="returnguard_handover_showcase.json",
+            mime="application/json",
+            use_container_width=True
+        )
+
+        with st.expander("JSON Vorschau", expanded=False):
+            st.code(json_str, language="json")
+
+    except Exception as e:
+        st.error("Export ist fehlgeschlagen (Demo-Schutz).")
+        st.code(str(e))
 
 # Footer
 st.divider()
