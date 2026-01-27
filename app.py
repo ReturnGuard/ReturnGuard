@@ -82,10 +82,8 @@ def _json_safe(obj):
 
 
 def _strip_image_bytes(data: dict) -> dict:
-    # Clone safely (bytes become placeholders)
     data = json.loads(json.dumps(_json_safe(data), ensure_ascii=False))
 
-    # Reduce photo objects to just name + size
     for sess in data.get("sessions", {}).values():
         photos = sess.get("photos", {}) or {}
         for key, items in photos.items():
@@ -116,11 +114,53 @@ def export_state_as_json() -> str:
         "vehicles": st.session_state.vehicles,
         "sessions": st.session_state.sessions,
         "exported_at": now_iso(),
-        "version": "showcase_v0.1",
+        "version": "showcase_v0.2_wizard",
         "export_mode": "metadata_only",
     }
     safe = _strip_image_bytes(raw)
     return json.dumps(safe, indent=2, ensure_ascii=False)
+
+
+# ---------- Wizard helpers ----------
+
+WIZARD_HINTS = {
+    "front": "Tipp: 3–4m Abstand, Auto komplett im Bild.",
+    "rear": "Tipp: Kennzeichen sichtbar, kompletter Heckbereich.",
+    "left": "Tipp: komplette Seite, Räder mit drauf.",
+    "right": "Tipp: komplette Seite, Räder mit drauf.",
+    "interior_front": "Tipp: Armaturen + Sitze vorne sichtbar.",
+    "odometer": "Tipp: Zündung an, km-Stand gut lesbar.",
+    "wheels": "Optional: 1–2 Bilder pro Seite reichen.",
+}
+
+
+def wizard_steps():
+    # Pflichtschritte ohne wheels + optionaler wheels-Schritt am Ende
+    main = [(k, l) for (k, l) in REQUIRED_SHOTS if k != "wheels"]
+    optional = [("wheels", "Felgen (optional)")]
+    return main + optional
+
+
+def is_step_optional(step_key: str) -> bool:
+    return step_key == "wheels"
+
+
+def step_has_photo(session: dict, step_key: str) -> bool:
+    return bool(session["photos"].get(step_key))
+
+
+def find_next_missing_required_index(session: dict) -> int:
+    steps = wizard_steps()
+    for i, (k, _) in enumerate(steps):
+        if is_step_optional(k):
+            continue
+        if not step_has_photo(session, k):
+            return i
+    # If all required present, jump to optional wheels step
+    for i, (k, _) in enumerate(steps):
+        if is_step_optional(k):
+            return i
+    return 0
 
 
 # -----------------------------
@@ -128,8 +168,8 @@ def export_state_as_json() -> str:
 # -----------------------------
 ensure_state()
 
-st.title("🛡️ ReturnGuard – Fahrzeug Übergabe-Check (Streamlit Showcase)")
-st.caption("Prototyp: geführte Fotos, Schadensdoku, Historie, Vorher/Nachher-Vergleich. (Ohne KI / ohne Backend)")
+st.title("🛡️ ReturnGuard – Fahrzeug Übergabe-Check (Showcase)")
+st.caption("Prototyp: Wizard-Fotos (1/6), Schadensdoku, Historie, Vorher/Nachher-Vergleich. (Ohne KI / ohne Backend)")
 
 colA, colB = st.columns([1, 2], gap="large")
 
@@ -205,8 +245,9 @@ with colA:
                 "timestamp": now_iso(),
                 "counterparty": counterparty.strip(),
                 "photos": {k: [] for k, _ in REQUIRED_SHOTS},  # list of dicts {name, bytes}
-                "damages": [],  # list of damage dicts
+                "damages": [],
                 "closed": False,
+                "wizard_step": 0,  # NEW: wizard state stored per session
             }
             st.session_state.active_session_id = sid
             st.success("Session gestartet. Rechts kannst du jetzt den Check durchführen.")
@@ -222,19 +263,18 @@ with colB:
         sessions_for_vehicle = get_vehicle_sessions(vid)
         sessions_for_vehicle_sorted = sorted(sessions_for_vehicle, key=lambda s: s["timestamp"], reverse=True)
 
-        # Active session handling (if vehicle changed, drop active)
         active_sid = st.session_state.get("active_session_id")
         if active_sid and active_sid in st.session_state.sessions:
             active = st.session_state.sessions[active_sid]
             if active["vehicle_id"] != vid:
-                active_sid = None
                 st.session_state.active_session_id = None
+                active_sid = None
 
         st.subheader("📸 Ablauf")
         tabs = st.tabs(["1) Guided Check", "2) Historie", "3) Vorher/Nachher", "4) Export (Demo)"])
 
         # -----------------------------
-        # Tab 1: Guided Check
+        # Tab 1: Guided Check (WIZARD)
         # -----------------------------
         with tabs[0]:
             if not st.session_state.get("active_session_id") or st.session_state.sessions.get(st.session_state.get("active_session_id"), {}).get("vehicle_id") != vid:
@@ -243,52 +283,127 @@ with colB:
                 sid = st.session_state.active_session_id
                 session = st.session_state.sessions[sid]
 
+                # Initialize wizard_step if older sessions exist
+                if "wizard_step" not in session:
+                    session["wizard_step"] = 0
+
                 t_label = "Übergabe" if session["type"] == "handover" else "Rückgabe"
                 st.markdown(f"### {t_label} · {session['timestamp']}")
                 if session.get("counterparty"):
                     st.caption(f"Person: {session['counterparty']}")
 
-                uploaded, total = progress_required_photos(session)
-                st.progress(uploaded / total if total else 0.0)
-                st.caption(f"Pflichtfotos: {uploaded}/{total} erledigt (Felgen optional)")
+                steps = wizard_steps()
+                total_required = len([1 for k, _ in steps if not is_step_optional(k)])
+                done_required, _ = progress_required_photos(session)
 
-                st.markdown("#### Pflichtfotos (geführt)")
-                for key, label in REQUIRED_SHOTS:
-                    with st.expander(f"{label}", expanded=False):
-                        hint = {
-                            "front": "Tipp: 3–4m Abstand, Auto komplett im Bild.",
-                            "rear": "Tipp: Kennzeichen sichtbar, kompletter Heckbereich.",
-                            "left": "Tipp: komplette Seite, Räder mit drauf.",
-                            "right": "Tipp: komplette Seite, Räder mit drauf.",
-                            "interior_front": "Tipp: Armaturen + Sitze vorne sichtbar.",
-                            "odometer": "Tipp: Zündung an, km-Stand gut lesbar.",
-                            "wheels": "Optional: 1–2 Bilder pro Seite reichen.",
-                        }.get(key, "")
+                st.progress(done_required / total_required if total_required else 0.0)
+                st.caption(f"Pflichtfotos: {done_required}/{total_required} erledigt (Felgen optional am Ende).")
 
-                        st.write(hint)
-
-                        files = st.file_uploader(
-                            f"Foto(s) hochladen – {label}",
-                            type=["jpg", "jpeg", "png", "heic"],
-                            accept_multiple_files=True,
-                            key=f"u_{sid}_{key}",
-                            disabled=session["closed"],
-                        )
-
-                        if files:
-                            session["photos"][key] = [{"name": f.name, "bytes": f.getvalue()} for f in files]
-                            st.success(f"{len(files)} Datei(en) gespeichert.")
-
-                        stored = session["photos"].get(key) or []
-                        if stored:
-                            st.caption(f"Gespeichert: {len(stored)}")
-                            cols = st.columns(min(4, len(stored)))
-                            for i, item in enumerate(stored[:4]):
-                                with cols[i % len(cols)]:
-                                    st.image(item["bytes"], caption=item["name"], use_container_width=True)
+                # Smart jump button (useful after refresh)
+                cJ1, cJ2 = st.columns([1, 1])
+                with cJ1:
+                    if st.button("➡️ Zum nächsten fehlenden Pflichtfoto", use_container_width=True, disabled=session["closed"]):
+                        session["wizard_step"] = find_next_missing_required_index(session)
+                        st.rerun()
+                with cJ2:
+                    if st.button("🔁 Schritt zurücksetzen (auf 1/6)", use_container_width=True, disabled=session["closed"]):
+                        session["wizard_step"] = 0
+                        st.rerun()
 
                 st.divider()
-                st.markdown("#### Schäden hinzufügen (manuell)")
+
+                # Clamp wizard step
+                if session["wizard_step"] < 0:
+                    session["wizard_step"] = 0
+                if session["wizard_step"] >= len(steps):
+                    session["wizard_step"] = len(steps) - 1
+
+                step_index = session["wizard_step"]
+                step_key, step_label = steps[step_index]
+                optional = is_step_optional(step_key)
+
+                # Wizard header
+                req_idx = step_index + 1
+                # Show as 1/6 for required steps; wheels as "Optional"
+                if not optional:
+                    st.markdown(f"## Schritt {req_idx}/{total_required}: **{step_label}**")
+                else:
+                    st.markdown(f"## Optional: **{step_label}**")
+
+                st.write(WIZARD_HINTS.get(step_key, ""))
+
+                # Uploader behavior:
+                # - Required steps: single photo is enough (accept_multiple_files=False)
+                # - Wheels: allow multiple
+                allow_multi = True if optional else False
+
+                files = st.file_uploader(
+                    f"Foto hochladen – {step_label}",
+                    type=["jpg", "jpeg", "png", "heic"],
+                    accept_multiple_files=allow_multi,
+                    key=f"wiz_{sid}_{step_key}_{step_index}",
+                    disabled=session["closed"],
+                )
+
+                if files:
+                    if allow_multi:
+                        session["photos"][step_key] = [{"name": f.name, "bytes": f.getvalue()} for f in files]
+                        st.success(f"{len(files)} Datei(en) gespeichert.")
+                    else:
+                        # single file
+                        f = files[0] if isinstance(files, list) else files
+                        # In Streamlit, with accept_multiple_files=False, "files" is UploadedFile not list.
+                        # But to be safe we handle both.
+                        if hasattr(f, "getvalue"):
+                            session["photos"][step_key] = [{"name": f.name, "bytes": f.getvalue()}]
+                            st.success("1 Datei gespeichert.")
+
+                # Preview current step photo(s)
+                stored = session["photos"].get(step_key) or []
+                if stored:
+                    st.caption(f"Gespeichert: {len(stored)}")
+                    cols = st.columns(min(4, len(stored)))
+                    for i, item in enumerate(stored[:4]):
+                        with cols[i % len(cols)]:
+                            st.image(item["bytes"], caption=item["name"], use_container_width=True)
+                else:
+                    if optional:
+                        st.info("Optional – kannst du überspringen.")
+                    else:
+                        st.warning("Noch kein Foto gespeichert.")
+
+                # Wizard navigation
+                navL, navM, navR = st.columns([1, 1, 1])
+                with navL:
+                    if st.button("⬅️ Zurück", use_container_width=True, disabled=session["closed"] or step_index == 0):
+                        session["wizard_step"] = max(0, step_index - 1)
+                        st.rerun()
+
+                with navM:
+                    # Skip only allowed for optional wheels
+                    if st.button("⏭️ Überspringen", use_container_width=True, disabled=session["closed"] or not optional):
+                        # Move to end (summary area conceptually)
+                        session["wizard_step"] = step_index  # stay; optional skip simply means "not required"
+                        st.info("Optional übersprungen. Du kannst die Session trotzdem abschließen, wenn Pflichtfotos vollständig sind.")
+                        # no rerun needed
+
+                with navR:
+                    # Next requires photo if required step
+                    next_disabled = session["closed"]
+                    if not optional and not step_has_photo(session, step_key):
+                        next_disabled = True
+
+                    if st.button("Weiter ➡️", use_container_width=True, disabled=next_disabled):
+                        if step_index < len(steps) - 1:
+                            session["wizard_step"] = step_index + 1
+                            st.rerun()
+                        else:
+                            st.success("Wizard fertig. Unten kannst du Schäden erfassen oder die Session abschließen.")
+
+                st.divider()
+
+                # Damage section (same as before)
+                st.markdown("### Schäden hinzufügen (manuell)")
 
                 with st.container(border=True):
                     c1, c2, c3 = st.columns([1, 1, 2])
@@ -340,9 +455,11 @@ with colB:
                                     st.image(ph["bytes"], caption=ph["name"], use_container_width=True)
 
                 st.divider()
+
+                # Session close / discard
                 cL, cR = st.columns([1, 1])
                 with cL:
-                    if st.button("Session abschließen", type="primary", use_container_width=True, disabled=session["closed"]):
+                    if st.button("✅ Session abschließen", type="primary", use_container_width=True, disabled=session["closed"]):
                         missing = []
                         for k, label in REQUIRED_SHOTS:
                             if k == "wheels":
@@ -351,14 +468,18 @@ with colB:
                                 missing.append(label)
                         if missing:
                             st.error("Noch fehlen Pflichtfotos: " + ", ".join(missing))
+                            # jump to first missing step
+                            session["wizard_step"] = find_next_missing_required_index(session)
+                            st.rerun()
                         else:
                             session["closed"] = True
                             st.success("Session abgeschlossen (gespeichert in Historie).")
                 with cR:
-                    if st.button("Session verwerfen (Demo)", use_container_width=True):
+                    if st.button("🗑️ Session verwerfen (Demo)", use_container_width=True):
                         del st.session_state.sessions[sid]
                         st.session_state.active_session_id = None
                         st.warning("Session verworfen.")
+                        st.rerun()
 
         # -----------------------------
         # Tab 2: History
@@ -370,10 +491,10 @@ with colB:
             else:
                 for s in sessions_for_vehicle_sorted:
                     with st.expander(session_label(s), expanded=False):
-                        uploaded, total = progress_required_photos(s)
+                        done_required, total_required = progress_required_photos(s)
                         st.caption(
                             f"Status: {'✅ abgeschlossen' if s['closed'] else '🟡 offen'} · "
-                            f"Pflichtfotos {uploaded}/{total} · Schäden: {len(s['damages'])}"
+                            f"Pflichtfotos {done_required}/{total_required} · Schäden: {len(s['damages'])}"
                         )
 
                         preview_keys = ["front", "rear", "left", "right"]
@@ -451,7 +572,7 @@ with colB:
                         st.write("—")
 
         # -----------------------------
-        # Tab 4: Export (FIXED)
+        # Tab 4: Export
         # -----------------------------
         with tabs[3]:
             st.markdown("### Export (Demo)")
@@ -477,4 +598,4 @@ with colB:
 
 # Footer
 st.divider()
-st.caption("Showcase v0.1 – Nächster Schritt: PDF-Protokoll + (optional) OCR-Scan-Simulation + Rollen/Cloud.")
+st.caption("Showcase v0.2 (Wizard) – Nächster Schritt: PDF-Protokoll + (optional) Scan-Simulation + Rollen/Cloud.")
