@@ -5,7 +5,7 @@ import plotly.express as px
 from datetime import datetime
 
 # =================================================================
-# RETURN GUARD v0.2 - FULL PROTOTYPE FOR INVESTORS
+# RETURN GUARD v0.2 - FULL PROTOTYPE FOR INVESTORS (CLEANED)
 # =================================================================
 
 # Konfiguration
@@ -56,7 +56,9 @@ with st.sidebar:
     st.caption("Version 0.2 | Investor Showcase")
     st.divider()
     
-    page = st.radio("Menü", ["🏠 Home", "🔍 Expert-Check", "⚖️ Shadow Expert", "🏢 Fleet-Portal", "📊 Investor Dashboard", 🛠️ Partner-Portal])
+    # Menü ohne Emojis in den Strings für maximale Stabilität
+    menu_options = ["Home", "Expert-Check", "Shadow Expert", "Partner-Portal", "Fleet-Portal", "Investor Dashboard"]
+    page = st.radio("Menü wählen:", menu_options)
     
     st.divider()
     if st.button("📸 Fahrzeugschein scannen"):
@@ -66,7 +68,7 @@ with st.sidebar:
         st.success(f"Aktiv: {st.session_state.rg_data['vehicle']['model']}")
 
 # ==================== PAGE 1: HOME ====================
-if page == "🏠 Home":
+if page == "Home":
     st.markdown("""
     <div class="hero">
         <h1>Die Zukunft der Leasingrückgabe.</h1>
@@ -76,21 +78,20 @@ if page == "🏠 Home":
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.subheader("1. Vor-Check")
+        st.subheader("🏠 1. Vor-Check")
         st.write("Prüfen Sie Ihr Fahrzeug modular nach den 14 Vest-Punkten.")
     with col2:
-        st.subheader("2. Shadow Expert")
+        st.subheader("⚖️ 2. Shadow Expert")
         st.write("Wir prüfen Händler-Gutachten gegen offizielle Hersteller-Kataloge.")
     with col3:
-        st.subheader("3. Geld sparen")
-        st.write("Durchschnittlich 850 € Ersparnis durch Veto-Logik und Partner-Netzwerk.")
+        st.subheader("💰 3. Geld sparen")
+        st.write("Ersparnis durch Veto-Logik und Partner-Netzwerk.")
 
 # ==================== PAGE 2: EXPERT-CHECK ====================
-elif page == "🔍 Expert-Check":
-    st.title("Modularer Expert-Check")
-    st.info("Klicken Sie auf die Bereiche, um Schäden zu dokumentieren. Der Shadow Expert prüft im Hintergrund.")
+elif page == "Expert-Check":
+    st.title("🔍 Modularer Expert-Check")
+    st.info("Klicken Sie auf die Bereiche, um Schäden zu dokumentieren.")
 
-    # Kategorien
     with st.expander("🚗 Außenhaut & Karosserie", expanded=True):
         c1, c2 = st.columns(2)
         with c1:
@@ -109,20 +110,14 @@ elif page == "🔍 Expert-Check":
         if felge:
             tiefe = st.number_input("Tiefe (mm)", 0.1, 5.0, 0.5)
             if tiefe < 1.0:
-                st.info("💡 **Shadow Expert:** Kratzer < 1mm Tiefe sind laut BMW/Mercedes meist zulässig.")
-
-    with st.expander("🪟 Verglasung & Optik"):
-        st.write("Checkliste: Windschutzscheibe, Scheinwerfer, Spiegelgläser.")
-
-    with st.expander("🛋️ Innenraum & Technik"):
-        st.write("Checkliste: Sitze, Gerüche, Elektronik, Bordwerkzeug.")
+                st.info("💡 **Shadow Expert:** Kratzer < 1mm Tiefe sind laut BMW meist zulässig.")
 
 # ==================== PAGE 3: SHADOW EXPERT ====================
-elif page == "⚖️ Shadow Expert":
-    st.title("Shadow Expert: Veto-Analyse")
-    st.write("Laden Sie das Gutachten des Händlers hoch. Wir finden die Fehler.")
+elif page == "Shadow Expert":
+    st.title("⚖️ Shadow Expert: Veto-Analyse")
+    st.write("Laden Sie das Gutachten des Händlers hoch.")
     
-    up = st.file_uploader("Gutachten / Protokoll hochladen", type=["pdf", "jpg"])
+    up = st.file_uploader("Gutachten hochladen", type=["pdf", "jpg"])
     
     if up or st.button("Beispiel-Analyse starten"):
         st.markdown("""
@@ -130,96 +125,40 @@ elif page == "⚖️ Shadow Expert":
             <h3>❌ VETO GEFUNDEN</h3>
             <p><b>Position:</b> Stoßfänger vorne (Lackierung)<br>
             <b>Händler-Forderung:</b> 480,00 €</p>
-            <p><b>Begründung:</b> Der beschriebene Kratzer ist polierbar und nicht grundierungstief. 
-            Laut OLG Stuttgart (Az. 6 U 84/24) ist dies als normale Gebrauchsspur einzustufen.</p>
-            <p><b>Handlungsempfehlung:</b> Widerspruch einlegen. Unterschrift vor Ort verweigern.</p>
+            <p><b>Begründung:</b> Kratzer ist polierbar. Laut OLG Stuttgart (Az. 6 U 84/24) normale Gebrauchsspur.</p>
             <h4 style="color: #e11d48;">Ersparnis-Potenzial: 480,00 €</h4>
         </div>
         """, unsafe_allow_html=True)
         
-        if st.button("Widerspruchs-Brief (PDF) generieren"):
-            st.success("Widerspruchs-Brief wurde erstellt! Senden Sie diesen an Ihr Autohaus.")
+        if st.button("Anwaltliche Hilfe anfordern (Referral)"):
+            st.success("Anfrage an Partner-Fachanwalt übermittelt!")
 
-# ==================== PAGE 4: FLEET-PORTAL ====================
-elif page == "🏢 Fleet-Portal":
-    st.title("Fleet Manager Cockpit")
-    st.write("Verwalten Sie Ihre KMU-Flotte und minimieren Sie Rückgabekosten.")
-    
-    col_m1, col_m2, col_m3 = st.columns(3)
-    col_m1.metric("Fahrzeuge im Check", "8", "+2")
-    col_m2.metric("Veto-Ersparnis (YTD)", "5.420 €", "Active")
-    col_m3.metric("Fleet-Health", "85%", "Gut")
-    
-    data = {
-        "Kennzeichen": ["M-RG 101", "M-RG 102", "M-RG 103"],
-        "Modell": ["VW Golf", "Audi A4", "BMW 3er"],
-        "Rückgabe": ["Feb 26", "Mär 26", "Jun 26"],
-        "Risiko": ["Hoch (3 Posten)", "Gering", "Keines"]
-    }
-    st.table(pd.DataFrame(data))
+# ==================== PAGE 4: PARTNER-PORTAL ====================
+elif page == "Partner-Portal":
+    st.title("🛠️ Partner-Portal: Lead-Marktplatz")
+    st.write("Exklusive Reparatur-Aufträge für Werkstätten.")
 
-# ==================== PAGE 5: INVESTOR DASHBOARD ====================
-elif page == "📊 Investor Dashboard":
-    st.title("Investor Relations")
-    
-    # TAM/SAM/SOM Plot
-    fig = px.bar(
-        x=["TAM (EU)", "SAM (DACH)", "SOM (Y3)"], 
-        y=[1750, 200, 5],
-        title="Marktpotential in Mio. €",
-        labels={'x': 'Marktsegment', 'y': 'Mio. €'},
-        color_discrete_sequence=['#1B365D']
-    )
-    st.plotly_chart(fig, use_container_width=True)
-    
-    col_i1, col_i2 = st.columns(2)
-    with col_i1:
-        st.subheader("Revenue Streams")
-        st.write("- **B2C:** 49€ pro Fall-Check")
-        st.write("- **B2B:** 149€/Monat SaaS-Fee")
-        st.write("- **Affiliate:** 15% Provision für Werkstatt-Leads")
-    with col_i2:
-        st.subheader("Exit Strategie")
-        st.write("Ziel 2029: Akquisition durch Mobile.de oder Versicherungskonzerne (Allianz/HUK).")
-# ==================== PAGE 6: PARTNER-PORTAL (NEU) ====================
-elif page == "🛠️ Partner-Portal":
-    st.title("Partner-Portal: Lead-Marktplatz")
-    st.write("Exklusive Reparatur-Aufträge für zertifizierte Werkstätten.")
-
-    tab_leads, tab_stats = st.tabs(["🎯 Offene Leads", "📈 Ihre Performance"])
-
+    tab_leads, tab_stats = st.tabs(["🎯 Offene Leads", "📈 Performance"])
     with tab_leads:
-        st.info("Diese Leads basieren auf aktuellen User-Checks in Ihrer Region.")
-        
-        # Lead 1
         with st.container():
-            col_l1, col_l2 = st.columns([3, 1])
-            with col_l1:
-                st.markdown("""
-                **Anfrage #8821 - VW Golf VIII** *Schaden:* Delle Tür hinten links (25mm)  
-                *Potenzial:* Smart-Repair Auftrag (~180 Euro)
-                """)
-            with col_l2:
-                if st.button("Lead kaufen (15€)", key="l1"):
-                    st.success("Kontaktdaten freigeschaltet!")
-
+            c_l1, c_l2 = st.columns([3, 1])
+            with c_l1:
+                st.markdown("**Anfrage #8821 - VW Golf VIII** | Delle Tür | Potenzial: ~180€")
+            with c_l2:
+                if st.button("Lead kaufen (15€)", key="lead1"):
+                    st.success("Gekauft!")
         st.divider()
 
-        # Lead 2
-        with st.container():
-            col_l3, col_l4 = st.columns([3, 1])
-            with col_l3:
-                st.markdown("""
-                **Anfrage #8819 - BMW 3er** *Schaden:* Felgenaufbereitung (Bordsteinschaden)  
-                *Potenzial:* Spezial-Reinigung (~350 Euro)
-                """)
-            with col_l4:
-                if st.button("Lead kaufen (25€)", key="l2"):
-                    st.warning("Lead bereits reserviert.")
+# ==================== PAGE 5: FLEET-PORTAL ====================
+elif page == "Fleet-Portal":
+    st.title("🏢 Fleet Manager Cockpit")
+    st.metric("Veto-Ersparnis (YTD)", "5.420 €")
+    data = {"Kennzeichen": ["M-RG 101", "M-RG 102"], "Status": ["🔴 Risiko", "🟢 OK"]}
+    st.table(pd.DataFrame(data))
 
-    with tab_stats:
-        st.metric("Gekaufte Leads (Monat)", "12", "+3")
-        st.metric("Umsatz durch ReturnGuard", "4.200 Euro", "+12%")
-
-# WICHTIG: Scrolle in der app.py hoch zu Zeile ~51 und füge "🛠️ Partner-Portal" 
-# in die Liste bei st.radio() ein, damit die Seite im Menü erscheint!
+# ==================== PAGE 6: INVESTOR DASHBOARD ====================
+elif page == "Investor Dashboard":
+    st.title("📊 Investor Relations")
+    fig = px.bar(x=["TAM", "SAM", "SOM"], y=[1750, 200, 5], title="Markt (Mio. €)")
+    st.plotly_chart(fig, use_container_width=True)
+    st.write("**Revenue Streams:** B2C Check-Fees, B2B Lead-Fees, Legal Referrals.")
