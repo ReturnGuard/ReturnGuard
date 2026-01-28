@@ -2134,6 +2134,330 @@ def render_investor():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    # WETTBEWERB & MOAT
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">🏆 Wettbewerb & Moat</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Warum gibt es uns noch nicht? Und warum wird es schwer, uns zu kopieren?</p>', unsafe_allow_html=True)
+
+    # Wettbewerbslandschaft
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+            <h4 style="color: #1F2937; margin: 0 0 20px 0;">Aktuelle Landschaft:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #6B7280;">
+                    <strong style="color: #374151;">Gutachter (DEKRA, TÜV)</strong>
+                    <p style="color: #6B7280; margin: 8px 0 0 0; font-size: 0.85rem;">Bewerten, aber vermitteln nicht. Kein Reparatur-Netzwerk.</p>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #6B7280;">
+                    <strong style="color: #374151;">Werkstatt-Ketten (ATU, Euromaster)</strong>
+                    <p style="color: #6B7280; margin: 8px 0 0 0; font-size: 0.85rem;">Reparieren, aber sind parteiisch. Keine Orchestrierung.</p>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #6B7280;">
+                    <strong style="color: #374151;">Legal Techs (Advocard, Rightmart)</strong>
+                    <p style="color: #6B7280; margin: 8px 0 0 0; font-size: 0.85rem;">Kommen erst nach dem Streit. Zu spät im Prozess.</p>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #6B7280;">
+                    <strong style="color: #374151;">Check24 & Co.</strong>
+                    <p style="color: #6B7280; margin: 8px 0 0 0; font-size: 0.85rem;">Vergleichen Leasing-Angebote, nicht Rückgaben.</p>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Warum keiner das macht
+    st.markdown('''
+        <div style="background: #fef3c7; padding: 20px 25px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #f59e0b;">
+            <h4 style="color: #92400e; margin: 0 0 10px 0;">⚠️ Warum macht das keiner?</h4>
+            <p style="color: #78350f; margin: 0; font-size: 0.95rem;">
+                Das Problem ist komplex, aber nicht sexy. Kein VC-Liebling wie "Mobility" oder "E-Auto-Abo".
+                Die Marktkenntnis ist hoch, der Aufbau eines Partner-Netzwerks zeitintensiv.
+                <strong>Genau das ist die Chance.</strong>
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Unser Moat
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); padding: 25px; border-radius: 12px; border: 2px solid #059669;">
+            <h4 style="color: #166534; margin: 0 0 15px 0;">🛡️ Unser Moat (Verteidigungsgräben):</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                <span style="background: #059669; color: white; padding: 10px 18px; border-radius: 8px; font-weight: 500;">
+                    <strong>Netzwerk-Effekte:</strong> Mehr Leads → Mehr Partner → Bessere Konditionen → Mehr Kunden
+                </span>
+                <span style="background: #059669; color: white; padding: 10px 18px; border-radius: 8px; font-weight: 500;">
+                    <strong>Daten-Lock-in:</strong> Historische Schadensbilder, Preise, Erfolgsquoten
+                </span>
+                <span style="background: #059669; color: white; padding: 10px 18px; border-radius: 8px; font-weight: 500;">
+                    <strong>Brand & Trust:</strong> "Die Neutralen" – schwer nachzuahmen
+                </span>
+                <span style="background: #059669; color: white; padding: 10px 18px; border-radius: 8px; font-weight: 500;">
+                    <strong>Partner-Exklusivitäten:</strong> Regionale Preferred Partner
+                </span>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # TRACTION / PROOF POINTS
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📈 Traction & Proof Points</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Was wir bereits validiert haben</p>', unsafe_allow_html=True)
+
+    # Status Badges
+    st.markdown('''
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 30px;">
+            <div style="background: #dcfce7; padding: 15px 25px; border-radius: 12px; text-align: center; border: 2px solid #059669;">
+                <div style="color: #166534; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Status</div>
+                <div style="color: #059669; font-size: 1.3rem; font-weight: 700;">MVP Live</div>
+            </div>
+            <div style="background: #dbeafe; padding: 15px 25px; border-radius: 12px; text-align: center; border: 2px solid #3b82f6;">
+                <div style="color: #1e40af; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Quick-Checks</div>
+                <div style="color: #3b82f6; font-size: 1.3rem; font-weight: 700;">1.200+</div>
+            </div>
+            <div style="background: #fef3c7; padding: 15px 25px; border-radius: 12px; text-align: center; border: 2px solid #f59e0b;">
+                <div style="color: #92400e; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Conversion</div>
+                <div style="color: #f59e0b; font-size: 1.3rem; font-weight: 700;">23%</div>
+            </div>
+            <div style="background: #ede9fe; padding: 15px 25px; border-radius: 12px; text-align: center; border: 2px solid #8b5cf6;">
+                <div style="color: #6b21a8; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Ø Ersparnis</div>
+                <div style="color: #8b5cf6; font-size: 1.3rem; font-weight: 700;">2.500€</div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Proof Points
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 25px; border-radius: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <div style="color: #059669; font-size: 1.5rem; margin-bottom: 10px;">✅</div>
+                    <strong style="color: #1F2937;">Problem validiert</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        73% der Befragten fühlten sich bei der Leasingrückgabe schlecht informiert (n=150 Survey)
+                    </p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <div style="color: #059669; font-size: 1.5rem; margin-bottom: 10px;">✅</div>
+                    <strong style="color: #1F2937;">Zahlungsbereitschaft bestätigt</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        68% würden 50-150€ für unabhängige Vorbereitung zahlen
+                    </p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <div style="color: #059669; font-size: 1.5rem; margin-bottom: 10px;">✅</div>
+                    <strong style="color: #1F2937;">Partner-Interest</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        12 Werkstätten & 3 Gutachterbüros in LOI-Gesprächen
+                    </p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <div style="color: #059669; font-size: 1.5rem; margin-bottom: 10px;">✅</div>
+                    <strong style="color: #1F2937;">SEO-Potenzial validiert</strong>
+                    <p style="color: #6B7280; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        12.000+ monatl. Suchanfragen für "Leasingrückgabe Kosten" etc.
+                    </p>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # TEAM
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">👥 Team</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Die Personen hinter ReturnGuard</p>', unsafe_allow_html=True)
+
+    team_cols = st.columns(3)
+
+    with team_cols[0]:
+        st.markdown('''
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="background: #1B365D; color: white; width: 80px; height: 80px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center;
+                            margin: 0 auto 15px auto; font-size: 2rem; font-weight: 700;">GF</div>
+                <h4 style="color: #1F2937; margin: 0 0 5px 0;">[Gründer/CEO]</h4>
+                <p style="color: #059669; margin: 0 0 10px 0; font-size: 0.9rem; font-weight: 600;">Business & Vision</p>
+                <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">
+                    10+ Jahre Automotive & Leasing<br>
+                    Ex-[Unternehmen]<br>
+                    Netzwerk zu Werkstätten & Gutachtern
+                </p>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    with team_cols[1]:
+        st.markdown('''
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="background: #059669; color: white; width: 80px; height: 80px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center;
+                            margin: 0 auto 15px auto; font-size: 2rem; font-weight: 700;">CT</div>
+                <h4 style="color: #1F2937; margin: 0 0 5px 0;">[CTO/Tech Lead]</h4>
+                <p style="color: #059669; margin: 0 0 10px 0; font-size: 0.9rem; font-weight: 600;">Produkt & Technik</p>
+                <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">
+                    Full-Stack Developer<br>
+                    Ex-[Startup/Tech-Co]<br>
+                    Marktplatz-Erfahrung
+                </p>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    with team_cols[2]:
+        st.markdown('''
+            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="background: #8b5cf6; color: white; width: 80px; height: 80px; border-radius: 50%;
+                            display: flex; align-items: center; justify-content: center;
+                            margin: 0 auto 15px auto; font-size: 2rem; font-weight: 700;">OP</div>
+                <h4 style="color: #1F2937; margin: 0 0 5px 0;">[COO/Operations]</h4>
+                <p style="color: #059669; margin: 0 0 10px 0; font-size: 0.9rem; font-weight: 600;">Partner & Ops</p>
+                <p style="color: #6B7280; margin: 0; font-size: 0.85rem;">
+                    Partner-Akquise & Onboarding<br>
+                    Ex-[Automotive Service]<br>
+                    Prozessoptimierung
+                </p>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    # Advisor Note
+    st.markdown('''
+        <div style="background: #eff6ff; padding: 15px 20px; border-radius: 8px; margin-top: 20px; text-align: center; border-left: 4px solid #3b82f6;">
+            <p style="color: #1e40af; margin: 0; font-size: 0.95rem;">
+                💡 <strong>Advisors:</strong> Gespräche mit erfahrenen Branchenexperten aus Leasing, Legal Tech und Automotive-Aftersales laufen.
+            </p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # ASK & USE OF FUNDS
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    st.markdown('<div class="content-section">', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">💶 Ask & Use of Funds</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtitle">Was wir suchen und wofür</p>', unsafe_allow_html=True)
+
+    # The Ask
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%); padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 25px;">
+            <p style="color: #94a3b8; font-size: 0.9rem; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px;">Pre-Seed Runde</p>
+            <div style="color: white; font-size: 3rem; font-weight: 700; margin-bottom: 10px;">500.000€</div>
+            <p style="color: #86efac; font-size: 1.1rem; margin: 0;">18 Monate Runway bis Series A Ready</p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Use of Funds
+    st.markdown('''
+        <div style="background: #F9FAFB; padding: 25px; border-radius: 12px;">
+            <h4 style="color: #1F2937; margin: 0 0 20px 0;">Verwendung:</h4>
+            <div style="display: grid; gap: 15px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 8px;
+                                display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">40%</div>
+                    <div style="flex: 1;">
+                        <strong style="color: #1F2937;">Produkt & Tech</strong>
+                        <div style="background: #dcfce7; height: 8px; border-radius: 4px; margin-top: 5px;">
+                            <div style="background: #059669; width: 40%; height: 100%; border-radius: 4px;"></div>
+                        </div>
+                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.85rem;">Quick-Check 2.0, Partner-Dashboard, Automatisierung</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #3b82f6; color: white; width: 50px; height: 50px; border-radius: 8px;
+                                display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">30%</div>
+                    <div style="flex: 1;">
+                        <strong style="color: #1F2937;">Marketing & Growth</strong>
+                        <div style="background: #dbeafe; height: 8px; border-radius: 4px; margin-top: 5px;">
+                            <div style="background: #3b82f6; width: 30%; height: 100%; border-radius: 4px;"></div>
+                        </div>
+                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.85rem;">SEO, Content, Performance Marketing, Brand</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #8b5cf6; color: white; width: 50px; height: 50px; border-radius: 8px;
+                                display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">20%</div>
+                    <div style="flex: 1;">
+                        <strong style="color: #1F2937;">Partner-Netzwerk</strong>
+                        <div style="background: #ede9fe; height: 8px; border-radius: 4px; margin-top: 5px;">
+                            <div style="background: #8b5cf6; width: 20%; height: 100%; border-radius: 4px;"></div>
+                        </div>
+                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.85rem;">Werkstatt-Onboarding, Gutachter-Integration, B2B-Sales</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #6B7280; color: white; width: 50px; height: 50px; border-radius: 8px;
+                                display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">10%</div>
+                    <div style="flex: 1;">
+                        <strong style="color: #1F2937;">Operations & Buffer</strong>
+                        <div style="background: #E5E7EB; height: 8px; border-radius: 4px; margin-top: 5px;">
+                            <div style="background: #6B7280; width: 10%; height: 100%; border-radius: 4px;"></div>
+                        </div>
+                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.85rem;">Legal, Buchhaltung, unvorhergesehene Ausgaben</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Milestones
+    st.markdown('''
+        <div style="background: white; padding: 25px; border-radius: 12px; margin-top: 25px; border: 2px solid #E5E7EB;">
+            <h4 style="color: #1F2937; margin: 0 0 20px 0;">🎯 Milestones bis Series A:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="background: #F9FAFB; padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="color: #059669; font-size: 1.5rem; font-weight: 700;">10.000</div>
+                    <div style="color: #6B7280; font-size: 0.85rem;">Quick-Checks / Monat</div>
+                </div>
+                <div style="background: #F9FAFB; padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="color: #059669; font-size: 1.5rem; font-weight: 700;">50+</div>
+                    <div style="color: #6B7280; font-size: 0.85rem;">Partner im Netzwerk</div>
+                </div>
+                <div style="background: #F9FAFB; padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="color: #059669; font-size: 1.5rem; font-weight: 700;">50k€</div>
+                    <div style="color: #6B7280; font-size: 0.85rem;">MRR</div>
+                </div>
+                <div style="background: #F9FAFB; padding: 15px; border-radius: 8px; text-align: center;">
+                    <div style="color: #059669; font-size: 1.5rem; font-weight: 700;">5</div>
+                    <div style="color: #6B7280; font-size: 0.85rem;">B2B-Flottenkunden</div>
+                </div>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    # Final CTA
+    st.markdown('''
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                    padding: 40px; border-radius: 12px; margin-top: 30px; text-align: center;">
+            <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.6rem;">
+                Interesse an einem Gespräch?
+            </h2>
+            <p style="color: #a7f3d0; margin: 0 0 25px 0; font-size: 1.05rem;">
+                Wir freuen uns über den Austausch mit strategischen Investoren,<br>
+                die Marktplätze und B2B-SaaS verstehen.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="mailto:invest@returnguard.de" style="background: white; color: #059669; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                    📧 invest@returnguard.de
+                </a>
+                <a href="?page=contact#content-start-contact" style="background: transparent; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; border: 2px solid rgba(255,255,255,0.5);">
+                    Kontaktformular →
+                </a>
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 def render_b2c():
     """B2C View: Home, Calculator, FAQ, Blog, Contact"""
