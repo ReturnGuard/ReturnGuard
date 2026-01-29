@@ -3,6 +3,7 @@ import streamlit.components.v1 as components
 import re
 from datetime import datetime
 import json
+import textwrap
 
 # ==================== FEATURE FLAGS ====================
 SHOW_AUTO_DIAGRAM = False  # Safari Mobile zeigt Raw HTML - Fallback für stabile V1
@@ -1376,6 +1377,12 @@ with st.sidebar:
 # Für bessere UX: Nutzer können mit Tastatur (Pos1) oder Browser-Scroll nach oben
 # Alternative: Streamlit's st.rerun() nutzt automatisch Scroll-to-Top
 
+# ==================== HTML RENDERING HELPER ====================
+def html(content):
+    """Render HTML with textwrap.dedent to avoid Markdown code block issues from indentation."""
+    st.markdown(textwrap.dedent(content), unsafe_allow_html=True)
+
+
 # ==================== RENDER FUNCTIONS ====================
 def render_investor():
     """
@@ -1395,7 +1402,7 @@ def render_investor():
     # ═══════════════════════════════════════════════════════════════════════════
 
     # HERO: Markt-Zahl + Positionierung
-    st.markdown('''
+    html('''
         <div class="hero-section">
             <div class="hero-content">
                 <p style="color: #86efac; font-size: 1.1rem; margin: 0 0 15px 0; font-weight: 600; letter-spacing: 1px;">
@@ -1418,10 +1425,10 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Kernbotschaft-Banner - kompakter
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%);
                     padding: 25px 30px; border-radius: 12px; margin: 30px 0;">
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center;">
@@ -1439,7 +1446,7 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # ═══════════════════════════════════════════════════════════════════════════
     # MARKTGRÖSSE (TAM/SAM/SOM)
@@ -1450,7 +1457,7 @@ def render_investor():
     st.markdown('<p class="section-subtitle">Validierte Zahlen für Deutschland (2026)</p>', unsafe_allow_html=True)
 
     # Market Pain vs. Captureable Revenue
-    st.markdown('''
+    html('''
         <div style="background: #1B365D; padding: 20px 25px; border-radius: 12px; margin-bottom: 25px;">
             <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; align-items: center;">
                 <div style="text-align: center; flex: 1;">
@@ -1466,10 +1473,10 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # TAM/SAM/SOM Tabelle
-    st.markdown('''
+    html('''
         <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
@@ -1498,17 +1505,17 @@ def render_investor():
                 </tbody>
             </table>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Wichtiger Hinweis
-    st.markdown('''
+    html('''
         <div style="background: #eff6ff; padding: 15px 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #3b82f6;">
             <p style="color: #1e40af; margin: 0; font-size: 0.95rem;">
                 <strong>Wichtig:</strong> Bei Leasingrückgaben zahlt der Kunde nicht die vollen Reparaturkosten,
                 sondern den <strong>Minderwert</strong>. Die 500€ Ø-Nachzahlung ist konservativ kalkuliert.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1520,7 +1527,7 @@ def render_investor():
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown('''
+        html('''
             <div style="background: #fef2f2; padding: 25px; border-radius: 12px; border-left: 4px solid #dc2626;">
                 <h3 style="color: #991b1b; margin: 0 0 15px 0;">👤 Für Privatkunden</h3>
                 <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 1.8;">
@@ -1530,10 +1537,10 @@ def render_investor():
                     <li>Keine Zeit, keine Vergleichsangebote, kein Überblick</li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     with col2:
-        st.markdown('''
+        html('''
             <div style="background: #fef2f2; padding: 25px; border-radius: 12px; border-left: 4px solid #dc2626;">
                 <h3 style="color: #991b1b; margin: 0 0 15px 0;">🏢 Für Gewerbekunden & Dienstleister</h3>
                 <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 1.8;">
@@ -1543,17 +1550,17 @@ def render_investor():
                     <li>Hoher Akquiseaufwand, niedrige Trefferquote</li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     # Marktversagen
-    st.markdown('''
+    html('''
         <div style="background: #fef3c7; padding: 20px 30px; border-radius: 12px; margin: 25px 0;
                     border: 2px solid #f59e0b; text-align: center;">
             <p style="color: #92400e; font-size: 1.15rem; margin: 0; font-weight: 600;">
                 ⚠️ Marktversagen: Alle Beteiligten existieren – aber sie sind nicht orchestriert.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1566,7 +1573,7 @@ def render_investor():
     st.markdown('<p class="section-subtitle">Marktplatz & Orchestrator – nicht Dienstleister</p>', unsafe_allow_html=True)
 
     # Was ReturnGuard NICHT ist
-    st.markdown('''
+    html('''
         <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; margin: 20px 0;">
             <h4 style="color: #6B7280; margin: 0 0 15px 0;">ReturnGuard ist <span style="color: #dc2626;">keine</span>:</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -1577,10 +1584,10 @@ def render_investor():
                 <span style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px;">❌ Leasinggesellschaft</span>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Was ReturnGuard IST
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
                     padding: 25px; border-radius: 12px; margin: 20px 0; border: 2px solid #059669;">
             <h4 style="color: #166534; margin: 0 0 15px 0;">ReturnGuard <span style="color: #059669;">ist</span> eine neutrale Vermittlungs- und Vorqualifizierungsplattform:</h4>
@@ -1591,10 +1598,10 @@ def render_investor():
                 <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px;">✓ Belässt Haftung wo sie hingehört</span>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Analogie für Investoren
-    st.markdown('''
+    html('''
         <div style="background: #eff6ff; padding: 25px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #3b82f6;">
             <h4 style="color: #1e40af; margin: 0 0 15px 0;">💡 Vergleich für Investoren:</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 20px; color: #1e3a8a;">
@@ -1606,7 +1613,7 @@ def render_investor():
                 → ReturnGuard koordiniert.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1621,7 +1628,7 @@ def render_investor():
     col_flow, col_why = st.columns([3, 2])
 
     with col_flow:
-        st.markdown('''
+        html('''
             <div style="background: #F9FAFB; padding: 25px; border-radius: 12px;">
                 <h4 style="color: #1F2937; margin: 0 0 20px 0;">So funktioniert's:</h4>
 
@@ -1649,10 +1656,10 @@ def render_investor():
                     </div>
                 </div>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     with col_why:
-        st.markdown('''
+        html('''
             <div style="background: #1B365D; padding: 25px; border-radius: 12px; height: 100%;">
                 <h4 style="color: #86efac; margin: 0 0 20px 0;">💡 Warum das funktioniert:</h4>
                 <ul style="color: white; margin: 0; padding-left: 20px; line-height: 2;">
@@ -1662,17 +1669,17 @@ def render_investor():
                     <li><strong>Emotional Hook</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">"1.850€ sparen" triggert Action</span></li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     # Investor-Statement
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 20px 30px; border-radius: 12px; margin-top: 25px; text-align: center;">
             <p style="color: white; font-size: 1.1rem; margin: 0;">
                 📊 <strong>Für Investoren:</strong> Jeder Quick-Check ist ein selbst-qualifizierter, kaufbereiter Lead.
                 Skaliert ohne Personal, konvertiert ohne Haftung.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1684,7 +1691,7 @@ def render_investor():
     st.markdown('<h2 class="section-title">Warum jetzt?</h2>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Timing & Markt-Rückenwind</p>', unsafe_allow_html=True)
 
-    st.markdown('''
+    html('''
         <div style="background: #F9FAFB; padding: 30px; border-radius: 12px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #059669;">
@@ -1720,7 +1727,7 @@ def render_investor():
         <p style="text-align: center; color: #059669; font-weight: 600; margin-top: 20px; font-size: 1.1rem;">
             → Das ist kein nettes Tool, sondern eine Antwort auf Marktveränderungen.
         </p>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1728,7 +1735,7 @@ def render_investor():
     # KLAMMER: Eine Plattform – drei Lesarten
     # ═══════════════════════════════════════════════════════════════════════════
 
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%);
                     padding: 40px; border-radius: 12px; margin: 40px 0; text-align: center;">
             <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.8rem;">
@@ -1739,7 +1746,7 @@ def render_investor():
                 Sie unterscheiden sich nur in Blickwinkel & Tonalität.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # ═══════════════════════════════════════════════════════════════════════════
     # DIE DREI EBENEN DES MARKTPLATZES
@@ -1749,7 +1756,7 @@ def render_investor():
     st.markdown('<h2 class="section-title">Die drei Ebenen des Marktplatzes</h2>', unsafe_allow_html=True)
 
     # Ebene A: B2C = Lead Engine
-    st.markdown('''
+    html('''
         <div style="background: #eff6ff; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #3b82f6;">
             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
                 <div style="background: #3b82f6; color: white; width: 50px; height: 50px; border-radius: 50%;
@@ -1791,10 +1798,10 @@ def render_investor():
                 💡 B2C ist kein Selbstzweck – Monetarisierung hier optional, aber strategisch stark.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Ebene B: Marktplatz-Kern = Revenue Engine
-    st.markdown('''
+    html('''
         <div style="background: #f0fdf4; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #059669;">
             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
                 <div style="background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%;
@@ -1826,10 +1833,10 @@ def render_investor():
                 </strong>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Ebene C: B2B/Flotten = Stabilitäts-Engine
-    st.markdown('''
+    html('''
         <div style="background: #faf5ff; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #8b5cf6;">
             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
                 <div style="background: #8b5cf6; color: white; width: 50px; height: 50px; border-radius: 50%;
@@ -1872,7 +1879,7 @@ def render_investor():
                 </strong>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1883,7 +1890,7 @@ def render_investor():
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h2 class="section-title">📊 Daten als strategisches Plattformkapital</h2>', unsafe_allow_html=True)
 
-    st.markdown('''
+    html('''
         <div style="background: #F9FAFB; padding: 30px; border-radius: 12px;">
             <p style="color: #1F2937; font-size: 1.05rem; margin: 0 0 20px 0;">
                 ReturnGuard aggregiert mit jeder Rückgabe strukturierte Marktintelligenz:
@@ -1906,7 +1913,7 @@ def render_investor():
                 → Wert hoch, Risiko niedrig. Ohne selbst zu bewerten oder zu haften.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1919,7 +1926,7 @@ def render_investor():
     st.markdown('<p class="section-subtitle">Wie aus einem ängstlichen Kunden Umsatz wird</p>', unsafe_allow_html=True)
 
     # Funnel-Visualisierung
-    st.markdown('''
+    html('''
         <div style="background: #F9FAFB; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <div style="background: #fee2e2; color: #991b1b; padding: 15px 60px; border-radius: 8px; font-weight: 600; text-align: center;">
@@ -1939,10 +1946,10 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Revenue Trigger-Tabelle (validierte Zahlen)
-    st.markdown('''
+    html('''
         <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
@@ -1984,10 +1991,10 @@ def render_investor():
         <p style="color: #6B7280; font-size: 0.8rem; margin-top: 10px; font-style: italic;">
             * Compliance §49b BRAO: Keine direkte Provision für Anwaltsmandate, stattdessen SaaS-Zugang oder Datenaufbereitungspauschale.
         </p>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # ARPU Summary (angepasst)
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 25px; border-radius: 12px; margin-top: 25px;">
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center;">
                 <div>
@@ -2007,10 +2014,10 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Ausbaustufen
-    st.markdown('''
+    html('''
         <div style="background: #F9FAFB; padding: 20px; border-radius: 10px; margin-top: 25px;">
             <h4 style="color: #6B7280; margin: 0 0 15px 0;">🚀 Zusätzliche Revenue-Optionen (später):</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -2020,7 +2027,7 @@ def render_investor():
                 <span style="background: white; color: #6B7280; padding: 8px 16px; border-radius: 20px; border: 1px solid #E5E7EB;">Premium-Pakete (Express, Sorgenfrei)</span>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2035,7 +2042,7 @@ def render_investor():
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown('''
+        html('''
             <div style="background: #fef3c7; padding: 25px; border-radius: 12px; height: 100%;">
                 <h4 style="color: #92400e; margin: 0 0 15px 0;">ReturnGuard macht:</h4>
                 <ul style="color: #78350f; margin: 0; padding-left: 20px; line-height: 2;">
@@ -2045,10 +2052,10 @@ def render_investor():
                     <li>Vorqualifizieren</li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     with col2:
-        st.markdown('''
+        html('''
             <div style="background: #fee2e2; padding: 25px; border-radius: 12px; height: 100%;">
                 <h4 style="color: #991b1b; margin: 0 0 15px 0;">ReturnGuard macht <u>nicht</u>:</h4>
                 <ul style="color: #7f1d1d; margin: 0; padding-left: 20px; line-height: 2;">
@@ -2058,10 +2065,10 @@ def render_investor():
                     <li>Für Leasinggesellschaften bewerten</li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     # Compliance
-    st.markdown('''
+    html('''
         <div style="background: #f0fdf4; padding: 25px; border-radius: 12px; margin-top: 25px; border: 2px solid #059669;">
             <h4 style="color: #166534; margin: 0 0 15px 0;">✅ Regulatorische Einfachheit:</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -2074,16 +2081,16 @@ def render_investor():
                 → Kein regulatorisches Minenfeld. Das reduziert rechtliches Risiko, operative Komplexität und Skalierungshürden.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Investor-Statement
-    st.markdown('''
+    html('''
         <div style="background: #1B365D; padding: 20px 30px; border-radius: 12px; margin-top: 25px; text-align: center;">
             <p style="color: white; font-size: 1.1rem; margin: 0;">
                 💼 <strong>Für Investoren:</strong> Das ist kein Nachteil – das ist ein Schutzschild.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2094,7 +2101,7 @@ def render_investor():
     st.markdown('<div class="content-section">', unsafe_allow_html=True)
     st.markdown('<h2 class="section-title">🎯 Warum ReturnGuard investierbar ist</h2>', unsafe_allow_html=True)
 
-    st.markdown('''
+    html('''
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
             <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
                 <div style="font-size: 2.5rem; margin-bottom: 10px;">🪶</div>
@@ -2117,10 +2124,10 @@ def render_investor():
                 <p style="color: #6B7280; margin: 0; font-size: 0.9rem;">Reine Vermittlung, keine operative Ausführung</p>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Abschluss-Statement
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%);
                     padding: 40px; border-radius: 12px; margin-top: 30px; text-align: center;">
             <p style="color: white; font-size: 1.4rem; margin: 0; font-weight: 600;">
@@ -2130,7 +2137,7 @@ def render_investor():
                 ReturnGuard fühlt sich an wie etwas, das es eigentlich schon längst geben müsste.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2143,7 +2150,7 @@ def render_investor():
     st.markdown('<p class="section-subtitle">Warum gibt es uns noch nicht? Und warum wird es schwer, uns zu kopieren?</p>', unsafe_allow_html=True)
 
     # Wettbewerbslandschaft
-    st.markdown('''
+    html('''
         <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
             <h4 style="color: #1F2937; margin: 0 0 20px 0;">Aktuelle Landschaft:</h4>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
@@ -2165,10 +2172,10 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Warum keiner das macht
-    st.markdown('''
+    html('''
         <div style="background: #fef3c7; padding: 20px 25px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #f59e0b;">
             <h4 style="color: #92400e; margin: 0 0 10px 0;">⚠️ Warum macht das keiner?</h4>
             <p style="color: #78350f; margin: 0; font-size: 0.95rem;">
@@ -2177,10 +2184,10 @@ def render_investor():
                 <strong>Genau das ist die Chance.</strong>
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Unser Moat
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); padding: 25px; border-radius: 12px; border: 2px solid #059669;">
             <h4 style="color: #166534; margin: 0 0 15px 0;">🛡️ Unser Moat (Verteidigungsgräben):</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 12px;">
@@ -2198,7 +2205,7 @@ def render_investor():
                 </span>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2211,7 +2218,7 @@ def render_investor():
     st.markdown('<p class="section-subtitle">Was wir bereits validiert haben</p>', unsafe_allow_html=True)
 
     # Status Badges
-    st.markdown('''
+    html('''
         <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 30px;">
             <div style="background: #dcfce7; padding: 15px 25px; border-radius: 12px; text-align: center; border: 2px solid #059669;">
                 <div style="color: #166534; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Status</div>
@@ -2230,10 +2237,10 @@ def render_investor():
                 <div style="color: #8b5cf6; font-size: 1.3rem; font-weight: 700;">2.500€</div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Proof Points
-    st.markdown('''
+    html('''
         <div style="background: #F9FAFB; padding: 25px; border-radius: 12px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
                 <div style="background: white; padding: 20px; border-radius: 8px;">
@@ -2266,7 +2273,7 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2281,7 +2288,7 @@ def render_investor():
     team_cols = st.columns(3)
 
     with team_cols[0]:
-        st.markdown('''
+        html('''
             <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
                 <div style="background: #1B365D; color: white; width: 80px; height: 80px; border-radius: 50%;
                             display: flex; align-items: center; justify-content: center;
@@ -2294,10 +2301,10 @@ def render_investor():
                     Netzwerk zu Werkstätten & Gutachtern
                 </p>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     with team_cols[1]:
-        st.markdown('''
+        html('''
             <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
                 <div style="background: #059669; color: white; width: 80px; height: 80px; border-radius: 50%;
                             display: flex; align-items: center; justify-content: center;
@@ -2310,10 +2317,10 @@ def render_investor():
                     Marktplatz-Erfahrung
                 </p>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     with team_cols[2]:
-        st.markdown('''
+        html('''
             <div style="background: #F9FAFB; padding: 25px; border-radius: 12px; text-align: center;">
                 <div style="background: #8b5cf6; color: white; width: 80px; height: 80px; border-radius: 50%;
                             display: flex; align-items: center; justify-content: center;
@@ -2326,16 +2333,16 @@ def render_investor():
                     Prozessoptimierung
                 </p>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     # Advisor Note
-    st.markdown('''
+    html('''
         <div style="background: #eff6ff; padding: 15px 20px; border-radius: 8px; margin-top: 20px; text-align: center; border-left: 4px solid #3b82f6;">
             <p style="color: #1e40af; margin: 0; font-size: 0.95rem;">
                 💡 <strong>Advisors:</strong> Gespräche mit erfahrenen Branchenexperten aus Leasing, Legal Tech und Automotive-Aftersales laufen.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2348,16 +2355,16 @@ def render_investor():
     st.markdown('<p class="section-subtitle">Was wir suchen und wofür</p>', unsafe_allow_html=True)
 
     # The Ask
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #1B365D 0%, #2d4a7c 100%); padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 25px;">
             <p style="color: #94a3b8; font-size: 0.9rem; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px;">Pre-Seed Runde</p>
             <div style="color: white; font-size: 3rem; font-weight: 700; margin-bottom: 10px;">500.000€</div>
             <p style="color: #86efac; font-size: 1.1rem; margin: 0;">18 Monate Runway bis Series A Ready</p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Use of Funds
-    st.markdown('''
+    html('''
         <div style="background: #F9FAFB; padding: 25px; border-radius: 12px;">
             <h4 style="color: #1F2937; margin: 0 0 20px 0;">Verwendung:</h4>
             <div style="display: grid; gap: 15px;">
@@ -2407,10 +2414,10 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Milestones
-    st.markdown('''
+    html('''
         <div style="background: white; padding: 25px; border-radius: 12px; margin-top: 25px; border: 2px solid #E5E7EB;">
             <h4 style="color: #1F2937; margin: 0 0 20px 0;">🎯 Milestones bis Series A:</h4>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
@@ -2432,10 +2439,10 @@ def render_investor():
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Final CTA
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%);
                     padding: 40px; border-radius: 12px; margin-top: 30px; text-align: center;">
             <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.6rem;">
@@ -2454,7 +2461,7 @@ def render_investor():
                 </a>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2714,7 +2721,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
     st.markdown('<div id="content-start-home"></div>', unsafe_allow_html=True)
 
     # HERO SECTION - Fokus auf Sicherheit & Orientierung
-    st.markdown('''
+    html('''
         <div class="hero-section">
             <div class="hero-content">
                 <h1 class="hero-title">Leasingrückgabe ohne böse Überraschungen</h1>
@@ -2728,19 +2735,19 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Vertrauens-Banner direkt nach Hero
-    st.markdown('''
+    html('''
         <div style="background: #ecfdf5; padding: 20px; border-radius: 12px; margin: -30px auto 30px auto; max-width: 800px; text-align: center; border: 1px solid #a7f3d0;">
             <span style="color: #059669; font-size: 1.1rem;">
                 ✓ Unverbindlich &nbsp;&nbsp; ✓ Kostenlose Erstberatung &nbsp;&nbsp; ✓ Keine versteckten Gebühren
             </span>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # SOCIAL PROOF BANNER
-    st.markdown('''
+    html('''
         <div class="social-proof-banner">
             <div class="social-stats">
                 <div class="stat-item">
@@ -2757,7 +2764,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # 3-SCHRITTE PROZESS - Kundenorientiert
     st.markdown('<div class="process-section">', unsafe_allow_html=True)
@@ -2767,7 +2774,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
     step1, step2, step3 = st.columns(3)
 
     with step1:
-        st.markdown('''
+        html('''
             <div class="process-step">
                 <div class="step-number">1</div>
                 <div class="step-icon">📱</div>
@@ -2777,10 +2784,10 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                     wo Sie stehen und was zu erwarten ist.
                 </p>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     with step2:
-        st.markdown('''
+        html('''
             <div class="process-step">
                 <div class="step-number">2</div>
                 <div class="step-icon">🛡️</div>
@@ -2790,10 +2797,10 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                     und was sich lohnt, reparieren zu lassen.
                 </p>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     with step3:
-        st.markdown('''
+        html('''
             <div class="process-step">
                 <div class="step-number">3</div>
                 <div class="step-icon">✅</div>
@@ -2803,12 +2810,12 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                     Im Schnitt sparen unsere Kunden 2.500€.
                 </p>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
 
     st.markdown('</div>', unsafe_allow_html=True)
 
     # HÄUFIGE SORGEN - Direkte Ansprache der Pain Points
-    st.markdown('''
+    html('''
         <div style="background: white; padding: 40px 20px; margin: 30px 0;">
             <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">Kennen Sie das?</h2>
             <p style="text-align: center; color: #6B7280; margin-bottom: 30px;">Diese Sorgen haben die meisten Leasingnehmer vor der Rückgabe</p>
@@ -2837,7 +2844,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                 </p>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # KUNDENBEWERTUNGEN
     st.markdown('<div class="testimonial-section">', unsafe_allow_html=True)
@@ -2918,7 +2925,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
     st.markdown('<h2 class="section-title">Kooperationspartner & Qualifikationen</h2>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtitle">Zertifizierte Gutachter und Fachanwälte</p>', unsafe_allow_html=True)
 
-    st.markdown('''
+    html('''
         <div class="partner-grid">
             <div class="partner-logo">
                 <div class="partner-logo-text">TÜV<br/>Süd</div>
@@ -2936,11 +2943,11 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                 <div class="partner-logo-text">§<br/>Rechts<br/>Schutz</div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
     st.markdown('</div>', unsafe_allow_html=True)
 
     # TRUST BADGES
-    st.markdown('''
+    html('''
         <div class="trust-section">
             <div class="trust-badges">
                 <div class="trust-badge">
@@ -2961,7 +2968,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                 </div>
             </div>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # PAKETE
     st.markdown('<div class="packages-section">', unsafe_allow_html=True)
@@ -2971,7 +2978,7 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
     pkg1, pkg2, pkg3, pkg4 = st.columns(4)
 
     with pkg1:
-        st.markdown('''
+        html('''
             <div class="package-card">
                 <div class="package-icon">📋</div>
                 <h3 class="package-title">Basis</h3>
@@ -2984,11 +2991,11 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                     <li>✓ Bearbeitung in 48h</li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
         st.button("Paket anfragen", key="b1", use_container_width=True)
 
     with pkg2:
-        st.markdown('''
+        html('''
             <div class="package-card">
                 <div class="package-icon">📊</div>
                 <h3 class="package-title">Standard</h3>
@@ -3001,11 +3008,11 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                     <li>✓ Bearbeitung in 24h</li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
         st.button("Paket anfragen", key="b2", use_container_width=True)
 
     with pkg3:
-        st.markdown('''
+        html('''
             <div class="package-card package-popular" style="position: relative;">
                 <div class="popular-badge">⭐ MEISTGEWÄHLT</div>
                 <div class="package-icon">🥇</div>
@@ -3019,11 +3026,11 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                     <li>✓ Sofort-Bearbeitung</li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
         st.button("Paket anfragen", key="b3", use_container_width=True)
 
     with pkg4:
-        st.markdown('''
+        html('''
             <div class="package-card">
                 <div class="package-icon">💎</div>
                 <h3 class="package-title">VIP</h3>
@@ -3036,13 +3043,13 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                     <li>✓ Persönlicher Manager</li>
                 </ul>
             </div>
-        ''', unsafe_allow_html=True)
+        ''')
         st.button("Paket anfragen", key="b4", use_container_width=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
     # ABSCHLUSS-CTA - Klare Orientierung
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 50px 30px; border-radius: 16px; margin: 40px 0; text-align: center;">
             <h2 style="color: white; margin: 0 0 15px 0; font-size: 1.8rem;">Nicht sicher, wo Sie anfangen sollen?</h2>
             <p style="color: rgba(255,255,255,0.9); margin: 0 0 25px 0; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
@@ -3056,14 +3063,14 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
                 Mo-Fr 9-18 Uhr · Keine Warteschleifen · Echte Experten
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
 # ==================== DIGITALER QUICK-CHECK ====================
 elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
     st.markdown('<div id="content-start-calculator"></div>', unsafe_allow_html=True)
     st.markdown('<div class="calculator-section">', unsafe_allow_html=True)
 
-    st.markdown('''
+    html('''
         <div class="calculator-box">
             <h1 class="calculator-title">📱 Digitaler Quick-Check</h1>
             <p class="calculator-subtitle">
@@ -3071,7 +3078,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
                 <span style="color: #059669; font-weight: 500;">Unverbindlich. Kostenlos. Keine Anmeldung.</span>
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # FAHRZEUGKLASSE UND BAUJAHR
     st.markdown('<div class="calculator-box">', unsafe_allow_html=True)
@@ -3515,7 +3522,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'blog':
     st.markdown('<p class="section-subtitle">Fachwissen zu Leasingrückgaben</p>', unsafe_allow_html=True)
 
     # CHECKLISTE als Featured Article
-    st.markdown('''
+    html('''
         <div style="background: linear-gradient(135deg, #1B365D 0%, #1E3A8A 100%); padding: 40px; border-radius: 12px; color: white; margin-bottom: 40px;">
             <h2 style="font-size: 2rem; margin-bottom: 15px;">✅ Checkliste: Leasingrückgabe vorbereiten</h2>
             <p style="font-size: 1.1rem; opacity: 0.9;">
@@ -3523,7 +3530,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'blog':
                 Von Vertragsprüfung bis Rückgabeprotokoll.
             </p>
         </div>
-    ''', unsafe_allow_html=True)
+    ''')
 
     # Checkliste Items
     checklist_items = [
@@ -4057,7 +4064,7 @@ elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'leg
 
 # ==================== FOOTER ====================
 st.markdown("---")
-st.markdown('''
+html('''
     <div style="text-align: center; color: #6B7280; padding: 40px 20px; font-size: 0.95rem;">
         <div style="margin-bottom: 20px;">
             <strong style="color: #1B365D; font-size: 1.1rem;">🛡️ ReturnGuard GmbH</strong>
@@ -4069,7 +4076,7 @@ st.markdown('''
             © 2024 ReturnGuard - Ihr Partner für faire Leasingrückgaben
         </div>
     </div>
-''', unsafe_allow_html=True)
+''')
 
 # ==================== NAVIGATION VIA QUERY PARAMS UND FRAGMENTS ====================
 # Navigation erfolgt jetzt über echte HTML-Links mit Query-Params und URL-Fragments
