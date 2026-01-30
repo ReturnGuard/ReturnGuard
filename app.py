@@ -390,7 +390,7 @@ damage_levels = [
 ]
 
 # ==================== CSS STYLES ====================
-st.markdown("""
+html("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 * {
@@ -1275,7 +1275,7 @@ div[data-testid="column"] > div.stButton > button:hover {
     .scroll-to-top { bottom: 15px; left: 15px; width: 45px; height: 45px; }
 }
 </style>
-""", unsafe_allow_html=True)
+""")
 
 # ==================== SIDEBAR VIEW SELECTOR ====================
 with st.sidebar:
@@ -2469,7 +2469,7 @@ def render_investor():
 def render_b2c():
     """B2C View: Home, Calculator, FAQ, Blog, Contact"""
     # Floating CTAs nur für B2C
-    st.markdown("""
+    html("""
     <div class="floating-cta">
         <a href="tel:+498912345678" class="floating-btn floating-phone" title="Jetzt anrufen">
             📞
@@ -2482,7 +2482,7 @@ def render_b2c():
             🧮
         </a>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Navigation für B2C
     st.markdown('<div class="top-nav">', unsafe_allow_html=True)
@@ -2515,7 +2515,7 @@ def render_b2b():
     """B2B View: Services, Contact (B2B-Fokus), Legal - Native Streamlit Components"""
 
     # B2B HERO - Using native Streamlit with container styling
-    st.markdown("""
+    html("""
     <style>
     .b2b-hero {
         background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
@@ -2537,10 +2537,10 @@ def render_b2b():
     .pkg-price { font-size: 2rem; font-weight: 700; color: #059669; }
     .step-circle { background: #059669; color: white; width: 50px; height: 50px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
     </style>
-    """, unsafe_allow_html=True)
+    """)
 
     # HERO Section
-    st.markdown("""
+    html("""
     <div class="b2b-hero">
         <p class="subtitle">FÜR FLOTTENMANAGER & FUHRPARKLEITER</p>
         <h1>Weniger Verwaltung.<br>Mehr Planbarkeit.</h1>
@@ -2549,7 +2549,7 @@ def render_b2b():
             einem Netzwerk und einem Ansprechpartner.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # CTA Buttons after hero
     cta_col1, cta_col2, cta_col3 = st.columns([1,2,1])
@@ -2605,7 +2605,7 @@ def render_b2b():
             st.markdown("**STARTER**")
             st.markdown("##### 10-25 Fahrzeuge")
             st.markdown("### :green[79€] /Fzg./Monat")
-            st.markdown("""
+            html("""
             ✓ Standard-Prozess
             ✓ Aufbereiter-Netzwerk
             ✓ Dokumentation
@@ -3350,7 +3350,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
                             </div>
                         </div>
                     </div>
-                    """, unsafe_allow_html=True)
+                    """)
 
             st.markdown("---")
 
@@ -3400,7 +3400,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
             col_a, col_b, col_c = st.columns(3)
 
             with col_a:
-                st.markdown("""
+                html("""
                 <div style="text-align: center; padding: 20px; background: white; border-radius: 8px; border: 2px solid #E5E7EB;">
                     <div style="font-size: 2.5rem; margin-bottom: 10px;">📞</div>
                     <strong>Kostenlose Beratung</strong>
@@ -3410,7 +3410,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
                         </a>
                     </div>
                 </div>
-                """, unsafe_allow_html=True)
+                """)
 
             with col_b:
                 st.markdown(f"""
@@ -3426,7 +3426,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
                 """, unsafe_allow_html=True)
 
             with col_c:
-                st.markdown("""
+                html("""
                 <div style="text-align: center; padding: 20px; background: white; border-radius: 8px; border: 2px solid #E5E7EB;">
                     <div style="font-size: 2.5rem; margin-bottom: 10px;">📧</div>
                     <strong>E-Mail Anfrage</strong>
@@ -3436,7 +3436,7 @@ elif st.session_state.view == "B2C" and st.session_state.page == 'calculator':
                         </a>
                     </div>
                 </div>
-                """, unsafe_allow_html=True)
+                """)
         else:
             st.info("ℹ️ Bitte bewerten Sie mindestens eine Beschädigung, um eine Schätzung zu erhalten.")
 
@@ -3761,7 +3761,7 @@ elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'ser
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("""
+        html("""
         ### 🔍 Technische Prüfung
         - Fahrzeuginspektion durch Sachverständige
         - Schadensdokumentation nach DAT/Schwacke
@@ -3855,7 +3855,7 @@ elif (st.session_state.view in ["B2C", "B2B"]) and st.session_state.page == 'con
         border: 1px solid #e5e7eb;
     }
     </style>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("### 📝 Kostenlose Erstberatung")
     st.markdown("Beschreiben Sie kurz Ihre Situation - wir melden uns innerhalb von 24h bei Ihnen.")
