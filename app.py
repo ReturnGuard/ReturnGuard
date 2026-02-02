@@ -1629,48 +1629,42 @@ def render_investor():
     col_flow, col_why = st.columns([3, 2])
 
     with col_flow:
-        html('''
-            <div style="background: #F9FAFB; padding: 25px; border-radius: 12px;">
-                <h4 style="color: #1F2937; margin: 0 0 20px 0;">So funktioniert's:</h4>
+        st.markdown("**So funktioniert's:**")
 
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                    <div style="background: #3b82f6; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</div>
-                    <div style="flex: 1; background: white; padding: 12px 15px; border-radius: 8px;">
-                        <strong style="color: #1F2937;">Kunde klickt sich durch</strong>
-                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.85rem;">Karosserie • Glas • Innenraum • Reifen (5 Klicks, 2 Min.)</p>
-                    </div>
-                </div>
+        # Schritt 1
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <div style="background: #3b82f6; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+            <div><strong>Kunde klickt sich durch</strong><br><span style="color: #6B7280; font-size: 0.85rem;">Karosserie • Glas • Innenraum • Reifen (5 Klicks, 2 Min.)</span></div>
+        </div>
+        """, unsafe_allow_html=True)
 
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                    <div style="background: #8b5cf6; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</div>
-                    <div style="flex: 1; background: white; padding: 12px 15px; border-radius: 8px;">
-                        <strong style="color: #1F2937;">Output: "Potenzielle Ersparnis"</strong>
-                        <p style="color: #6B7280; margin: 5px 0 0 0; font-size: 0.85rem;">Kein Gutachten, keine Haftung – nur eine Orientierung</p>
-                    </div>
-                </div>
+        # Schritt 2
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <div style="background: #8b5cf6; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+            <div><strong>Output: "Potenzielle Ersparnis"</strong><br><span style="color: #6B7280; font-size: 0.85rem;">Kein Gutachten, keine Haftung – nur eine Orientierung</span></div>
+        </div>
+        """, unsafe_allow_html=True)
 
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div style="background: #059669; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</div>
-                    <div style="flex: 1; background: #dcfce7; padding: 12px 15px; border-radius: 8px; border: 2px solid #059669;">
-                        <strong style="color: #166534;">CTA: "Angebote von Partnerwerkstätten sichern"</strong>
-                        <p style="color: #15803d; margin: 5px 0 0 0; font-size: 0.85rem;">→ Lead generiert (20-40€)</p>
-                    </div>
-                </div>
-            </div>
-        ''')
+        # Schritt 3
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="background: #059669; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+            <div><strong style="color: #166534;">CTA: "Angebote von Partnerwerkstätten sichern"</strong><br><span style="color: #15803d; font-size: 0.85rem;">→ Lead generiert (20-40€)</span></div>
+        </div>
+        """, unsafe_allow_html=True)
 
     with col_why:
-        html('''
-            <div style="background: #1B365D; padding: 25px; border-radius: 12px; height: 100%;">
-                <h4 style="color: #86efac; margin: 0 0 20px 0;">💡 Warum das funktioniert:</h4>
-                <ul style="color: white; margin: 0; padding-left: 20px; line-height: 2;">
-                    <li><strong>CAC → ~0€</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">Kunde kommt organisch oder via SEO</span></li>
-                    <li><strong>Selbst-Qualifizierung</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">Klicks zeigen Lead-Potenzial</span></li>
-                    <li><strong>Keine Haftung</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">"Ersparnis-Potenzial" ≠ Gutachten</span></li>
-                    <li><strong>Emotional Hook</strong><br><span style="color: #94a3b8; font-size: 0.85rem;">"1.850€ sparen" triggert Action</span></li>
-                </ul>
-            </div>
-        ''')
+        st.markdown("##### 💡 Warum das funktioniert:")
+        st.markdown("**CAC → ~0€**")
+        st.caption("Kunde kommt organisch oder via SEO")
+        st.markdown("**Selbst-Qualifizierung**")
+        st.caption("Klicks zeigen Lead-Potenzial")
+        st.markdown("**Keine Haftung**")
+        st.caption('"Ersparnis-Potenzial" ≠ Gutachten')
+        st.markdown("**Emotional Hook**")
+        st.caption('"1.850€ sparen" triggert Action')
 
     # Investor-Statement
     html('''
