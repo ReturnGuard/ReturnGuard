@@ -5,6 +5,13 @@ from datetime import datetime
 import json
 import textwrap
 
+
+# ==================== HTML RENDERING HELPER ====================
+def html(content):
+    """Render HTML with textwrap.dedent to avoid Markdown code block issues from indentation."""
+    st.markdown(textwrap.dedent(content), unsafe_allow_html=True)
+
+
 # ==================== FEATURE FLAGS ====================
 SHOW_AUTO_DIAGRAM = False  # Safari Mobile zeigt Raw HTML - Fallback für stabile V1
 
@@ -1376,12 +1383,6 @@ with st.sidebar:
 # Hinweis: Scroll-to-Top funktioniert in Streamlit nur begrenzt wegen iFrame
 # Für bessere UX: Nutzer können mit Tastatur (Pos1) oder Browser-Scroll nach oben
 # Alternative: Streamlit's st.rerun() nutzt automatisch Scroll-to-Top
-
-# ==================== HTML RENDERING HELPER ====================
-def html(content):
-    """Render HTML with textwrap.dedent to avoid Markdown code block issues from indentation."""
-    st.markdown(textwrap.dedent(content), unsafe_allow_html=True)
-
 
 # ==================== RENDER FUNCTIONS ====================
 def render_investor():
