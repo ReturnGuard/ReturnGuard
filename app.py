@@ -2810,36 +2810,24 @@ if st.session_state.view == "B2C" and st.session_state.page == 'home':
     st.markdown('</div>', unsafe_allow_html=True)
 
     # HÄUFIGE SORGEN - Direkte Ansprache der Pain Points
-    html('''
-        <div style="background: white; padding: 40px 20px; margin: 30px 0;">
-            <h2 style="text-align: center; color: #1F2937; margin-bottom: 10px;">Kennen Sie das?</h2>
-            <p style="text-align: center; color: #6B7280; margin-bottom: 30px;">Diese Sorgen haben die meisten Leasingnehmer vor der Rückgabe</p>
+    st.markdown("## Kennen Sie das?")
+    st.caption("Diese Sorgen haben die meisten Leasingnehmer vor der Rückgabe")
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto;">
-                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
-                    <div style="font-size: 1.5rem; margin-bottom: 10px;">😰</div>
-                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Was wird mir die Leasingfirma berechnen?"</h4>
-                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Unser Quick-Check zeigt Ihnen vorab eine realistische Einschätzung</p>
-                </div>
-                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
-                    <div style="font-size: 1.5rem; margin-bottom: 10px;">🤔</div>
-                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Lohnt sich eine Reparatur noch?"</h4>
-                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Wir sagen Ihnen, was sich lohnt – und was nicht</p>
-                </div>
-                <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; border-left: 4px solid #EF4444;">
-                    <div style="font-size: 1.5rem; margin-bottom: 10px;">⚖️</div>
-                    <h4 style="color: #991B1B; margin: 0 0 8px 0;">"Die Abrechnung war unfair – was tun?"</h4>
-                    <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">→ Wir verbinden Sie mit spezialisierten Fachanwälten</p>
-                </div>
-            </div>
+    sorgen_cols = st.columns(3)
+    with sorgen_cols[0]:
+        with st.container(border=True):
+            st.markdown("#### 😰 \"Was wird mir die Leasingfirma berechnen?\"")
+            st.write("→ Unser Quick-Check zeigt Ihnen vorab eine realistische Einschätzung")
+    with sorgen_cols[1]:
+        with st.container(border=True):
+            st.markdown("#### 🤔 \"Lohnt sich eine Reparatur noch?\"")
+            st.write("→ Wir sagen Ihnen, was sich lohnt – und was nicht")
+    with sorgen_cols[2]:
+        with st.container(border=True):
+            st.markdown("#### ⚖️ \"Die Abrechnung war unfair – was tun?\"")
+            st.write("→ Wir verbinden Sie mit spezialisierten Fachanwälten")
 
-            <div style="text-align: center; margin-top: 30px;">
-                <p style="color: #059669; font-size: 1.1rem; font-weight: 600; margin: 0;">
-                    ✓ Sie sind nicht allein. Über 1.200 Kunden hatten dieselben Fragen.
-                </p>
-            </div>
-        </div>
-    ''')
+    st.success("✓ Sie sind nicht allein. Über 1.200 Kunden hatten dieselben Fragen.")
 
     # KUNDENBEWERTUNGEN
     st.markdown('<div class="testimonial-section">', unsafe_allow_html=True)
