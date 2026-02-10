@@ -1210,26 +1210,78 @@ div.stButton > button:hover {
     box-shadow: 0 8px 25px rgba(27, 54, 93, 0.4);
 }
 
-/* NAVIGATION */
-.top-nav {
+/* STRIPE-STYLE NAVIGATION */
+.stripe-nav {
     background: white;
     border-bottom: 1px solid #E5E7EB;
-    padding: 20px 0;
+    padding: 0 40px;
     position: sticky;
     top: 0;
     z-index: 999;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.nav-brand {
-    text-align: center;
-    font-size: 1.6rem;
-    font-weight: 600;
+.stripe-nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
     color: #1B365D;
-    margin-bottom: 15px;
+    text-decoration: none;
 }
 
-/* Navigation Links als Buttons */
+.stripe-nav-logo svg {
+    width: 32px;
+    height: 32px;
+}
+
+.stripe-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stripe-nav-link {
+    color: #4B5563;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+
+.stripe-nav-link:hover {
+    color: #1F2937;
+    background: #F3F4F6;
+    text-decoration: none;
+}
+
+.stripe-nav-cta {
+    background: #059669;
+    color: white !important;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(5, 150, 105, 0.2);
+}
+
+.stripe-nav-cta:hover {
+    background: #047857;
+    color: white !important;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+/* Legacy nav-link for compatibility */
 .nav-link {
     display: inline-block;
     width: 100%;
@@ -2479,27 +2531,27 @@ def render_b2c():
     </div>
     """)
 
-    # Navigation für B2C
-    st.markdown('<div class="top-nav">', unsafe_allow_html=True)
-    st.markdown('<div class="nav-brand">🛡️ ReturnGuard</div>', unsafe_allow_html=True)
-
-    nav_cols = st.columns(7)
-    with nav_cols[0]:
-        st.markdown('<a href="?page=home#content-start-home" target="_self" class="nav-link">🏠 Home</a>', unsafe_allow_html=True)
-    with nav_cols[1]:
-        st.markdown('<a href="?page=calculator#content-start-calculator" target="_self" class="nav-link">📱 Quick-Check</a>', unsafe_allow_html=True)
-    with nav_cols[2]:
-        st.markdown('<a href="?page=faq#content-start-faq" target="_self" class="nav-link">❓ FAQ</a>', unsafe_allow_html=True)
-    with nav_cols[3]:
-        st.markdown('<a href="?page=blog#content-start-blog" target="_self" class="nav-link">📝 Blog</a>', unsafe_allow_html=True)
-    with nav_cols[4]:
-        st.markdown('<a href="?page=contact#content-start-contact" target="_self" class="nav-link">📞 Kontakt</a>', unsafe_allow_html=True)
-    with nav_cols[5]:
-        st.markdown('<a href="?page=about#content-start-about" target="_self" class="nav-link">👥 Über uns</a>', unsafe_allow_html=True)
-    with nav_cols[6]:
-        st.markdown('<a href="?page=legal#content-start-legal" target="_self" class="nav-link">⚖️ Rechtliches</a>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Stripe-Style Navigation für B2C
+    st.markdown('''
+    <nav class="stripe-nav">
+        <a href="?page=home#content-start-home" class="stripe-nav-logo">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="40" height="40" rx="8" fill="#1B365D"/>
+                <path d="M20 8L28 14V26L20 32L12 26V14L20 8Z" fill="#059669"/>
+                <path d="M20 12L25 16V24L20 28L15 24V16L20 12Z" fill="white"/>
+            </svg>
+            ReturnGuard
+        </a>
+        <div class="stripe-nav-links">
+            <a href="?page=home#content-start-home" class="stripe-nav-link">Home</a>
+            <a href="?page=calculator#content-start-calculator" class="stripe-nav-link">Quick-Check</a>
+            <a href="?page=faq#content-start-faq" class="stripe-nav-link">FAQ</a>
+            <a href="?page=about#content-start-about" class="stripe-nav-link">Über uns</a>
+            <a href="?page=contact#content-start-contact" class="stripe-nav-link">Kontakt</a>
+        </div>
+        <a href="?page=calculator#content-start-calculator" class="stripe-nav-cta">Jetzt starten →</a>
+    </nav>
+    ''', unsafe_allow_html=True)
 
     # ==================== B2C PAGES ====================
     # Die Page-spezifischen Inhalte werden nach diesem Block gerendert
